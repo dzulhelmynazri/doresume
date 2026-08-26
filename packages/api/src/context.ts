@@ -1,7 +1,7 @@
 import { auth } from "@doresume/auth";
 import type { NextRequest } from "next/server";
 
-export async function createContext(req: NextRequest) {
+export const createContext = async (req: NextRequest) => {
   const session = await auth.api.getSession({
     headers: req.headers,
   });
@@ -9,6 +9,6 @@ export async function createContext(req: NextRequest) {
     auth: null,
     session,
   };
-}
+};
 
 export type Context = Awaited<ReturnType<typeof createContext>>;

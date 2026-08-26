@@ -4,44 +4,46 @@ import { Label } from "@doresume/ui/components/label";
 import { useForm } from "@tanstack/react-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import z from "zod";
+import { z } from "zod";
 
 import { authClient } from "@/lib/auth-client";
 
 import Loader from "./loader";
 
-export default function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () => void }) {
+const SignUpForm = ({ onSwitchToSignIn }: { onSwitchToSignIn: () => void }) => {
   const router = useRouter();
   const { isPending } = authClient.useSession();
 
   const form = useForm({
     defaultValues: {
       email: "",
-      password: "",
       name: "",
+      password: "",
     },
     onSubmit: async ({ value }) => {
       await authClient.signUp.email(
         {
           email: value.email,
-          password: value.password,
           name: value.name,
+          password: value.password,
         },
         {
+          // oxlint-disable-next-line promise/prefer-await-to-callbacks
+          onError: (error) => {
+            toast.error(error.error.message || error.error.statusText);
+          },
+          // oxlint-disable-next-line promise/prefer-await-to-callbacks
           onSuccess: () => {
             router.push("/dashboard");
             toast.success("Sign up successful");
           },
-          onError: (error) => {
-            toast.error(error.error.message || error.error.statusText);
-          },
-        },
+        }
       );
     },
     validators: {
       onSubmit: z.object({
-        name: z.string().min(2, "Name must be at least 2 characters"),
         email: z.email("Invalid email address"),
+        name: z.string().min(2, "Name must be at least 2 characters"),
         password: z.string().min(8, "Password must be at least 8 characters"),
       }),
     },
@@ -52,7 +54,7 @@ export default function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () 
   }
 
   return (
-    <div className="mx-auto w-full mt-10 max-w-md p-6">
+    <div className="mx-auto mt-10 w-full max-w-md p-6">
       <h1 className="mb-6 text-center text-3xl font-bold">Create Account</h1>
 
       <form
@@ -132,10 +134,17 @@ export default function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () 
         </div>
 
         <form.Subscribe
-          selector={(state) => ({ canSubmit: state.canSubmit, isSubmitting: state.isSubmitting })}
+          selector={(state) => ({
+            canSubmit: state.canSubmit,
+            isSubmitting: state.isSubmitting,
+          })}
         >
           {({ canSubmit, isSubmitting }) => (
-            <Button type="submit" className="w-full" disabled={!canSubmit || isSubmitting}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={!canSubmit || isSubmitting}
+            >
               {isSubmitting ? "Submitting..." : "Sign Up"}
             </Button>
           )}
@@ -144,6 +153,7 @@ export default function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () 
 
       <div className="mt-4 text-center">
         <Button
+          type="button"
           variant="link"
           onClick={onSwitchToSignIn}
           className="text-indigo-600 hover:text-indigo-800"
@@ -153,4 +163,6 @@ export default function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () 
       </div>
     </div>
   );
-}
+};
+
+export default SignUpForm;

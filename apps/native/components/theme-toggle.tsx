@@ -8,8 +8,8 @@ import { useAppTheme } from "@/contexts/app-theme-context";
 
 const StyledIonicons = withUniwind(Ionicons);
 
-export function ThemeToggle() {
-  const { toggleTheme, isLight } = useAppTheme();
+export const ThemeToggle = () => {
+  const { isLight, toggleTheme } = useAppTheme();
 
   return (
     <Pressable
@@ -32,4 +32,4 @@ export function ThemeToggle() {
       )}
     </Pressable>
   );
-}
+};

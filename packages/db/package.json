@@ -24,7 +24,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@doresume/config": "workspace:*",
+    "@doresume/ts-config": "workspace:*",
     "drizzle-kit": "^0.31.10",
     "typescript": "^6.0.3"
   }

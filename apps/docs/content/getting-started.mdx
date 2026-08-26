@@ -1,0 +1,44 @@
+---
+title: Getting started
+description: Install the monorepo and run the doresume docs site locally.
+sidebar:
+  order: 1
+---
+
+doresume is a Bun + Turborepo workspace. The docs app is `apps/docs`.
+
+## Install
+
+From the repository root:
+
+```bash
+bun install
+```
+
+## Run the docs
+
+Start only the docs site (http://localhost:3002):
+
+```bash
+bun run dev:docs
+```
+
+Or start every app:
+
+```bash
+bun run dev
+```
+
+| App       | Command                 | URL                   |
+| --------- | ----------------------- | --------------------- |
+| Docs      | `bun run dev:docs`      | http://localhost:3002 |
+| Marketing | `bun run dev:marketing` | http://localhost:3000 |
+| Web       | `bun run dev:web`       | http://localhost:3001 |
+
+## Build
+
+```bash
+bun run build --filter=docs
+```
+
+Static HTML is written to `apps/docs/dist/`. Preview it with `bun run preview` from `apps/docs`.

@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 
 import { authClient } from "@/lib/auth-client";
 
-export default function UserMenu() {
+const UserMenu = () => {
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
 
@@ -25,14 +25,16 @@ export default function UserMenu() {
   if (!session) {
     return (
       <Link href="/login">
-        <Button variant="outline">Sign In</Button>
+        <Button type="button" variant="outline">
+          Sign In
+        </Button>
       </Link>
     );
   }
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<Button variant="outline" />}>
+      <DropdownMenuTrigger render={<Button type="button" variant="outline" />}>
         {session.user.name}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-card">
@@ -45,6 +47,7 @@ export default function UserMenu() {
             onClick={() => {
               authClient.signOut({
                 fetchOptions: {
+                  // oxlint-disable-next-line promise/prefer-await-to-callbacks
                   onSuccess: () => {
                     router.push("/");
                   },
@@ -58,4 +61,6 @@ export default function UserMenu() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
+};
+
+export default UserMenu;

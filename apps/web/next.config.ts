@@ -1,9 +1,9 @@
-import "@doresume/env/web";
-import type { NextConfig } from "next";
+import { nextConfig } from "@doresume/next-config";
+import { withEve } from "eve/next";
 
-const nextConfig: NextConfig = {
-  typedRoutes: true,
-  reactCompiler: true,
-};
-
-export default nextConfig;
+export default withEve(nextConfig, {
+  agents: {
+    "apply-agent": "../../agents/apply-agent",
+    "crawler-agent": "../../agents/crawler-agent",
+  },
+});

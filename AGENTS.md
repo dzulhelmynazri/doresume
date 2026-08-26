@@ -16,6 +16,16 @@ Oxlint + Oxfmt (the underlying engine) provides robust linting and formatting. M
 
 Write code that is **accessible, performant, type-safe, and maintainable**. Focus on clarity and explicit intent over brevity.
 
+### Do Not Reinvent
+
+Match the nearest existing package. Do not add architecture the task did not ask for.
+
+- Copy neighboring packages (`packages/storage`, `packages/email`, `packages/db`) instead of designing a new shape
+- Use the library the way its docs show — one client, one adapter, no wrapper layer
+- Do not add driver switching, fallbacks, factories, helper functions, or extra env vars unless asked
+- Do not add "dev vs production" branches, retries, or local stand-ins (SMTP, memory, filesystem) unless the existing pattern already has them
+- If the task is "install X", wire the SDK and stop. Do not anticipate future features
+
 ### Type Safety & Explicitness
 
 - Use explicit types for function parameters and return values when they enhance clarity

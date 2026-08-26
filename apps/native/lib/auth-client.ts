@@ -9,16 +9,16 @@ export const authClient = createAuthClient({
   plugins: [
     expoClient({
       scheme: Constants.expoConfig?.scheme as string,
-      storagePrefix: Constants.expoConfig?.scheme as string,
       storage: SecureStore,
+      storagePrefix: Constants.expoConfig?.scheme as string,
     }),
   ],
 });
 
-type PolarLinkResponse = {
+interface PolarLinkResponse {
   url: string;
   redirect: boolean;
-};
+}
 
 type PolarClientResponse<T> = Promise<{
   data: T | null;
@@ -34,7 +34,9 @@ type PolarNativeClient = typeof authClient & {
     returnUrl?: string;
   }) => PolarClientResponse<PolarLinkResponse>;
   customer: {
-    portal: (data?: { redirect?: boolean }) => PolarClientResponse<PolarLinkResponse>;
+    portal: (data?: {
+      redirect?: boolean;
+    }) => PolarClientResponse<PolarLinkResponse>;
   };
 };
 

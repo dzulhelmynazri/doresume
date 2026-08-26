@@ -13,7 +13,9 @@
   "dependencies": {
     "@doresume/auth": "workspace:*",
     "@doresume/db": "workspace:*",
+    "@doresume/email": "workspace:*",
     "@doresume/env": "workspace:*",
+    "@doresume/storage": "workspace:*",
     "@orpc/client": "catalog:",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
@@ -23,7 +25,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@doresume/config": "workspace:*",
+    "@doresume/ts-config": "workspace:*",
     "typescript": "^6.0.3"
   }
 }

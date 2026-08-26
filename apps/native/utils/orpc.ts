@@ -16,7 +16,7 @@ export const queryClient = new QueryClient({
   }),
 });
 
-async function expoFetch(request: Request, init?: RequestInit) {
+const expoFetch = async (request: Request, init?: RequestInit) => {
   const { fetch } = await import("expo/fetch");
 
   return fetch(request.url, {
@@ -26,10 +26,9 @@ async function expoFetch(request: Request, init?: RequestInit) {
     signal: request.signal,
     ...init,
   });
-}
+};
 
 export const link = new RPCLink({
-  url: `${env.EXPO_PUBLIC_SERVER_URL}/api/rpc`,
   fetch(request, init) {
     return expoFetch(request, {
       ...init,
@@ -48,6 +47,7 @@ export const link = new RPCLink({
     }
     return Object.fromEntries(headers);
   },
+  url: `${env.EXPO_PUBLIC_SERVER_URL}/api/rpc`,
 });
 
 export const client: AppRouterClient = createORPCClient(link);

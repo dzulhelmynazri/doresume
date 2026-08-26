@@ -8,6 +8,10 @@ dist
 build
 *.tsbuildinfo
 
+# Blume (docs)
+.blume
+.blume-verify
+
 # Generated files
 apps/web/src/routeTree.gen.ts
 local.db
@@ -47,9 +51,17 @@ lerna-debug.log*
 .alchemy
 .vercel
 
+# eve
+.eve
+.output
+.nitro
+
 # Testing
 coverage
 .nyc_output
+
+# Local object storage (files-sdk fs adapter)
+.uploads
 
 # Misc
 *.tgz

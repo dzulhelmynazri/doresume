@@ -5,8 +5,14 @@ import App from "./App.tsx";
 
 import "./style.css";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+const rootElement = document.querySelector("#root");
+
+if (rootElement === null) {
+  throw new Error("Root element not found");
+}
+
+ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
+  </React.StrictMode>
 );

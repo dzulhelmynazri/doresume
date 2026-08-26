@@ -5,9 +5,10 @@ import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { QueryCache, QueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export function createQueryClient() {
-  return new QueryClient({
+export const createQueryClient = () =>
+  new QueryClient({
     queryCache: new QueryCache({
+      // oxlint-disable-next-line promise/prefer-await-to-callbacks
       onError: (error, query) => {
         toast.error(`Error: ${error.message}`, {
           action: {
@@ -20,26 +21,24 @@ export function createQueryClient() {
       },
     }),
   });
-}
 
 export const queryClient = createQueryClient();
 
 export const link = new RPCLink({
-  url: `${typeof window !== "undefined" ? window.location.origin : "http://localhost:3001"}/api/rpc`,
-  fetch(url, options) {
-    return fetch(url, {
+  fetch: (url, options) =>
+    fetch(url, {
       ...options,
       credentials: "include",
-    });
-  },
+    }),
   headers: async () => {
-    if (typeof window !== "undefined") {
-      return {};
+    if (typeof window === "undefined") {
+      const { headers } = await import("next/headers");
+      return Object.fromEntries(await headers());
     }
 
-    const { headers } = await import("next/headers");
-    return Object.fromEntries(await headers());
+    return {};
   },
+  url: `${typeof window === "undefined" ? "http://localhost:3001" : window.location.origin}/api/rpc`,
 });
 
 export const client: AppRouterClient = createORPCClient(link);

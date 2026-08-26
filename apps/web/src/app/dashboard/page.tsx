@@ -6,7 +6,7 @@ import { authClient } from "@/lib/auth-client";
 
 import Dashboard from "./dashboard";
 
-export default async function DashboardPage() {
+const DashboardPage = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -28,4 +28,6 @@ export default async function DashboardPage() {
       <Dashboard session={session} customerState={customerState} />
     </div>
   );
-}
+};
+
+export default DashboardPage;

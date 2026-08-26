@@ -1,0 +1,16 @@
+{
+  "name": "docs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "blume dev --port 3002",
+    "build": "blume build",
+    "preview": "blume preview --port 3002",
+    "check-types": "blume check",
+    "doctor": "blume doctor"
+  },
+  "dependencies": {
+    "blume": "^1.5.3"
+  }
+}

@@ -1,15 +1,16 @@
-export default async function SuccessPage({
+const SuccessPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{ checkout_id: string }>;
-}) {
-  const params = await searchParams;
-  const checkout_id = params.checkout_id;
+}) => {
+  const { checkout_id } = await searchParams;
 
   return (
     <div className="px-4 py-8">
       <h1>Payment Successful!</h1>
-      {checkout_id && <p>Checkout ID: {checkout_id}</p>}
+      {checkout_id ? <p>Checkout ID: {checkout_id}</p> : null}
     </div>
   );
-}
+};
+
+export default SuccessPage;

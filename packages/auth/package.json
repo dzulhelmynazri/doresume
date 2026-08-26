@@ -21,7 +21,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@doresume/config": "workspace:*",
+    "@doresume/ts-config": "workspace:*",
     "typescript": "^6.0.3"
   }
 }

@@ -10,19 +10,29 @@ import {
   useToast,
 } from "heroui-native";
 import { useRef } from "react";
-import { Text, TextInput, View } from "react-native";
-import z from "zod";
+import { Text, View } from "react-native";
+import type { TextInput } from "react-native";
+import { z } from "zod";
 
 import { authClient } from "@/lib/auth-client";
 import { queryClient } from "@/utils/orpc";
 
 const signInSchema = z.object({
-  email: z.string().trim().min(1, "Email is required").email("Enter a valid email address"),
-  password: z.string().min(1, "Password is required").min(8, "Use at least 8 characters"),
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email is required")
+    .email("Enter a valid email address"),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .min(8, "Use at least 8 characters"),
 });
 
-function getErrorMessage(error: unknown): string | null {
-  if (!error) return null;
+const getErrorMessage = (error: unknown): string | null => {
+  if (!error) {
+    return null;
+  }
 
   if (typeof error === "string") {
     return error;
@@ -46,9 +56,9 @@ function getErrorMessage(error: unknown): string | null {
   }
 
   return null;
-}
+};
 
-function SignIn() {
+const SignIn = () => {
   const passwordInputRef = useRef<TextInput>(null);
   const { toast } = useToast();
 
@@ -57,10 +67,7 @@ function SignIn() {
       email: "",
       password: "",
     },
-    validators: {
-      onSubmit: signInSchema,
-    },
-    onSubmit: async ({ value, formApi }) => {
+    onSubmit: async ({ formApi, value }) => {
       await authClient.signIn.email(
         {
           email: value.email.trim(),
@@ -69,26 +76,29 @@ function SignIn() {
         {
           onError(error) {
             toast.show({
-              variant: "danger",
               label: error.error?.message || "Failed to sign in",
+              variant: "danger",
             });
           },
           onSuccess() {
             formApi.reset();
             toast.show({
-              variant: "success",
               label: "Signed in successfully",
+              variant: "success",
             });
             queryClient.refetchQueries();
           },
-        },
+        }
       );
+    },
+    validators: {
+      onSubmit: signInSchema,
     },
   });
 
   return (
-    <Surface variant="secondary" className="p-4 rounded-lg">
-      <Text className="text-foreground font-medium mb-4">Sign In</Text>
+    <Surface variant="secondary" className="rounded-lg p-4">
+      <Text className="text-foreground mb-4 font-medium">Sign In</Text>
 
       <form.Subscribe
         selector={(state) => ({
@@ -149,7 +159,11 @@ function SignIn() {
                   )}
                 </form.Field>
 
-                <Button onPress={form.handleSubmit} isDisabled={isSubmitting} className="mt-1">
+                <Button
+                  onPress={form.handleSubmit}
+                  isDisabled={isSubmitting}
+                  className="mt-1"
+                >
                   {isSubmitting ? (
                     <Spinner size="sm" color="default" />
                   ) : (
@@ -163,6 +177,6 @@ function SignIn() {
       </form.Subscribe>
     </Surface>
   );
-}
+};
 
 export { SignIn };

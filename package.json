@@ -3,6 +3,7 @@
   "private": true,
   "workspaces": {
     "packages": [
+      "agents/*",
       "apps/*",
       "packages/*"
     ],
@@ -37,6 +38,10 @@
     "check-types": "turbo run check-types",
     "dev:native": "turbo run dev -F native --",
     "dev:web": "turbo run dev -F web --",
+    "dev:marketing": "turbo run dev -F marketing --",
+    "dev:docs": "turbo run dev -F docs --",
+    "dev:apply-agent": "turbo run dev -F apply-agent --",
+    "dev:crawler-agent": "turbo run dev -F crawler-agent --",
     "db:push": "turbo run db:push -F @doresume/db --",
     "db:studio": "turbo run db:studio -F @doresume/db --",
     "db:generate": "turbo run db:generate -F @doresume/db --",
@@ -51,14 +56,17 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@doresume/config": "workspace:*",
+    "@doresume/ts-config": "workspace:*",
     "@types/node": "catalog:",
     "husky": "latest",
     "oxfmt": "latest",
     "oxlint": "latest",
     "turbo": "^2.10.7",
     "typescript": "^6.0.3",
-    "ultracite": "7.9.4"
+    "ultracite": "^7.10.6"
+  },
+  "engines": {
+    "node": "24.x"
   },
   "packageManager": "bun@1.3.14"
 }

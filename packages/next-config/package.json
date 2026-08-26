@@ -1,0 +1,20 @@
+{
+  "name": "@doresume/next-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@doresume/ts-config": "workspace:*",
+    "next": "catalog:",
+    "typescript": "^6.0.3"
+  },
+  "peerDependencies": {
+    "next": "catalog:"
+  }
+}

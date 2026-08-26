@@ -1,6 +1,6 @@
 # doresume
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines Next.js, Self, ORPC, and more.
+A modern TypeScript stack that combines Next.js, Self, ORPC, and more.
 
 ## Features
 
@@ -39,14 +39,21 @@ This project uses PostgreSQL with Drizzle ORM.
 bun run db:push
 ```
 
+## Storage
+
+Object storage lives in `@doresume/storage` and uses [Files SDK](https://files-sdk.dev/) with the [Cloudflare R2 adapter](https://files-sdk.dev/docs/adapters/r2). Set `R2_BUCKET`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, and `R2_SECRET_ACCESS_KEY` in `apps/web/.env`. Access keys are auto-loaded by the adapter.
+
+## Email
+
+Transactional email lives in `@doresume/email` and uses [Email SDK](https://email-sdk.dev/) with the [Resend adapter](https://email-sdk.dev/docs/adapters/resend). Set `RESEND_API_KEY` in `apps/web/.env`.
+
 Then, run the development server:
 
 ```bash
 bun run dev
 ```
 
-Open [http://localhost:3001](http://localhost:3001) in your browser to see the fullstack application.
-Use the Expo Go app to run the mobile application.
+Open [http://localhost:3001](http://localhost:3001) in your browser to see the fullstack application, or [http://localhost:3000](http://localhost:3000) for the marketing site. Use the Expo Go app to run the mobile application.
 
 ## UI Customization
 
@@ -83,14 +90,22 @@ If you want to add app-specific blocks instead of shared primitives, run the sha
 
 ```
 doresume/
+├── agents/
+│   ├── apply-agent/   # Durable AI agent (eve)
+│   └── crawler-agent/ # Durable AI agent (eve)
 ├── apps/
-│   └── web/         # Fullstack application (Next.js)
+│   ├── web/         # Fullstack application (Next.js)
+│   ├── marketing/   # Marketing site (Next.js)
+│   ├── docs/        # Documentation site (Blume)
 │   ├── native/      # Mobile application (React Native, Expo)
+│   └── extension/   # Browser extension (WXT)
 ├── packages/
 │   ├── ui/          # Shared shadcn/ui components and styles
 │   ├── api/         # API layer / business logic
 │   ├── auth/        # Authentication configuration & logic
-│   └── db/          # Database schema & queries
+│   ├── db/          # Database schema & queries
+│   ├── email/       # Transactional email (Email SDK)
+│   └── storage/     # Object storage (Files SDK)
 ```
 
 ## Available Scripts
@@ -98,6 +113,10 @@ doresume/
 - `bun run dev`: Start all applications in development mode
 - `bun run build`: Build all applications
 - `bun run dev:web`: Start only the web application
+- `bun run dev:marketing`: Start only the marketing site
+- `bun run dev:docs`: Start only the documentation site (http://localhost:3002)
+- `bun run dev:apply-agent`: Start the apply-agent (REPL + HTTP)
+- `bun run dev:crawler-agent`: Start the crawler-agent (REPL + HTTP)
 - `bun run check-types`: Check TypeScript types across all apps
 - `bun run dev:native`: Start the React Native/Expo development server
 - `bun run db:push`: Push schema changes to database

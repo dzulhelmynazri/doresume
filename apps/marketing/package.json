@@ -1,0 +1,31 @@
+{
+  "name": "marketing",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "check-types": "tsc --noEmit",
+    "start": "next start --port 3000"
+  },
+  "dependencies": {
+    "@doresume/next-config": "workspace:*",
+    "@doresume/ui": "workspace:*",
+    "@swc/helpers": "^0.5.23",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "lucide-react": "catalog:",
+    "next": "catalog:",
+    "next-themes": "catalog:",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@doresume/ts-config": "workspace:*",
+    "@tailwindcss/postcss": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "^6.0.3"
+  }
+}

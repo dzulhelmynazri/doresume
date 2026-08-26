@@ -12,6 +12,7 @@
     "@doresume/api": "workspace:*",
     "@doresume/auth": "workspace:*",
     "@doresume/env": "workspace:*",
+    "@doresume/next-config": "workspace:*",
     "@doresume/ui": "workspace:*",
     "@orpc/client": "catalog:",
     "@orpc/openapi": "catalog:",
@@ -25,6 +26,7 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
+    "eve": "^0.45.0",
     "lucide-react": "catalog:",
     "next": "catalog:",
     "next-themes": "catalog:",
@@ -34,7 +36,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@doresume/config": "workspace:*",
+    "@doresume/ts-config": "workspace:*",
     "@tailwindcss/postcss": "catalog:",
     "@tanstack/react-query-devtools": "^5.101.4",
     "@types/node": "catalog:",

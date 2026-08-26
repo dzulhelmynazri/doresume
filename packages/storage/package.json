@@ -1,0 +1,24 @@
+{
+  "name": "@doresume/storage",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.700.0",
+    "@aws-sdk/s3-presigned-post": "^3.700.0",
+    "@aws-sdk/s3-request-presigner": "^3.700.0",
+    "@doresume/env": "workspace:*",
+    "files-sdk": "^2.2.5"
+  },
+  "devDependencies": {
+    "@doresume/ts-config": "workspace:*",
+    "typescript": "^6.0.3"
+  }
+}

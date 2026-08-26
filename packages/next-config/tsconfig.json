@@ -1,0 +1,7 @@
+{
+  "extends": "@doresume/ts-config/tsconfig.base.json",
+  "compilerOptions": {
+    "strictNullChecks": true
+  },
+  "include": ["src"]
+}

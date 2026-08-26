@@ -9,27 +9,26 @@ import { nextCookies } from "better-auth/next-js";
 
 import { polarClient } from "./lib/payments";
 
-export function createAuth() {
+export const createAuth = () => {
   const db = createDb();
 
   return betterAuth({
+    baseURL: env.BETTER_AUTH_URL,
     database: drizzleAdapter(db, {
       provider: "pg",
 
-      schema: schema,
+      schema,
     }),
-    trustedOrigins: [env.BETTER_AUTH_URL, "doresume://", "exp://", "http://localhost:8081"],
     emailAndPassword: {
       enabled: true,
     },
-    secret: env.BETTER_AUTH_SECRET,
-    baseURL: env.BETTER_AUTH_URL,
     plugins: [
       polar({
         client: polarClient,
         createCustomerOnSignUp: true,
         use: [
           checkout({
+            authenticatedUsersOnly: true,
             products: [
               {
                 productId: "your-product-id",
@@ -37,7 +36,6 @@ export function createAuth() {
               },
             ],
             successUrl: env.POLAR_SUCCESS_URL,
-            authenticatedUsersOnly: true,
           }),
           portal(),
         ],
@@ -45,7 +43,14 @@ export function createAuth() {
       nextCookies(),
       expo(),
     ],
+    secret: env.BETTER_AUTH_SECRET,
+    trustedOrigins: [
+      env.BETTER_AUTH_URL,
+      "doresume://",
+      "exp://",
+      "http://localhost:8081",
+    ],
   });
-}
+};
 
 export const auth = createAuth();
