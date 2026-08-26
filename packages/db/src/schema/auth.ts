@@ -12,6 +12,7 @@ import {
 
 export const user = pgTable("user", {
   address: text("address"),
+  applicationPassword: text("application_password"),
   checklist: jsonb("checklist").$type<Checklist>(),
   citizenship: jsonb("citizenship").$type<WorkEligibility["citizenship"]>(),
 

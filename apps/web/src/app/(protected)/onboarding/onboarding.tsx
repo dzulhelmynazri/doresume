@@ -1,6 +1,6 @@
 "use client";
 
-import type { Checklist } from "@doresume/contracts";
+import type { ApplicationPassword } from "@doresume/contracts";
 import {
   Questionnaire,
   QuestionnaireActions,
@@ -29,6 +29,10 @@ import { LocationFields, useLocationForm } from "./2-location";
 import { ContactFields, useContactForm } from "./3-contact";
 import { WorkEligibilityFields, useWorkEligibilityForm } from "./4-eligibility";
 import { ChecklistFields, useChecklistForm } from "./5-checklist";
+import {
+  ApplicationPasswordFields,
+  useApplicationPasswordForm,
+} from "./6-application-password";
 
 const ONBOARDING_STEPS = [
   "resume",
@@ -36,6 +40,7 @@ const ONBOARDING_STEPS = [
   "contact",
   "eligibility",
   "checklist",
+  "password",
 ] as const;
 const ONBOARDING_ITEMS = [
   { name: "resume", required: true },
@@ -43,6 +48,7 @@ const ONBOARDING_ITEMS = [
   { name: "contact", required: false },
   { name: "eligibility", required: true },
   { name: "checklist", required: true },
+  { name: "password", required: true },
 ] as const;
 
 const onboardingStepParser = parseAsStringLiteral(ONBOARDING_STEPS)
@@ -75,7 +81,10 @@ const Onboarding = ({
   const eligibilityForm = useWorkEligibilityForm(async (value) => {
     await client.saveWorkEligibility(value);
   });
-  const finishOnboarding = async (checklist: Checklist) => {
+  const checklistForm = useChecklistForm(async (value) => {
+    await client.saveChecklist(value);
+  });
+  const finishOnboarding = async (applicationPassword: ApplicationPassword) => {
     setIsFinishing(true);
 
     try {
@@ -106,14 +115,23 @@ const Onboarding = ({
         return;
       }
 
-      await client.saveChecklist(checklist);
+      await checklistForm.handleSubmit();
+
+      if (!checklistForm.state.isValid) {
+        toast.error("Finish the checklist to continue.");
+        void setStep("checklist");
+        setIsFinishing(false);
+        return;
+      }
+
+      await client.saveApplicationPassword(applicationPassword);
       router.push("/dashboard");
     } catch {
       toast.error("Could not save your details.");
       setIsFinishing(false);
     }
   };
-  const checklistForm = useChecklistForm(finishOnboarding);
+  const passwordForm = useApplicationPasswordForm(finishOnboarding);
 
   const { isUploading } = files;
   const canContinueResume = uploaded !== null && !isUploading;
@@ -136,7 +154,7 @@ const Onboarding = ({
           return;
         }
 
-        void checklistForm.handleSubmit();
+        void passwordForm.handleSubmit();
       }}
     >
       <QuestionnaireProgress />
@@ -200,12 +218,20 @@ const Onboarding = ({
         <ChecklistFields form={checklistForm} />
         <QuestionnaireError />
       </QuestionnaireItem>
+      <QuestionnaireItem name="password" required>
+        <QuestionnaireTitle>Application password</QuestionnaireTitle>
+        <QuestionnaireDescription>
+          Set a password for sites that ask
+        </QuestionnaireDescription>
+        <ApplicationPasswordFields form={passwordForm} />
+        <QuestionnaireError />
+      </QuestionnaireItem>
       <QuestionnaireActions>
         <QuestionnairePrevious />
         <QuestionnaireNext disabled={!canContinueResume}>
           Continue
         </QuestionnaireNext>
-        <checklistForm.Subscribe selector={(state) => state.isSubmitting}>
+        <passwordForm.Subscribe selector={(state) => state.isSubmitting}>
           {(isSubmitting) => {
             const isBusy = isFinishing || isSubmitting;
 
@@ -216,7 +242,7 @@ const Onboarding = ({
               </QuestionnaireSubmit>
             );
           }}
-        </checklistForm.Subscribe>
+        </passwordForm.Subscribe>
       </QuestionnaireActions>
     </Questionnaire>
   );
