@@ -1,15 +1,18 @@
+import type { WorkEligibility } from "@doresume/contracts";
 import { relations } from "drizzle-orm";
 import {
+  boolean,
+  index,
+  jsonb,
   pgTable,
   text,
   timestamp,
-  boolean,
-  index,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   address: text("address"),
+  citizenship: jsonb("citizenship").$type<WorkEligibility["citizenship"]>(),
   city: text("city"),
   country: text("country"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -26,6 +29,8 @@ export const user = pgTable("user", {
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
+  workCountries:
+    jsonb("work_countries").$type<WorkEligibility["workCountries"]>(),
   zip: text("zip"),
 });
 

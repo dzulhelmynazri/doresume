@@ -1,10 +1,10 @@
 import { auth } from "@doresume/auth";
-import { userHasLocation } from "@doresume/db/user-location";
 import { Spinner } from "@doresume/ui/components/spinner";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
+import { userIsOnboarded } from "@/lib/onboarding";
 import { getUserResume } from "@/lib/resume";
 
 import Onboarding from "./onboarding";
@@ -18,12 +18,12 @@ const OnboardingPageContent = async () => {
     redirect("/auth");
   }
 
-  const [resume, hasLocation] = await Promise.all([
+  const [resume, isOnboarded] = await Promise.all([
     getUserResume(session.user.id),
-    userHasLocation(session.user.id),
+    userIsOnboarded(session.user.id),
   ]);
 
-  if (resume && hasLocation) {
+  if (isOnboarded) {
     redirect("/dashboard");
   }
 
@@ -31,10 +31,12 @@ const OnboardingPageContent = async () => {
 };
 
 const OnboardingPage = () => (
-  <div className="flex h-svh items-center justify-center p-6">
-    <Suspense fallback={<Spinner />}>
-      <OnboardingPageContent />
-    </Suspense>
+  <div className="row-span-full min-h-0 overflow-y-auto">
+    <div className="flex min-h-full flex-col items-center justify-center px-6 py-12">
+      <Suspense fallback={<Spinner />}>
+        <OnboardingPageContent />
+      </Suspense>
+    </div>
   </div>
 );
 

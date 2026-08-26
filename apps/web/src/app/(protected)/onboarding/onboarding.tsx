@@ -1,6 +1,6 @@
 "use client";
 
-import type { Contact } from "@doresume/contracts";
+import type { WorkEligibility } from "@doresume/contracts";
 import {
   Questionnaire,
   QuestionnaireActions,
@@ -27,12 +27,19 @@ import { ResumeDropzone } from "./1-resume";
 import type { UploadedResume } from "./1-resume";
 import { LocationFields, useLocationForm } from "./2-location";
 import { ContactFields, useContactForm } from "./3-contact";
+import { WorkEligibilityFields, useWorkEligibilityForm } from "./4-eligibility";
 
-const ONBOARDING_STEPS = ["resume", "location", "contact"] as const;
+const ONBOARDING_STEPS = [
+  "resume",
+  "location",
+  "contact",
+  "eligibility",
+] as const;
 const ONBOARDING_ITEMS = [
   { name: "resume", required: true },
   { name: "location", required: true },
   { name: "contact", required: false },
+  { name: "eligibility", required: true },
 ] as const;
 
 const onboardingStepParser = parseAsStringLiteral(ONBOARDING_STEPS)
@@ -59,7 +66,10 @@ const Onboarding = ({
   const locationForm = useLocationForm(async (value) => {
     await client.saveLocation(value);
   });
-  const finishOnboarding = async (contact: Contact) => {
+  const contactForm = useContactForm(async (value) => {
+    await client.saveContact(value);
+  });
+  const finishOnboarding = async (eligibility: WorkEligibility) => {
     setIsFinishing(true);
 
     try {
@@ -72,14 +82,23 @@ const Onboarding = ({
         return;
       }
 
-      await client.saveContact(contact);
+      await contactForm.handleSubmit();
+
+      if (!contactForm.state.isValid) {
+        toast.error("Check your contact details.");
+        void setStep("contact");
+        setIsFinishing(false);
+        return;
+      }
+
+      await client.saveWorkEligibility(eligibility);
       router.push("/dashboard");
     } catch {
       toast.error("Could not save your details.");
       setIsFinishing(false);
     }
   };
-  const contactForm = useContactForm(finishOnboarding);
+  const eligibilityForm = useWorkEligibilityForm(finishOnboarding);
 
   const { isUploading } = files;
   const canContinueResume = uploaded !== null && !isUploading;
@@ -102,7 +121,7 @@ const Onboarding = ({
           return;
         }
 
-        void contactForm.handleSubmit();
+        void eligibilityForm.handleSubmit();
       }}
     >
       <QuestionnaireProgress />
@@ -147,12 +166,22 @@ const Onboarding = ({
         <ContactFields form={contactForm} />
         <QuestionnaireError />
       </QuestionnaireItem>
+      <QuestionnaireItem name="eligibility" required>
+        <QuestionnaireTitle>Where can you work?</QuestionnaireTitle>
+        <QuestionnaireDescription>
+          Add each country you&apos;d take a job in, then answer two quick
+          questions for each. We use this to filter out jobs you can&apos;t
+          apply to.
+        </QuestionnaireDescription>
+        <WorkEligibilityFields form={eligibilityForm} />
+        <QuestionnaireError />
+      </QuestionnaireItem>
       <QuestionnaireActions>
         <QuestionnairePrevious />
         <QuestionnaireNext disabled={!canContinueResume}>
           Continue
         </QuestionnaireNext>
-        <contactForm.Subscribe selector={(state) => state.isSubmitting}>
+        <eligibilityForm.Subscribe selector={(state) => state.isSubmitting}>
           {(isSubmitting) => {
             const isBusy = isFinishing || isSubmitting;
 
@@ -163,7 +192,7 @@ const Onboarding = ({
               </QuestionnaireSubmit>
             );
           }}
-        </contactForm.Subscribe>
+        </eligibilityForm.Subscribe>
       </QuestionnaireActions>
     </Questionnaire>
   );
