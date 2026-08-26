@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import "../index.css";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 
-import Header from "@/components/header";
 import Providers from "@/components/providers";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -36,10 +35,7 @@ const RootLayout = ({
   >
     <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
       <Providers>
-        <div className="grid h-svh grid-rows-[auto_1fr]">
-          <Header />
-          {children}
-        </div>
+        <div className="grid h-svh grid-rows-[auto_1fr]">{children}</div>
       </Providers>
     </body>
   </html>
