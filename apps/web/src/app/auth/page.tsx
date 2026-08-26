@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import Auth from "@/components/auth";
+import { userIsOnboarded } from "@/lib/onboarding";
 
 const AuthPageContent = async () => {
   const session = await auth.api.getSession({
@@ -12,7 +13,11 @@ const AuthPageContent = async () => {
   });
 
   if (session?.user) {
-    redirect("/dashboard");
+    if (await userIsOnboarded(session.user.id)) {
+      redirect("/dashboard");
+    }
+
+    redirect("/onboarding");
   }
 
   return <Auth />;

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import { authClient } from "@/lib/auth-client";
+import { userIsOnboarded } from "@/lib/onboarding";
 
 import Dashboard from "./dashboard";
 
@@ -16,6 +17,10 @@ const DashboardPageContent = async () => {
 
   if (!session?.user) {
     redirect("/auth");
+  }
+
+  if (!(await userIsOnboarded(session.user.id))) {
+    redirect("/onboarding");
   }
 
   const { data: customerState } = await authClient.customer.state({

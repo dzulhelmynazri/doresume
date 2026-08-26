@@ -1,9 +1,9 @@
 import { cn } from "@doresume/ui/lib/utils";
 import type { Metadata } from "next";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import "../index.css";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
-
 import Providers from "@/components/providers";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -34,9 +34,11 @@ const RootLayout = ({
     className={cn("font-sans", inter.variable)}
   >
     <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-      <Providers>
-        <div className="grid h-svh grid-rows-[auto_1fr]">{children}</div>
-      </Providers>
+      <NuqsAdapter>
+        <Providers>
+          <div className="grid h-svh grid-rows-[auto_1fr]">{children}</div>
+        </Providers>
+      </NuqsAdapter>
     </body>
   </html>
 );

@@ -9,17 +9,24 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
+  address: text("address"),
+  city: text("city"),
+  country: text("country"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   id: text("id").primaryKey(),
   image: text("image"),
   lastLoginMethod: text("last_login_method"),
+  linkedin: text("linkedin"),
   name: text("name").notNull(),
+  phone: text("phone"),
+  state: text("state"),
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
+  zip: text("zip"),
 });
 
 export const session = pgTable(

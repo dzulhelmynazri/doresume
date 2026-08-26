@@ -41,7 +41,7 @@ bun run db:push
 
 ## Storage
 
-Object storage lives in `@doresume/storage` and uses [Files SDK](https://files-sdk.dev/) with the [Cloudflare R2 adapter](https://files-sdk.dev/docs/adapters/r2). Set `R2_BUCKET`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, and `R2_SECRET_ACCESS_KEY` in `apps/web/.env`. Access keys are auto-loaded by the adapter.
+Object storage lives in `@doresume/storage` and uses [Files SDK](https://files-sdk.dev/) with the [Amazon S3 adapter](https://files-sdk.dev/docs/adapters/s3). Set `AWS_S3_BUCKET`, `AWS_REGION`, `AWS_ENDPOINT_URL_S3`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` in `apps/web/.env`. Access keys are auto-loaded by the adapter.
 
 ## Email
 

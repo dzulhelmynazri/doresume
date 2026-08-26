@@ -22,7 +22,7 @@ const Auth = () => {
     setPendingProvider(provider);
 
     const { error: signInError } = await authClient.signIn.social({
-      callbackURL: "/dashboard",
+      callbackURL: "/onboarding",
       errorCallbackURL: "/auth",
       provider,
     });

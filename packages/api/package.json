@@ -12,6 +12,7 @@
   "scripts": {},
   "dependencies": {
     "@doresume/auth": "workspace:*",
+    "@doresume/contracts": "workspace:*",
     "@doresume/db": "workspace:*",
     "@doresume/email": "workspace:*",
     "@doresume/env": "workspace:*",

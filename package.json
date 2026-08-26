@@ -53,6 +53,7 @@
   "dependencies": {
     "@doresume/env": "workspace:*",
     "dotenv": "catalog:",
+    "files-sdk": "^2.2.5",
     "zod": "catalog:"
   },
   "devDependencies": {

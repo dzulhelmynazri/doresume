@@ -1,11 +1,13 @@
 import { env } from "@doresume/env/server";
 import { Files } from "files-sdk";
-import { r2 } from "files-sdk/r2";
+import { s3 } from "files-sdk/s3";
 
 export const storage = new Files({
-  adapter: r2({
-    accountId: env.R2_ACCOUNT_ID,
-    bucket: env.R2_BUCKET,
+  adapter: s3({
+    bucket: env.AWS_S3_BUCKET,
+    endpoint: env.AWS_ENDPOINT_URL_S3,
+    forcePathStyle: true,
+    region: env.AWS_REGION,
   }),
 });
 
