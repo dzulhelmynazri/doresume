@@ -24,7 +24,7 @@ const UserMenu = () => {
 
   if (!session) {
     return (
-      <Link href="/login">
+      <Link href="/auth">
         <Button type="button" variant="outline">
           Sign In
         </Button>

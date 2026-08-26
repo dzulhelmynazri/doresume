@@ -6,6 +6,7 @@ import { polar, checkout, portal } from "@polar-sh/better-auth";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
+import { lastLoginMethod } from "better-auth/plugins";
 
 import { polarClient } from "./lib/payments";
 
@@ -40,10 +41,27 @@ export const createAuth = () => {
           portal(),
         ],
       }),
-      nextCookies(),
       expo(),
+      lastLoginMethod({
+        storeInDatabase: true,
+      }),
+      nextCookies(),
     ],
     secret: env.BETTER_AUTH_SECRET,
+    socialProviders: {
+      google: {
+        clientId: env.GOOGLE_CLIENT_ID,
+        clientSecret: env.GOOGLE_CLIENT_SECRET,
+        prompt: "select_account",
+      },
+      linkedin: {
+        clientId: env.LINKEDIN_CLIENT_ID,
+        clientSecret: env.LINKEDIN_CLIENT_SECRET,
+        mapProfileToUser: (profile) => ({
+          email: profile.email ?? `${profile.sub}@linkedin.placeholder.invalid`,
+        }),
+      },
+    },
     trustedOrigins: [
       env.BETTER_AUTH_URL,
       "doresume://",

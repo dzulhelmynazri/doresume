@@ -14,6 +14,7 @@ export const user = pgTable("user", {
   emailVerified: boolean("email_verified").default(false).notNull(),
   id: text("id").primaryKey(),
   image: text("image"),
+  lastLoginMethod: text("last_login_method"),
   name: text("name").notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
