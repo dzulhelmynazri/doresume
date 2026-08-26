@@ -1,0 +1,29 @@
+{
+  "name": "@doresume/api",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@doresume/auth": "workspace:*",
+    "@doresume/db": "workspace:*",
+    "@doresume/env": "workspace:*",
+    "@orpc/client": "catalog:",
+    "@orpc/openapi": "catalog:",
+    "@orpc/server": "catalog:",
+    "@orpc/zod": "catalog:",
+    "dotenv": "catalog:",
+    "next": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@doresume/config": "workspace:*",
+    "typescript": "^6.0.3"
+  }
+}
