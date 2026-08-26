@@ -1,5 +1,6 @@
 import type { RouterClient } from "@orpc/server";
 
+import { saveChecklist } from "./checklist";
 import { saveContact } from "./contact";
 import { saveWorkEligibility } from "./eligibility";
 import { healthCheck } from "./health";
@@ -9,6 +10,7 @@ import { privateData } from "./private-data";
 export const appRouter = {
   healthCheck,
   privateData,
+  saveChecklist,
   saveContact,
   saveLocation,
   saveWorkEligibility,

@@ -1,4 +1,17 @@
+export {
+  DISABILITY_STATUSES,
+  GENDERS,
+  RACES,
+  VETERAN_STATUSES,
+  checklistSchema,
+  type Checklist,
+  type DisabilityStatus,
+  type Gender,
+  type RaceEthnicity,
+  type VeteranStatus,
+} from "./checklist";
 export { contactSchema, type Contact } from "./contact";
+
 export {
   AUTHORIZATION_BASES,
   AUTHORIZATION_STATUSES,

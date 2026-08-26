@@ -1,4 +1,4 @@
-import type { WorkEligibility } from "@doresume/contracts";
+import type { Checklist, WorkEligibility } from "@doresume/contracts";
 import { relations } from "drizzle-orm";
 import {
   boolean,
@@ -12,7 +12,9 @@ import {
 
 export const user = pgTable("user", {
   address: text("address"),
+  checklist: jsonb("checklist").$type<Checklist>(),
   citizenship: jsonb("citizenship").$type<WorkEligibility["citizenship"]>(),
+
   city: text("city"),
   country: text("country"),
   createdAt: timestamp("created_at").defaultNow().notNull(),

@@ -1,6 +1,6 @@
 "use client";
 
-import type { WorkEligibility } from "@doresume/contracts";
+import type { Checklist } from "@doresume/contracts";
 import {
   Questionnaire,
   QuestionnaireActions,
@@ -28,18 +28,21 @@ import type { UploadedResume } from "./1-resume";
 import { LocationFields, useLocationForm } from "./2-location";
 import { ContactFields, useContactForm } from "./3-contact";
 import { WorkEligibilityFields, useWorkEligibilityForm } from "./4-eligibility";
+import { ChecklistFields, useChecklistForm } from "./5-checklist";
 
 const ONBOARDING_STEPS = [
   "resume",
   "location",
   "contact",
   "eligibility",
+  "checklist",
 ] as const;
 const ONBOARDING_ITEMS = [
   { name: "resume", required: true },
   { name: "location", required: true },
   { name: "contact", required: false },
   { name: "eligibility", required: true },
+  { name: "checklist", required: true },
 ] as const;
 
 const onboardingStepParser = parseAsStringLiteral(ONBOARDING_STEPS)
@@ -69,7 +72,10 @@ const Onboarding = ({
   const contactForm = useContactForm(async (value) => {
     await client.saveContact(value);
   });
-  const finishOnboarding = async (eligibility: WorkEligibility) => {
+  const eligibilityForm = useWorkEligibilityForm(async (value) => {
+    await client.saveWorkEligibility(value);
+  });
+  const finishOnboarding = async (checklist: Checklist) => {
     setIsFinishing(true);
 
     try {
@@ -91,14 +97,23 @@ const Onboarding = ({
         return;
       }
 
-      await client.saveWorkEligibility(eligibility);
+      await eligibilityForm.handleSubmit();
+
+      if (!eligibilityForm.state.isValid) {
+        toast.error("Add where you can work.");
+        void setStep("eligibility");
+        setIsFinishing(false);
+        return;
+      }
+
+      await client.saveChecklist(checklist);
       router.push("/dashboard");
     } catch {
       toast.error("Could not save your details.");
       setIsFinishing(false);
     }
   };
-  const eligibilityForm = useWorkEligibilityForm(finishOnboarding);
+  const checklistForm = useChecklistForm(finishOnboarding);
 
   const { isUploading } = files;
   const canContinueResume = uploaded !== null && !isUploading;
@@ -121,7 +136,7 @@ const Onboarding = ({
           return;
         }
 
-        void eligibilityForm.handleSubmit();
+        void checklistForm.handleSubmit();
       }}
     >
       <QuestionnaireProgress />
@@ -176,12 +191,21 @@ const Onboarding = ({
         <WorkEligibilityFields form={eligibilityForm} />
         <QuestionnaireError />
       </QuestionnaireItem>
+      <QuestionnaireItem name="checklist" required>
+        <QuestionnaireTitle>Quick checklist</QuestionnaireTitle>
+        <QuestionnaireDescription>
+          A few last questions. Tap through. Defaults work for most people. Only
+          change what applies.
+        </QuestionnaireDescription>
+        <ChecklistFields form={checklistForm} />
+        <QuestionnaireError />
+      </QuestionnaireItem>
       <QuestionnaireActions>
         <QuestionnairePrevious />
         <QuestionnaireNext disabled={!canContinueResume}>
           Continue
         </QuestionnaireNext>
-        <eligibilityForm.Subscribe selector={(state) => state.isSubmitting}>
+        <checklistForm.Subscribe selector={(state) => state.isSubmitting}>
           {(isSubmitting) => {
             const isBusy = isFinishing || isSubmitting;
 
@@ -192,7 +216,7 @@ const Onboarding = ({
               </QuestionnaireSubmit>
             );
           }}
-        </eligibilityForm.Subscribe>
+        </checklistForm.Subscribe>
       </QuestionnaireActions>
     </Questionnaire>
   );
