@@ -1,6 +1,6 @@
 "use client";
 
-import type { ApplicationPassword } from "@doresume/contracts";
+import type { ApplicationSettings } from "@doresume/contracts";
 import {
   Questionnaire,
   QuestionnaireActions,
@@ -33,6 +33,10 @@ import {
   ApplicationPasswordFields,
   useApplicationPasswordForm,
 } from "./6-application-password";
+import {
+  ApplicationSettingsFields,
+  useApplicationSettingsForm,
+} from "./7-application-settings";
 
 const ONBOARDING_STEPS = [
   "resume",
@@ -41,6 +45,7 @@ const ONBOARDING_STEPS = [
   "eligibility",
   "checklist",
   "password",
+  "settings",
 ] as const;
 const ONBOARDING_ITEMS = [
   { name: "resume", required: true },
@@ -49,6 +54,7 @@ const ONBOARDING_ITEMS = [
   { name: "eligibility", required: true },
   { name: "checklist", required: true },
   { name: "password", required: true },
+  { name: "settings", required: true },
 ] as const;
 
 const onboardingStepParser = parseAsStringLiteral(ONBOARDING_STEPS)
@@ -84,7 +90,10 @@ const Onboarding = ({
   const checklistForm = useChecklistForm(async (value) => {
     await client.saveChecklist(value);
   });
-  const finishOnboarding = async (applicationPassword: ApplicationPassword) => {
+  const passwordForm = useApplicationPasswordForm(async (value) => {
+    await client.saveApplicationPassword(value);
+  });
+  const finishOnboarding = async (applicationSettings: ApplicationSettings) => {
     setIsFinishing(true);
 
     try {
@@ -124,14 +133,23 @@ const Onboarding = ({
         return;
       }
 
-      await client.saveApplicationPassword(applicationPassword);
+      await passwordForm.handleSubmit();
+
+      if (!passwordForm.state.isValid) {
+        toast.error("Set a password for application sites.");
+        void setStep("password");
+        setIsFinishing(false);
+        return;
+      }
+
+      await client.saveApplicationSettings(applicationSettings);
       router.push("/dashboard");
     } catch {
       toast.error("Could not save your details.");
       setIsFinishing(false);
     }
   };
-  const passwordForm = useApplicationPasswordForm(finishOnboarding);
+  const settingsForm = useApplicationSettingsForm(finishOnboarding);
 
   const { isUploading } = files;
   const canContinueResume = uploaded !== null && !isUploading;
@@ -154,7 +172,7 @@ const Onboarding = ({
           return;
         }
 
-        void passwordForm.handleSubmit();
+        void settingsForm.handleSubmit();
       }}
     >
       <QuestionnaireProgress />
@@ -226,12 +244,20 @@ const Onboarding = ({
         <ApplicationPasswordFields form={passwordForm} />
         <QuestionnaireError />
       </QuestionnaireItem>
+      <QuestionnaireItem name="settings" required>
+        <QuestionnaireTitle>How should we apply?</QuestionnaireTitle>
+        <QuestionnaireDescription>
+          You can change these anytime from settings.
+        </QuestionnaireDescription>
+        <ApplicationSettingsFields form={settingsForm} />
+        <QuestionnaireError />
+      </QuestionnaireItem>
       <QuestionnaireActions>
         <QuestionnairePrevious />
         <QuestionnaireNext disabled={!canContinueResume}>
           Continue
         </QuestionnaireNext>
-        <passwordForm.Subscribe selector={(state) => state.isSubmitting}>
+        <settingsForm.Subscribe selector={(state) => state.isSubmitting}>
           {(isSubmitting) => {
             const isBusy = isFinishing || isSubmitting;
 
@@ -242,7 +268,7 @@ const Onboarding = ({
               </QuestionnaireSubmit>
             );
           }}
-        </passwordForm.Subscribe>
+        </settingsForm.Subscribe>
       </QuestionnaireActions>
     </Questionnaire>
   );

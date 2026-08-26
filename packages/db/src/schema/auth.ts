@@ -1,4 +1,8 @@
-import type { Checklist, WorkEligibility } from "@doresume/contracts";
+import type {
+  ApplicationSettings,
+  Checklist,
+  WorkEligibility,
+} from "@doresume/contracts";
 import { relations } from "drizzle-orm";
 import {
   boolean,
@@ -13,6 +17,9 @@ import {
 export const user = pgTable("user", {
   address: text("address"),
   applicationPassword: text("application_password"),
+  applicationSettings: jsonb(
+    "application_settings"
+  ).$type<ApplicationSettings>(),
   checklist: jsonb("checklist").$type<Checklist>(),
   citizenship: jsonb("citizenship").$type<WorkEligibility["citizenship"]>(),
 

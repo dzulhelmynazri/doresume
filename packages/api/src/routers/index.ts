@@ -1,6 +1,7 @@
 import type { RouterClient } from "@orpc/server";
 
 import { saveApplicationPassword } from "./application-password";
+import { saveApplicationSettings } from "./application-settings";
 import { saveChecklist } from "./checklist";
 import { saveContact } from "./contact";
 import { saveWorkEligibility } from "./eligibility";
@@ -12,6 +13,7 @@ export const appRouter = {
   healthCheck,
   privateData,
   saveApplicationPassword,
+  saveApplicationSettings,
   saveChecklist,
   saveContact,
   saveLocation,

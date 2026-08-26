@@ -4,6 +4,12 @@ export {
   type ApplicationPassword,
 } from "./application-password";
 export {
+  RESUME_OPTIMIZATION_MODES,
+  applicationSettingsSchema,
+  type ApplicationSettings,
+  type ResumeOptimization,
+} from "./application-settings";
+export {
   DISABILITY_STATUSES,
   GENDERS,
   RACES,
