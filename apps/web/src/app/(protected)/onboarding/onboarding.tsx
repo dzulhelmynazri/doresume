@@ -39,15 +39,16 @@ import {
   WorkArrangementFields,
   useWorkArrangementForm,
 } from "./9-work-arrangement";
-import { ChecklistFields, useChecklistForm } from "./10-checklist";
+import { MinimumSalaryFields, useMinimumSalaryForm } from "./10-minimum-salary";
+import { ChecklistFields, useChecklistForm } from "./11-checklist";
 import {
   ApplicationPasswordFields,
   useApplicationPasswordForm,
-} from "./11-application-password";
+} from "./12-application-password";
 import {
   ApplicationSettingsFields,
   useApplicationSettingsForm,
-} from "./12-application-settings";
+} from "./13-application-settings";
 
 const ONBOARDING_STEPS = [
   "resume",
@@ -59,6 +60,7 @@ const ONBOARDING_STEPS = [
   "workType",
   "education",
   "workArrangement",
+  "minimumSalary",
   "checklist",
   "password",
   "settings",
@@ -73,6 +75,7 @@ const ONBOARDING_ITEMS = [
   { name: "workType", required: true },
   { name: "education", required: true },
   { name: "workArrangement", required: true },
+  { name: "minimumSalary", required: true },
   { name: "checklist", required: true },
   { name: "password", required: true },
   { name: "settings", required: true },
@@ -125,6 +128,9 @@ const Onboarding = ({
   });
   const workArrangementForm = useWorkArrangementForm(async (value) => {
     await client.saveWorkArrangement(value);
+  });
+  const minimumSalaryForm = useMinimumSalaryForm(async (value) => {
+    await client.saveMinimumSalary(value);
   });
   const passwordForm = useApplicationPasswordForm(async (value) => {
     await client.saveApplicationPassword(value);
@@ -201,6 +207,15 @@ const Onboarding = ({
       if (!workArrangementForm.state.isValid) {
         toast.error("Choose how you'd like to work.");
         void setStep("workArrangement");
+        setIsFinishing(false);
+        return;
+      }
+
+      await minimumSalaryForm.handleSubmit();
+
+      if (!minimumSalaryForm.state.isValid) {
+        toast.error("Enter your desired minimum salary.");
+        void setStep("minimumSalary");
         setIsFinishing(false);
         return;
       }
@@ -312,9 +327,6 @@ const Onboarding = ({
         <QuestionnaireTitle>
           What industries are you interested in?
         </QuestionnaireTitle>
-        <QuestionnaireDescription>
-          Select every industry you&apos;d consider, or stay open to all.
-        </QuestionnaireDescription>
         <IndustryFields form={industriesForm} />
         <QuestionnaireError />
       </QuestionnaireItem>
@@ -342,18 +354,19 @@ const Onboarding = ({
         <QuestionnaireTitle>
           What&apos;s your highest education level?
         </QuestionnaireTitle>
-        <QuestionnaireDescription>
-          Pick the highest level you&apos;ve completed.
-        </QuestionnaireDescription>
         <EducationLevelFields form={educationLevelForm} />
         <QuestionnaireError />
       </QuestionnaireItem>
       <QuestionnaireItem name="workArrangement" required>
         <QuestionnaireTitle>How would you like to work?</QuestionnaireTitle>
-        <QuestionnaireDescription>
-          This shapes which roles we prioritize for you.
-        </QuestionnaireDescription>
         <WorkArrangementFields form={workArrangementForm} />
+        <QuestionnaireError />
+      </QuestionnaireItem>
+      <QuestionnaireItem name="minimumSalary" required>
+        <QuestionnaireTitle>
+          What&apos;s your desired minimum salary?
+        </QuestionnaireTitle>
+        <MinimumSalaryFields form={minimumSalaryForm} />
         <QuestionnaireError />
       </QuestionnaireItem>
       <QuestionnaireItem name="checklist" required>

@@ -6,6 +6,7 @@ import { userHasWorkEligibility } from "@doresume/db/user-eligibility";
 import { userHasExperienceLevel } from "@doresume/db/user-experience-level";
 import { userHasIndustries } from "@doresume/db/user-industries";
 import { userHasLocation } from "@doresume/db/user-location";
+import { userHasMinimumSalary } from "@doresume/db/user-minimum-salary";
 import { userHasWorkArrangement } from "@doresume/db/user-work-arrangement";
 import { userHasWorkType } from "@doresume/db/user-work-type";
 
@@ -22,6 +23,7 @@ export const userIsOnboarded = async (userId: string) => {
     hasWorkType,
     hasEducationLevel,
     hasWorkArrangement,
+    hasMinimumSalary,
     hasApplicationPassword,
     hasApplicationSettings,
   ] = await Promise.all([
@@ -34,6 +36,7 @@ export const userIsOnboarded = async (userId: string) => {
     userHasWorkType(userId),
     userHasEducationLevel(userId),
     userHasWorkArrangement(userId),
+    userHasMinimumSalary(userId),
     userHasApplicationPassword(userId),
     userHasApplicationSettings(userId),
   ]);
@@ -48,6 +51,7 @@ export const userIsOnboarded = async (userId: string) => {
     hasWorkType &&
     hasEducationLevel &&
     hasWorkArrangement &&
+    hasMinimumSalary &&
     hasApplicationPassword &&
     hasApplicationSettings
   );

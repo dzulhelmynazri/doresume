@@ -10,6 +10,7 @@ import { saveExperienceLevel } from "./experience-level";
 import { healthCheck } from "./health";
 import { saveIndustries } from "./industries";
 import { saveLocation } from "./location";
+import { saveMinimumSalary } from "./minimum-salary";
 import { privateData } from "./private-data";
 import { saveWorkArrangement } from "./work-arrangement";
 import { saveWorkType } from "./work-type";
@@ -25,6 +26,7 @@ export const appRouter = {
   saveExperienceLevel,
   saveIndustries,
   saveLocation,
+  saveMinimumSalary,
   saveWorkArrangement,
   saveWorkEligibility,
   saveWorkType,
