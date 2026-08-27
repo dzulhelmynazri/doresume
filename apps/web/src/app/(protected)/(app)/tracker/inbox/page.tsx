@@ -1,7 +1,5 @@
-const TrackerInboxPage = () => (
-  <div>
-    <h1>Inbox</h1>
-  </div>
-);
+import { Inbox } from "@/components/tracker/inbox";
+
+const TrackerInboxPage = () => <Inbox />;
 
 export default TrackerInboxPage;

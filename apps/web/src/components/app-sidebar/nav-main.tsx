@@ -8,7 +8,6 @@ import {
 import {
   SidebarGroup,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
@@ -18,6 +17,7 @@ import {
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import type { ReactNode } from "react";
 
 export interface NavMainSubItem {
@@ -32,6 +32,54 @@ export interface NavMainItem {
   items?: NavMainSubItem[];
 }
 
+const NavCollapsibleItem = ({
+  item,
+  pathname,
+}: {
+  item: NavMainItem;
+  pathname: string;
+}) => {
+  const isSectionActive =
+    pathname === item.url || pathname.startsWith(`${item.url}/`);
+  const [userOpen, setUserOpen] = useState<boolean | undefined>();
+  const open = userOpen ?? isSectionActive;
+
+  return (
+    <Collapsible
+      onOpenChange={setUserOpen}
+      open={open}
+      render={<SidebarMenuItem />}
+    >
+      <CollapsibleTrigger
+        render={
+          <SidebarMenuButton
+            className="group/collapsible"
+            tooltip={item.title}
+          />
+        }
+      >
+        {item.icon}
+        <span>{item.title}</span>
+        <ChevronRightIcon className="ml-auto transition-transform group-aria-expanded/collapsible:rotate-90" />
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <SidebarMenuSub>
+          {item.items?.map((subItem) => (
+            <SidebarMenuSubItem key={subItem.title}>
+              <SidebarMenuSubButton
+                isActive={pathname === subItem.url}
+                render={<Link aria-label={subItem.title} href={subItem.url} />}
+              >
+                <span>{subItem.title}</span>
+              </SidebarMenuSubButton>
+            </SidebarMenuSubItem>
+          ))}
+        </SidebarMenuSub>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+};
+
 export const NavMain = ({ items }: { items: NavMainItem[] }) => {
   const pathname = usePathname();
 
@@ -39,9 +87,7 @@ export const NavMain = ({ items }: { items: NavMainItem[] }) => {
     <SidebarGroup>
       <SidebarMenu>
         {items.map((item) => {
-          const hasItems = Boolean(item.items?.length);
-
-          if (!hasItems) {
+          if (!item.items?.length) {
             return (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
@@ -57,43 +103,11 @@ export const NavMain = ({ items }: { items: NavMainItem[] }) => {
           }
 
           return (
-            <Collapsible
-              defaultOpen
+            <NavCollapsibleItem
+              item={item}
               key={item.title}
-              render={<SidebarMenuItem />}
-            >
-              <SidebarMenuButton
-                tooltip={item.title}
-                render={<Link aria-label={item.title} href={item.url} />}
-              >
-                {item.icon}
-                <span>{item.title}</span>
-              </SidebarMenuButton>
-              <CollapsibleTrigger
-                render={
-                  <SidebarMenuAction className="aria-expanded:rotate-90" />
-                }
-              >
-                <ChevronRightIcon />
-                <span className="sr-only">Toggle</span>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <SidebarMenuSub>
-                  {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton
-                        isActive={pathname === subItem.url}
-                        render={
-                          <Link aria-label={subItem.title} href={subItem.url} />
-                        }
-                      >
-                        <span>{subItem.title}</span>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  ))}
-                </SidebarMenuSub>
-              </CollapsibleContent>
-            </Collapsible>
+              pathname={pathname}
+            />
           );
         })}
       </SidebarMenu>

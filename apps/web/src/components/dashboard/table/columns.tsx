@@ -45,4 +45,19 @@ export const columns = columnHelper.columns([
     ),
     meta: { label: "Status" },
   }),
+  columnHelper.accessor("appliedAt", {
+    cell: ({ getValue }) => (
+      <span className="text-muted-foreground whitespace-nowrap">
+        {getValue()}
+      </span>
+    ),
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        className="justify-end"
+        column={column}
+        title="Applied"
+      />
+    ),
+    meta: { className: "text-right", label: "Applied" },
+  }),
 ]);

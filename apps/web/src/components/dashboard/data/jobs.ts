@@ -16,6 +16,7 @@ export const RESUME_STATUSES = ["not-ready", "generating", "ready"] as const;
 export type ResumeStatus = (typeof RESUME_STATUSES)[number];
 
 export interface Job {
+  appliedAt: string;
   category: string;
   company: string;
   employmentType: string;
@@ -95,7 +96,22 @@ const sampleSections = (company: string, title: string): JobSection[] => [
   },
 ];
 
-export const jobs: Job[] = [
+const DUMMY_APPLIED_AT = [
+  "09:34 AM",
+  "11:20 AM",
+  "Yesterday",
+  "Yesterday",
+  "2 days ago",
+  "3 days ago",
+  "4 days ago",
+  "1 week ago",
+  "1 week ago",
+  "Aug 18",
+  "Aug 14",
+  "Aug 12",
+] as const;
+
+const jobList: Omit<Job, "appliedAt">[] = [
   {
     category: "Software Engineering",
     company: "Grove Collaborative",
@@ -643,6 +659,11 @@ export const jobs: Job[] = [
     workplace: "Remote",
   },
 ];
+
+export const jobs: Job[] = jobList.map((job, index) => ({
+  ...job,
+  appliedAt: DUMMY_APPLIED_AT[index % DUMMY_APPLIED_AT.length],
+}));
 
 export const getJobById = (id: string): Job | undefined =>
   jobs.find((job) => job.id === id);
