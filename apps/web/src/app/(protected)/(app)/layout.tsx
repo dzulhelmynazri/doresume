@@ -1,4 +1,5 @@
 import { auth } from "@doresume/auth";
+import { Separator } from "@doresume/ui/components/separator";
 import { SidebarInset, SidebarProvider } from "@doresume/ui/components/sidebar";
 import { Spinner } from "@doresume/ui/components/spinner";
 import { headers } from "next/headers";
@@ -28,6 +29,7 @@ const AppLayoutContent = async ({ children }: { children: ReactNode }) => {
       <AppSidebar />
       <SidebarInset>
         <AppHeader />
+        <Separator />
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4 pt-0">
           {children}
         </div>

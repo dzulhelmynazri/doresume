@@ -26,6 +26,7 @@
     "@swc/helpers": "^0.5.23",
     "@tanstack/react-form": "catalog:",
     "@tanstack/react-query": "catalog:",
+    "@tanstack/react-table": "^9.2.3",
     "babel-plugin-react-compiler": "^1.0.0",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
