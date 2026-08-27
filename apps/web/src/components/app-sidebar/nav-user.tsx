@@ -18,11 +18,11 @@ import {
 import { Skeleton } from "@doresume/ui/components/skeleton";
 import {
   ChevronsUpDownIcon,
-  SparklesIcon,
-  BadgeCheckIcon,
+  SettingsIcon,
   CreditCardIcon,
   LogOutIcon,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { authClient } from "@/lib/auth-client";
@@ -89,17 +89,11 @@ export const NavUser = () => {
               </DropdownMenuLabel>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
+
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <SparklesIcon />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheckIcon />
-                Account
+              <DropdownMenuItem render={<Link href="/apply" />}>
+                <SettingsIcon />
+                Settings
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCardIcon />

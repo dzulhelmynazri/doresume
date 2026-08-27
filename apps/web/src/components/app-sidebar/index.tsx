@@ -23,9 +23,9 @@ import {
 import Link from "next/link";
 import * as React from "react";
 
-import { NavMain } from "@/components/nav-main";
-import { NavSecondary } from "@/components/nav-secondary";
-import { NavUser } from "@/components/nav-user";
+import { NavMain } from "./nav-main";
+import { NavSecondary } from "./nav-secondary";
+import { NavUser } from "./nav-user";
 
 const data = {
   navMain: [
@@ -77,6 +77,10 @@ const data = {
 export const getAppNavTitle = (pathname: string) => {
   if (pathname.startsWith("/dashboard/applications/")) {
     return "Application";
+  }
+
+  if (pathname.startsWith("/apply")) {
+    return "Settings";
   }
 
   return (
