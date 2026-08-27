@@ -56,3 +56,17 @@ export {
   type WorkEligibility,
 } from "./eligibility";
 export { locationSchema, type Location } from "./location";
+export {
+  WORK_ARRANGEMENTS,
+  WORK_ARRANGEMENT_OPTIONS,
+  workArrangementSchema,
+  type WorkArrangement,
+  type WorkArrangementForm,
+} from "./work-arrangement";
+export {
+  WORK_TYPES,
+  WORK_TYPE_OPTIONS,
+  workTypeSchema,
+  type WorkType,
+  type WorkTypeForm,
+} from "./work-type";

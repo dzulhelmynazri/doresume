@@ -4,7 +4,9 @@ import type {
   EducationLevel,
   ExperienceLevel,
   Industries,
+  WorkArrangement,
   WorkEligibility,
+  WorkType,
 } from "@doresume/contracts";
 import { relations } from "drizzle-orm";
 import {
@@ -44,8 +46,10 @@ export const user = pgTable("user", {
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
+  workArrangement: text("work_arrangement").$type<WorkArrangement>(),
   workCountries:
     jsonb("work_countries").$type<WorkEligibility["workCountries"]>(),
+  workType: text("work_type").$type<WorkType>(),
   zip: text("zip"),
 });
 

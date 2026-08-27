@@ -11,6 +11,8 @@ import { healthCheck } from "./health";
 import { saveIndustries } from "./industries";
 import { saveLocation } from "./location";
 import { privateData } from "./private-data";
+import { saveWorkArrangement } from "./work-arrangement";
+import { saveWorkType } from "./work-type";
 
 export const appRouter = {
   healthCheck,
@@ -23,7 +25,9 @@ export const appRouter = {
   saveExperienceLevel,
   saveIndustries,
   saveLocation,
+  saveWorkArrangement,
   saveWorkEligibility,
+  saveWorkType,
 };
 export type AppRouter = typeof appRouter;
 export type AppRouterClient = RouterClient<typeof appRouter>;

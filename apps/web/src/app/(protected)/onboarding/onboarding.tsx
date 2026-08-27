@@ -34,15 +34,20 @@ import {
   useExperienceLevelForm,
 } from "./6-experience-level";
 import { EducationLevelFields, useEducationLevelForm } from "./7-education";
-import { ChecklistFields, useChecklistForm } from "./8-checklist";
+import { WorkTypeFields, useWorkTypeForm } from "./8-work-type";
+import {
+  WorkArrangementFields,
+  useWorkArrangementForm,
+} from "./9-work-arrangement";
+import { ChecklistFields, useChecklistForm } from "./10-checklist";
 import {
   ApplicationPasswordFields,
   useApplicationPasswordForm,
-} from "./9-application-password";
+} from "./11-application-password";
 import {
   ApplicationSettingsFields,
   useApplicationSettingsForm,
-} from "./10-application-settings";
+} from "./12-application-settings";
 
 const ONBOARDING_STEPS = [
   "resume",
@@ -51,7 +56,9 @@ const ONBOARDING_STEPS = [
   "eligibility",
   "industries",
   "experience",
+  "workType",
   "education",
+  "workArrangement",
   "checklist",
   "password",
   "settings",
@@ -63,7 +70,9 @@ const ONBOARDING_ITEMS = [
   { name: "eligibility", required: true },
   { name: "industries", required: true },
   { name: "experience", required: true },
+  { name: "workType", required: true },
   { name: "education", required: true },
+  { name: "workArrangement", required: true },
   { name: "checklist", required: true },
   { name: "password", required: true },
   { name: "settings", required: true },
@@ -108,8 +117,14 @@ const Onboarding = ({
   const experienceLevelForm = useExperienceLevelForm(async (value) => {
     await client.saveExperienceLevel(value);
   });
+  const workTypeForm = useWorkTypeForm(async (value) => {
+    await client.saveWorkType(value);
+  });
   const educationLevelForm = useEducationLevelForm(async (value) => {
     await client.saveEducationLevel(value);
+  });
+  const workArrangementForm = useWorkArrangementForm(async (value) => {
+    await client.saveWorkArrangement(value);
   });
   const passwordForm = useApplicationPasswordForm(async (value) => {
     await client.saveApplicationPassword(value);
@@ -163,11 +178,29 @@ const Onboarding = ({
         return;
       }
 
+      await workTypeForm.handleSubmit();
+
+      if (!workTypeForm.state.isValid) {
+        toast.error("Choose what type of work you're open to.");
+        void setStep("workType");
+        setIsFinishing(false);
+        return;
+      }
+
       await educationLevelForm.handleSubmit();
 
       if (!educationLevelForm.state.isValid) {
         toast.error("Choose your highest education level.");
         void setStep("education");
+        setIsFinishing(false);
+        return;
+      }
+
+      await workArrangementForm.handleSubmit();
+
+      if (!workArrangementForm.state.isValid) {
+        toast.error("Choose how you'd like to work.");
+        void setStep("workArrangement");
         setIsFinishing(false);
         return;
       }
@@ -295,6 +328,16 @@ const Onboarding = ({
         <ExperienceLevelFields form={experienceLevelForm} />
         <QuestionnaireError />
       </QuestionnaireItem>
+      <QuestionnaireItem name="workType" required>
+        <QuestionnaireTitle>
+          What type of work are you open to?
+        </QuestionnaireTitle>
+        <QuestionnaireDescription>
+          We&apos;ll prioritize jobs that match your preferences.
+        </QuestionnaireDescription>
+        <WorkTypeFields form={workTypeForm} />
+        <QuestionnaireError />
+      </QuestionnaireItem>
       <QuestionnaireItem name="education" required>
         <QuestionnaireTitle>
           What&apos;s your highest education level?
@@ -303,6 +346,14 @@ const Onboarding = ({
           Pick the highest level you&apos;ve completed.
         </QuestionnaireDescription>
         <EducationLevelFields form={educationLevelForm} />
+        <QuestionnaireError />
+      </QuestionnaireItem>
+      <QuestionnaireItem name="workArrangement" required>
+        <QuestionnaireTitle>How would you like to work?</QuestionnaireTitle>
+        <QuestionnaireDescription>
+          This shapes which roles we prioritize for you.
+        </QuestionnaireDescription>
+        <WorkArrangementFields form={workArrangementForm} />
         <QuestionnaireError />
       </QuestionnaireItem>
       <QuestionnaireItem name="checklist" required>
