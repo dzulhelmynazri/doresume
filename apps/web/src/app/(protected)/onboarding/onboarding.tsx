@@ -383,6 +383,19 @@ const Onboarding = ({
         <QuestionnaireDescription>
           Set a password for sites that ask
         </QuestionnaireDescription>
+        <passwordForm.Subscribe selector={(state) => state.values.password}>
+          {(password) => (
+            <div className="sr-only">
+              <QuestionnaireInput
+                key={password}
+                aria-label="Application password"
+                defaultValue={password}
+                readOnly
+                type="password"
+              />
+            </div>
+          )}
+        </passwordForm.Subscribe>
         <ApplicationPasswordFields form={passwordForm} />
         <QuestionnaireError />
       </QuestionnaireItem>

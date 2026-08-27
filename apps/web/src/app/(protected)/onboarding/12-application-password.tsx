@@ -11,7 +11,6 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@doresume/ui/components/field";
-import { QuestionnaireInput } from "@doresume/ui/components/questionnaire";
 import { useForm } from "@tanstack/react-form";
 import { LockIcon } from "lucide-react";
 
@@ -85,10 +84,11 @@ const generateStrongPassword = () => {
 };
 
 export const useApplicationPasswordForm = (
-  onValidSubmit: (value: ApplicationPassword) => void | Promise<void>
+  onValidSubmit: (value: ApplicationPassword) => void | Promise<void>,
+  defaultValues: ApplicationPassword = APPLICATION_PASSWORD_DEFAULTS
 ) =>
   useForm({
-    defaultValues: APPLICATION_PASSWORD_DEFAULTS,
+    defaultValues,
     onSubmit: async ({ value }) => {
       await onValidSubmit(applicationPasswordSchema.parse(value));
     },
@@ -105,19 +105,6 @@ const ApplicationPasswordFields = ({
   form: ApplicationPasswordFormApi;
 }) => (
   <FieldGroup>
-    <form.Subscribe selector={(state) => state.values.password}>
-      {(password) => (
-        <div className="sr-only">
-          <QuestionnaireInput
-            key={password}
-            aria-label="Application password"
-            defaultValue={password}
-            readOnly
-            type="password"
-          />
-        </div>
-      )}
-    </form.Subscribe>
     <FieldDescription>
       Some applications (Workday, iCIMS, Oracle) require you to create an
       account mid-flow. We use this to sign you up automatically.

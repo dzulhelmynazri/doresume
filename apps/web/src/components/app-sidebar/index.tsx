@@ -11,6 +11,7 @@ import {
 } from "@doresume/ui/components/sidebar";
 import {
   BriefcaseIcon,
+  GraduationCapIcon,
   LayoutDashboardIcon,
   ListChecksIcon,
   SearchIcon,
@@ -38,6 +39,11 @@ const data = {
       icon: <BriefcaseIcon />,
       title: "Browse Job",
       url: "/jobs",
+    },
+    {
+      icon: <GraduationCapIcon />,
+      title: "Graduate Trainee",
+      url: "/graduate-trainee",
     },
     {
       icon: <ListChecksIcon />,
