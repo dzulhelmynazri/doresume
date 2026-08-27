@@ -47,6 +47,16 @@ const data = {
     },
     {
       icon: <ListChecksIcon />,
+      items: [
+        {
+          title: "Inbox",
+          url: "/tracker/inbox",
+        },
+        {
+          title: "Pipeline",
+          url: "/tracker/pipeline",
+        },
+      ],
       title: "Tracker",
       url: "/tracker",
     },
@@ -89,9 +99,19 @@ export const getAppNavTitle = (pathname: string) => {
     return "Settings";
   }
 
-  return (
-    data.navMain.find((item) => item.url === pathname)?.title ?? "Dashboard"
-  );
+  for (const item of data.navMain) {
+    const subItem = item.items?.find((sub) => sub.url === pathname);
+
+    if (subItem) {
+      return subItem.title;
+    }
+
+    if (item.url === pathname) {
+      return item.title;
+    }
+  }
+
+  return "Dashboard";
 };
 
 export const AppSidebar = ({
