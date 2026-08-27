@@ -22,6 +22,27 @@ export {
   type VeteranStatus,
 } from "./checklist";
 export { contactSchema, type Contact } from "./contact";
+export {
+  EDUCATION_LEVELS,
+  EDUCATION_LEVEL_OPTIONS,
+  educationLevelSchema,
+  type EducationLevel,
+  type EducationLevelForm,
+} from "./education-level";
+export {
+  EXPERIENCE_LEVELS,
+  EXPERIENCE_LEVEL_OPTIONS,
+  experienceLevelSchema,
+  type ExperienceLevel,
+  type ExperienceLevelForm,
+} from "./experience-level";
+export {
+  INDUSTRIES,
+  INDUSTRY_OPTIONS,
+  industriesSchema,
+  type Industries,
+  type Industry,
+} from "./industries";
 
 export {
   AUTHORIZATION_BASES,

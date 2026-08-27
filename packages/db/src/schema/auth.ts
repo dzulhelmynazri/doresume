@@ -1,6 +1,9 @@
 import type {
   ApplicationSettings,
   Checklist,
+  EducationLevel,
+  ExperienceLevel,
+  Industries,
   WorkEligibility,
 } from "@doresume/contracts";
 import { relations } from "drizzle-orm";
@@ -22,14 +25,16 @@ export const user = pgTable("user", {
   ).$type<ApplicationSettings>(),
   checklist: jsonb("checklist").$type<Checklist>(),
   citizenship: jsonb("citizenship").$type<WorkEligibility["citizenship"]>(),
-
   city: text("city"),
   country: text("country"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  educationLevel: text("education_level").$type<EducationLevel>(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
+  experienceLevel: text("experience_level").$type<ExperienceLevel>(),
   id: text("id").primaryKey(),
   image: text("image"),
+  industries: jsonb("industries").$type<Industries>(),
   lastLoginMethod: text("last_login_method"),
   linkedin: text("linkedin"),
   name: text("name").notNull(),

@@ -1,7 +1,10 @@
 import { userHasApplicationPassword } from "@doresume/db/user-application-password";
 import { userHasApplicationSettings } from "@doresume/db/user-application-settings";
 import { userHasChecklist } from "@doresume/db/user-checklist";
+import { userHasEducationLevel } from "@doresume/db/user-education-level";
 import { userHasWorkEligibility } from "@doresume/db/user-eligibility";
+import { userHasExperienceLevel } from "@doresume/db/user-experience-level";
+import { userHasIndustries } from "@doresume/db/user-industries";
 import { userHasLocation } from "@doresume/db/user-location";
 
 import { userHasResume } from "@/lib/resume";
@@ -12,6 +15,9 @@ export const userIsOnboarded = async (userId: string) => {
     hasLocation,
     hasWorkEligibility,
     hasChecklist,
+    hasIndustries,
+    hasExperienceLevel,
+    hasEducationLevel,
     hasApplicationPassword,
     hasApplicationSettings,
   ] = await Promise.all([
@@ -19,6 +25,9 @@ export const userIsOnboarded = async (userId: string) => {
     userHasLocation(userId),
     userHasWorkEligibility(userId),
     userHasChecklist(userId),
+    userHasIndustries(userId),
+    userHasExperienceLevel(userId),
+    userHasEducationLevel(userId),
     userHasApplicationPassword(userId),
     userHasApplicationSettings(userId),
   ]);
@@ -28,6 +37,9 @@ export const userIsOnboarded = async (userId: string) => {
     hasLocation &&
     hasWorkEligibility &&
     hasChecklist &&
+    hasIndustries &&
+    hasExperienceLevel &&
+    hasEducationLevel &&
     hasApplicationPassword &&
     hasApplicationSettings
   );

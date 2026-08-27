@@ -4,8 +4,11 @@ import { saveApplicationPassword } from "./application-password";
 import { saveApplicationSettings } from "./application-settings";
 import { saveChecklist } from "./checklist";
 import { saveContact } from "./contact";
+import { saveEducationLevel } from "./education-level";
 import { saveWorkEligibility } from "./eligibility";
+import { saveExperienceLevel } from "./experience-level";
 import { healthCheck } from "./health";
+import { saveIndustries } from "./industries";
 import { saveLocation } from "./location";
 import { privateData } from "./private-data";
 
@@ -16,6 +19,9 @@ export const appRouter = {
   saveApplicationSettings,
   saveChecklist,
   saveContact,
+  saveEducationLevel,
+  saveExperienceLevel,
+  saveIndustries,
   saveLocation,
   saveWorkEligibility,
 };
