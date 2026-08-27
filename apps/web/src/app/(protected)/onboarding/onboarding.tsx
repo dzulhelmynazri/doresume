@@ -404,6 +404,18 @@ const Onboarding = ({
         <QuestionnaireDescription>
           You can change these anytime from settings.
         </QuestionnaireDescription>
+        <settingsForm.Subscribe selector={(state) => state.values}>
+          {(values) => (
+            <div className="sr-only">
+              <QuestionnaireInput
+                key={JSON.stringify(values)}
+                aria-label="Application settings"
+                defaultValue={JSON.stringify(values)}
+                readOnly
+              />
+            </div>
+          )}
+        </settingsForm.Subscribe>
         <ApplicationSettingsFields form={settingsForm} />
         <QuestionnaireError />
       </QuestionnaireItem>

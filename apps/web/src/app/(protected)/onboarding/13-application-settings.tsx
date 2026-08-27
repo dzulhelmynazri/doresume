@@ -14,7 +14,6 @@ import {
   FieldSet,
   FieldTitle,
 } from "@doresume/ui/components/field";
-import { QuestionnaireInput } from "@doresume/ui/components/questionnaire";
 import {
   RadioGroup,
   RadioGroupItem,
@@ -62,10 +61,11 @@ const REVIEW_BEFORE_SUBMIT_OPTIONS = [
 ] as const;
 
 export const useApplicationSettingsForm = (
-  onValidSubmit: (value: ApplicationSettings) => void | Promise<void>
+  onValidSubmit: (value: ApplicationSettings) => void | Promise<void>,
+  defaultValues: ApplicationSettings = APPLICATION_SETTINGS_DEFAULTS
 ) =>
   useForm({
-    defaultValues: APPLICATION_SETTINGS_DEFAULTS,
+    defaultValues,
     onSubmit: async ({ value }) => {
       await onValidSubmit(applicationSettingsSchema.parse(value));
     },
@@ -130,18 +130,6 @@ const ApplicationSettingsFields = ({
   form: ApplicationSettingsFormApi;
 }) => (
   <FieldGroup>
-    <form.Subscribe selector={(state) => state.values}>
-      {(values) => (
-        <div className="sr-only">
-          <QuestionnaireInput
-            key={JSON.stringify(values)}
-            aria-label="Application settings"
-            defaultValue={JSON.stringify(values)}
-            readOnly
-          />
-        </div>
-      )}
-    </form.Subscribe>
     <form.Field name="resumeOptimization">
       {(field) => {
         const isInvalid =
