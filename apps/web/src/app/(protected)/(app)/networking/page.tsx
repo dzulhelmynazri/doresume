@@ -1,7 +1,5 @@
-const NetworkingPage = () => (
-  <div>
-    <h1>Networking</h1>
-  </div>
-);
+import { Networking } from "@/components/networking";
+
+const NetworkingPage = () => <Networking />;
 
 export default NetworkingPage;
