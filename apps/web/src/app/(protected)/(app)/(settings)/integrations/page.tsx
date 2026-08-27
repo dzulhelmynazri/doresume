@@ -1,6 +1,17 @@
-import { CardDescription, CardTitle } from "@doresume/ui/components/card";
+import { getIntegrationConnections } from "@doresume/api/composio";
 import { Spinner } from "@doresume/ui/components/spinner";
 import { Suspense } from "react";
+
+import { requireUser } from "@/lib/session";
+
+import { Integrations } from "./integrations";
+
+const IntegrationsPageContent = async () => {
+  const user = await requireUser();
+  const { gmail, linkedin, outlook } = await getIntegrationConnections(user.id);
+
+  return <Integrations gmail={gmail} linkedin={linkedin} outlook={outlook} />;
+};
 
 const IntegrationsPage = () => (
   <Suspense
@@ -10,12 +21,7 @@ const IntegrationsPage = () => (
       </div>
     }
   >
-    <div className="py-4">
-      <CardTitle>Integrations</CardTitle>
-      <CardDescription>
-        Integrations with other services and tools.
-      </CardDescription>
-    </div>
+    <IntegrationsPageContent />
   </Suspense>
 );
 

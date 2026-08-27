@@ -12,11 +12,10 @@ import {
 import {
   BriefcaseIcon,
   // GraduationCapIcon,
-  LayoutDashboardIcon,
+  Earth,
   ListChecksIcon,
-  SearchIcon,
-  UserIcon,
-  UsersIcon,
+  Origami,
+  BookUser,
   LifeBuoyIcon,
   SendIcon,
 } from "lucide-react";
@@ -31,7 +30,7 @@ import { NavUser } from "./nav-user";
 const data = {
   navMain: [
     {
-      icon: <LayoutDashboardIcon />,
+      icon: <Earth />,
       title: "Dashboard",
       url: "/dashboard",
     },
@@ -51,19 +50,14 @@ const data = {
       url: "/tracker",
     },
     {
-      icon: <UsersIcon />,
+      icon: <BookUser />,
       title: "Networking",
       url: "/networking",
     },
     {
-      icon: <UserIcon />,
+      icon: <Origami />,
       title: "Profile",
       url: "/profile",
-    },
-    {
-      icon: <SearchIcon />,
-      title: "Research",
-      url: "/research",
     },
   ],
   navSecondary: [
@@ -85,7 +79,11 @@ export const getAppNavTitle = (pathname: string) => {
     return "Application";
   }
 
-  if (pathname.startsWith("/apply") || pathname.startsWith("/workday")) {
+  if (
+    pathname.startsWith("/apply") ||
+    pathname.startsWith("/workday") ||
+    pathname.startsWith("/integrations")
+  ) {
     return "Settings";
   }
 

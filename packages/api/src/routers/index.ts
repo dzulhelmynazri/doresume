@@ -9,6 +9,11 @@ import { saveWorkEligibility } from "./eligibility";
 import { saveExperienceLevel } from "./experience-level";
 import { healthCheck } from "./health";
 import { saveIndustries } from "./industries";
+import {
+  connectIntegration,
+  disconnectIntegration,
+  getConnections,
+} from "./integrations";
 import { saveLocation } from "./location";
 import { saveMinimumSalary } from "./minimum-salary";
 import { privateData } from "./private-data";
@@ -16,6 +21,9 @@ import { saveWorkArrangement } from "./work-arrangement";
 import { saveWorkType } from "./work-type";
 
 export const appRouter = {
+  connectIntegration,
+  disconnectIntegration,
+  getConnections,
   healthCheck,
   privateData,
   saveApplicationPassword,
