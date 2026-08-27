@@ -22,7 +22,13 @@ const WorkdayPasswordPageContent = async () => {
 };
 
 const WorkdayPasswordPage = () => (
-  <Suspense fallback={<Spinner />}>
+  <Suspense
+    fallback={
+      <div className="py-4">
+        <Spinner />
+      </div>
+    }
+  >
     <WorkdayPasswordPageContent />
   </Suspense>
 );
