@@ -91,8 +91,9 @@ If you want to add app-specific blocks instead of shared primitives, run the sha
 ```
 doresume/
 ├── agents/
-│   ├── apply-agent/   # Durable AI agent (eve)
-│   └── crawler-agent/ # Durable AI agent (eve)
+│   ├── apply-agent/      # Durable AI agent (eve)
+│   ├── crawler-agent/    # Durable AI agent (eve)
+│   └── networking-agent/ # Durable AI agent (eve)
 ├── apps/
 │   ├── web/         # Fullstack application (Next.js)
 │   ├── marketing/   # Marketing site (Next.js)
@@ -117,6 +118,7 @@ doresume/
 - `bun run dev:docs`: Start only the documentation site (http://localhost:3002)
 - `bun run dev:apply-agent`: Start the apply-agent (REPL + HTTP)
 - `bun run dev:crawler-agent`: Start the crawler-agent (REPL + HTTP)
+- `bun run dev:networking-agent`: Start the networking-agent (REPL + HTTP)
 - `bun run check-types`: Check TypeScript types across all apps
 - `bun run dev:native`: Start the React Native/Expo development server
 - `bun run db:push`: Push schema changes to database

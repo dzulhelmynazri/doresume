@@ -5,5 +5,6 @@ export default withEve(nextConfig, {
   agents: {
     "apply-agent": "../../agents/apply-agent",
     "crawler-agent": "../../agents/crawler-agent",
+    "networking-agent": "../../agents/networking-agent",
   },
 });

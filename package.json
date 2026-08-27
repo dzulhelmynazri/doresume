@@ -42,6 +42,7 @@
     "dev:docs": "turbo run dev -F docs --",
     "dev:apply-agent": "turbo run dev -F apply-agent --",
     "dev:crawler-agent": "turbo run dev -F crawler-agent --",
+    "dev:networking-agent": "turbo run dev -F networking-agent --",
     "db:push": "turbo run db:push -F @doresume/db --",
     "db:studio": "turbo run db:studio -F @doresume/db --",
     "db:generate": "turbo run db:generate -F @doresume/db --",
