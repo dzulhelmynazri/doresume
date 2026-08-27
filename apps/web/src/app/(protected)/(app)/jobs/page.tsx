@@ -1,7 +1,5 @@
-const JobsPage = () => (
-  <div>
-    <h1>Browse Job</h1>
-  </div>
-);
+import { Jobs } from "@/components/jobs";
+
+const JobsPage = () => <Jobs />;
 
 export default JobsPage;

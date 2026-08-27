@@ -53,11 +53,21 @@ export const formatWorkplaceLocation = (
 };
 
 export const FEATURED_JOB_COUNT = 5;
+export const BROWSE_JOB_COUNT = 20;
 
-export const getFeaturedJobs = (allJobs: Job[]): Job[] =>
+const getTopJobs = (allJobs: Job[], count: number): Job[] =>
   allJobs
     .toSorted((left, right) => right.matchPercent - left.matchPercent)
-    .slice(0, FEATURED_JOB_COUNT);
+    .slice(0, count);
+
+export const getFeaturedJobs = (allJobs: Job[]): Job[] =>
+  getTopJobs(allJobs, FEATURED_JOB_COUNT);
+
+export const getBrowseJobs = (allJobs: Job[]): Job[] =>
+  getTopJobs(
+    allJobs.filter((job) => job.status !== "skipped"),
+    BROWSE_JOB_COUNT
+  );
 
 export const getJobApplicationPath = (id: string): string =>
   `/dashboard/applications/${id}`;

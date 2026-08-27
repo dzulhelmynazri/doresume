@@ -17,33 +17,48 @@ import type { Job } from "../data/jobs";
 const MATCH_RING_RADIUS = 16;
 const MATCH_RING_CIRCUMFERENCE = 2 * Math.PI * MATCH_RING_RADIUS;
 
-const FEATURED_POSTED_LABELS = [
+const POSTED_LABELS = [
   "2 days ago",
   "14 hours ago",
   "a day ago",
   "6 days ago",
   "3 days ago",
+  "8 hours ago",
+  "4 days ago",
+  "11 hours ago",
+  "5 days ago",
+  "18 hours ago",
+  "3 hours ago",
+  "7 days ago",
+  "9 hours ago",
+  "16 hours ago",
+  "a day ago",
+  "4 days ago",
+  "6 hours ago",
+  "5 days ago",
+  "12 hours ago",
+  "2 days ago",
 ] as const;
 
 const FEATURED_TONES = [
   {
-    card: "bg-featured-1/15 ring-featured-1/30",
+    card: "bg-featured-1/20 ring-featured-1/25",
     ring: "stroke-featured-1",
   },
   {
-    card: "bg-featured-2/15 ring-featured-2/30",
+    card: "bg-featured-2/20 ring-featured-2/25",
     ring: "stroke-featured-2",
   },
   {
-    card: "bg-featured-3/15 ring-featured-3/30",
+    card: "bg-featured-3/20 ring-featured-3/25",
     ring: "stroke-featured-3",
   },
   {
-    card: "bg-featured-4/15 ring-featured-4/30",
+    card: "bg-featured-4/20 ring-featured-4/25",
     ring: "stroke-featured-4",
   },
   {
-    card: "bg-featured-5/15 ring-featured-5/30",
+    card: "bg-featured-5/20 ring-featured-5/25",
     ring: "stroke-featured-5",
   },
 ] as const;
@@ -128,7 +143,10 @@ const JobCard = ({
     >
       <CardHeader>
         <CardDescription>
-          {location} <br /> {postedLabel}
+          <span className="flex flex-col">
+            <span>{location}</span>
+            <span>{postedLabel}</span>
+          </span>
         </CardDescription>
         <CardAction>
           <MatchRing strokeClassName={ringClassName} value={job.matchPercent} />
@@ -141,7 +159,7 @@ const JobCard = ({
           <Badge variant="secondary">{job.seniority}</Badge>
         </div>
       </CardContent>
-      <CardFooter className="mt-auto justify-between gap-2 border-t">
+      <CardFooter className="mt-auto justify-between gap-2">
         <span className="min-w-0 truncate">{job.company}</span>
         <div className="flex shrink-0 items-center gap-1">
           <Button
@@ -151,7 +169,7 @@ const JobCard = ({
             }}
             size="sm"
             type="button"
-            variant="outline"
+            variant="ghost"
           >
             Pass
           </Button>
@@ -184,7 +202,8 @@ const JobCards = ({
 }) => (
   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
     {jobs.map((job, index) => {
-      const postedLabel = FEATURED_POSTED_LABELS[index] ?? "7 days ago";
+      const postedLabel =
+        POSTED_LABELS[index % POSTED_LABELS.length] ?? POSTED_LABELS[0];
       const tone =
         FEATURED_TONES[index % FEATURED_TONES.length] ?? FEATURED_TONES[0];
 
