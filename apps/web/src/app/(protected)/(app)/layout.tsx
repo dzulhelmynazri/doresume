@@ -5,7 +5,7 @@ import { Spinner } from "@doresume/ui/components/spinner";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 import { AppHeader } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
@@ -25,12 +25,15 @@ const AppLayoutContent = async ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <SidebarProvider className="row-span-full min-h-0 overflow-hidden">
+    <SidebarProvider
+      className="row-span-full min-h-0 overflow-hidden"
+      style={{ "--sidebar-width": "12rem" } as CSSProperties}
+    >
       <AppSidebar />
       <SidebarInset>
         <AppHeader />
         <Separator />
-        <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4 pt-0">
+        <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4 pt-4">
           {children}
         </div>
       </SidebarInset>

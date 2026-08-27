@@ -1,12 +1,8 @@
 import {
-  columnFilteringFeature,
-  columnVisibilityFeature,
-  createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
   metaHelper,
   rowPaginationFeature,
-  rowSelectionFeature,
   rowSortingFeature,
   sortFn_alphanumeric,
   sortFn_basic,
@@ -15,13 +11,9 @@ import {
 } from "@tanstack/react-table";
 
 export const features = tableFeatures({
-  columnFilteringFeature,
   columnMeta: metaHelper<{ className?: string; label?: string }>(),
-  columnVisibilityFeature,
-  filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   rowPaginationFeature,
-  rowSelectionFeature,
   rowSortingFeature,
   sortFns: {
     alphanumeric: sortFn_alphanumeric,

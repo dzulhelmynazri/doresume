@@ -52,6 +52,16 @@ export const formatWorkplaceLocation = (
   return `${workplace} · ${location}`;
 };
 
+export const FEATURED_JOB_COUNT = 5;
+
+export const getFeaturedJobs = (allJobs: Job[]): Job[] =>
+  allJobs
+    .toSorted((left, right) => right.matchPercent - left.matchPercent)
+    .slice(0, FEATURED_JOB_COUNT);
+
+export const getJobApplicationPath = (id: string): string =>
+  `/dashboard/applications/${id}`;
+
 export const JOB_STATUS_LABEL: Record<JobStatus, string> = {
   failed: "Failed",
   "in-flight": "In flight",
@@ -623,3 +633,6 @@ export const jobs: Job[] = [
     workplace: "Remote",
   },
 ];
+
+export const getJobById = (id: string): Job | undefined =>
+  jobs.find((job) => job.id === id);

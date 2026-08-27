@@ -6,17 +6,11 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@doresume/ui/components/dropdown-menu";
 import { cn } from "@doresume/ui/lib/utils";
 import type { Column, RowData } from "@tanstack/react-table";
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  ChevronsUpDownIcon,
-  EyeOffIcon,
-} from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon } from "lucide-react";
 
 import type { DataTableFeatures } from "./data-table-features";
 
@@ -53,13 +47,6 @@ const DataTableColumnHeader = <TData extends RowData, TValue>({
             <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
               <ArrowDownIcon />
               Desc
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-              <EyeOffIcon />
-              Hide
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>

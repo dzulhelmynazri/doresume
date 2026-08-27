@@ -2,14 +2,6 @@
 
 import { Button } from "@doresume/ui/components/button";
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuTrigger,
-} from "@doresume/ui/components/dropdown-menu";
-import { Input } from "@doresume/ui/components/input";
-import {
   Select,
   SelectContent,
   SelectGroup,
@@ -27,26 +19,20 @@ import {
 } from "@doresume/ui/components/table";
 import { cn } from "@doresume/ui/lib/utils";
 import { useTable } from "@tanstack/react-table";
-import type {
-  ColumnDef,
-  ColumnFiltersState,
-  ColumnVisibilityState,
-  RowData,
-  RowSelectionState,
-  SortingState,
-} from "@tanstack/react-table";
+import type { ColumnDef, RowData, SortingState } from "@tanstack/react-table";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronsLeftIcon,
   ChevronsRightIcon,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { features } from "./data-table-features";
 import type { DataTableFeatures } from "./data-table-features";
 
-const DEFAULT_PAGE_SIZE = 15;
+const DEFAULT_PAGE_SIZE = 7;
 
 const PAGE_SIZE_ITEMS = [
   { label: "10", value: "10" },
@@ -61,17 +47,14 @@ const PAGE_SIZE_ITEMS = [
 const DataTable = <TData extends RowData & { id: string }>({
   columns,
   data,
-  onRowClick,
+  getRowHref,
 }: {
   columns: ColumnDef<DataTableFeatures, TData>[];
   data: TData[];
-  onRowClick?: (row: TData) => void;
+  getRowHref?: (row: TData) => string;
 }) => {
+  const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] =
-    useState<ColumnVisibilityState>({});
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const table = useTable({
     columns,
     data,
@@ -83,58 +66,14 @@ const DataTable = <TData extends RowData & { id: string }>({
         pageSize: DEFAULT_PAGE_SIZE,
       },
     },
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     state: {
-      columnFilters,
-      columnVisibility,
-      rowSelection,
       sorting,
     },
   });
-  const titleFilter = table.getColumn("title")?.getFilterValue();
-  const titleFilterValue = typeof titleFilter === "string" ? titleFilter : "";
 
   return (
     <div>
-      <div className="flex items-center py-4">
-        <Input
-          className="max-w-sm"
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
-          placeholder="Filter roles..."
-          value={titleFilterValue}
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={<Button className="ml-auto" variant="outline" />}
-          >
-            Columns
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuGroup>
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => (
-                  <DropdownMenuCheckboxItem
-                    checked={column.getIsVisible()}
-                    className="capitalize"
-                    key={column.id}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.columnDef.meta?.label ?? column.id}
-                  </DropdownMenuCheckboxItem>
-                ))}
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
@@ -157,23 +96,28 @@ const DataTable = <TData extends RowData & { id: string }>({
             {table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
-                  className={cn(onRowClick ? "cursor-pointer" : undefined)}
-                  data-state={row.getIsSelected() ? "selected" : undefined}
+                  className={cn(getRowHref ? "cursor-pointer" : undefined)}
                   key={row.id}
-                  onClick={() => onRowClick?.(row.original)}
+                  onClick={() => {
+                    const href = getRowHref?.(row.original);
+
+                    if (href) {
+                      router.push(href);
+                    }
+                  }}
                   onKeyDown={(event) => {
-                    if (!onRowClick || event.target !== event.currentTarget) {
+                    if (!getRowHref || event.target !== event.currentTarget) {
                       return;
                     }
 
                     if (event.key === "Enter" || event.key === " ") {
                       event.preventDefault();
-                      onRowClick(row.original);
+                      router.push(getRowHref(row.original));
                     }
                   }}
-                  tabIndex={onRowClick ? 0 : undefined}
+                  tabIndex={getRowHref ? 0 : undefined}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getAllCells().map((cell) => (
                     <TableCell
                       className={cell.column.columnDef.meta?.className}
                       key={cell.id}
@@ -196,11 +140,7 @@ const DataTable = <TData extends RowData & { id: string }>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between py-4">
-        <p className="text-muted-foreground flex-1 text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </p>
+      <div className="flex items-center justify-end py-4">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium">Rows per page</p>

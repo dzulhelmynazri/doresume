@@ -1,5 +1,5 @@
-import { JobsTable } from "@/components/dashboard/jobs-table";
+import { Dashboard } from "@/components/dashboard";
 
-const DashboardPage = () => <JobsTable />;
+const DashboardPage = () => <Dashboard />;
 
 export default DashboardPage;

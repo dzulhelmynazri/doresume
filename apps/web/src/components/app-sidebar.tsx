@@ -74,8 +74,15 @@ const data = {
   ],
 };
 
-export const getAppNavTitle = (pathname: string) =>
-  data.navMain.find((item) => item.url === pathname)?.title ?? "Dashboard";
+export const getAppNavTitle = (pathname: string) => {
+  if (pathname.startsWith("/dashboard/applications/")) {
+    return "Application";
+  }
+
+  return (
+    data.navMain.find((item) => item.url === pathname)?.title ?? "Dashboard"
+  );
+};
 
 export const AppSidebar = ({
   ...props
