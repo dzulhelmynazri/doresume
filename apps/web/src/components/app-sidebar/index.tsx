@@ -18,8 +18,8 @@ import {
   UsersIcon,
   LifeBuoyIcon,
   SendIcon,
-  TerminalIcon,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 
@@ -97,14 +97,21 @@ export const AppSidebar = ({
         <SidebarMenuItem>
           <SidebarMenuButton
             size="lg"
-            render={<Link aria-label="Acme Inc" href="/dashboard" />}
+            render={<Link aria-label="doresume" href="/dashboard" />}
           >
-            <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-              <TerminalIcon />
+            <div className="relative size-8 overflow-hidden rounded-lg">
+              <Image
+                alt="doresume"
+                className="size-full [image-rendering:pixelated]"
+                height={32}
+                src="/doresume.png"
+                unoptimized
+                width={32}
+              />
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">Acme Inc</span>
-              <span className="truncate text-xs">Enterprise</span>
+              <span className="truncate font-medium">doresume</span>
+              <span className="truncate text-xs">Job Agent</span>
             </div>
           </SidebarMenuButton>
         </SidebarMenuItem>
