@@ -1,8 +1,6 @@
-import { auth } from "@doresume/auth";
 import { Separator } from "@doresume/ui/components/separator";
 import { SidebarInset, SidebarProvider } from "@doresume/ui/components/sidebar";
 import { Spinner } from "@doresume/ui/components/spinner";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import type { ReactNode } from "react";
@@ -10,17 +8,12 @@ import type { ReactNode } from "react";
 import { AppHeader } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
 import { userIsOnboarded } from "@/lib/onboarding";
+import { requireUser } from "@/lib/session";
 
 const AppLayoutContent = async ({ children }: { children: ReactNode }) => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const user = await requireUser();
 
-  if (!session?.user) {
-    redirect("/auth");
-  }
-
-  if (!(await userIsOnboarded(session.user.id))) {
+  if (!(await userIsOnboarded(user.id))) {
     redirect("/onboarding");
   }
 

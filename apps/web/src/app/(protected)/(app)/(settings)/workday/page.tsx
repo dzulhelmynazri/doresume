@@ -1,22 +1,14 @@
-import { auth } from "@doresume/auth";
 import { getUserApplicationPassword } from "@doresume/db/user-application-password";
 import { Spinner } from "@doresume/ui/components/spinner";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
+
+import { requireUser } from "@/lib/session";
 
 import { WorkdayPasswordForm } from "./workday-form";
 
 const WorkdayPasswordPageContent = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.user) {
-    redirect("/auth");
-  }
-
-  const password = await getUserApplicationPassword(session.user.id);
+  const user = await requireUser();
+  const password = await getUserApplicationPassword(user.id);
 
   return <WorkdayPasswordForm password={password ?? ""} />;
 };

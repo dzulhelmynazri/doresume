@@ -1,26 +1,18 @@
-import { auth } from "@doresume/auth";
 import { Spinner } from "@doresume/ui/components/spinner";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import { userIsOnboarded } from "@/lib/onboarding";
 import { getUserResume } from "@/lib/resume";
+import { requireUser } from "@/lib/session";
 
 import Onboarding from "./onboarding";
 
 const OnboardingPageContent = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.user) {
-    redirect("/auth");
-  }
-
+  const user = await requireUser();
   const [resume, isOnboarded] = await Promise.all([
-    getUserResume(session.user.id),
-    userIsOnboarded(session.user.id),
+    getUserResume(user.id),
+    userIsOnboarded(user.id),
   ]);
 
   if (isOnboarded) {

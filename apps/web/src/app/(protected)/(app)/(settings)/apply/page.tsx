@@ -1,22 +1,14 @@
-import { auth } from "@doresume/auth";
 import { getUserApplicationSettings } from "@doresume/db/user-application-settings";
 import { Spinner } from "@doresume/ui/components/spinner";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
+
+import { requireUser } from "@/lib/session";
 
 import { ApplySettingsForm } from "./apply-form";
 
 const ApplySettingsPageContent = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.user) {
-    redirect("/auth");
-  }
-
-  const settings = await getUserApplicationSettings(session.user.id);
+  const user = await requireUser();
+  const settings = await getUserApplicationSettings(user.id);
 
   return <ApplySettingsForm settings={settings} />;
 };

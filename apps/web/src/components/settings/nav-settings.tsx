@@ -7,7 +7,7 @@ import {
   SidebarMenuItem,
 } from "@doresume/ui/components/sidebar";
 import type { LucideIcon } from "lucide-react";
-import { BriefcaseIcon, SlidersHorizontalIcon } from "lucide-react";
+import { BriefcaseIcon, SlidersHorizontalIcon, ToyBrick } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -25,6 +25,11 @@ const SETTINGS_NAV_ITEMS: {
     icon: BriefcaseIcon,
     title: "Workday password",
     url: "/workday",
+  },
+  {
+    icon: ToyBrick,
+    title: "Integrations",
+    url: "/integrations",
   },
 ];
 

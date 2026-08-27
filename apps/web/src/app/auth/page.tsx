@@ -1,19 +1,16 @@
-import { auth } from "@doresume/auth";
 import { Spinner } from "@doresume/ui/components/spinner";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import Auth from "@/components/auth";
 import { userIsOnboarded } from "@/lib/onboarding";
+import { getCurrentUser } from "@/lib/session";
 
 const AuthPageContent = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const user = await getCurrentUser();
 
-  if (session?.user) {
-    if (await userIsOnboarded(session.user.id)) {
+  if (user) {
+    if (await userIsOnboarded(user.id)) {
       redirect("/dashboard");
     }
 

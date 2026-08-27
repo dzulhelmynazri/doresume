@@ -1,7 +1,7 @@
-import { redirect } from "next/navigation";
-
-const TrackerPage = () => {
-  redirect("/tracker/inbox");
-};
+const TrackerPage = () => (
+  <div>
+    <h1>Tracker</h1>
+  </div>
+);
 
 export default TrackerPage;
