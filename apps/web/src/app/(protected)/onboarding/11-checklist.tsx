@@ -3,15 +3,18 @@
 import { checklistSchema } from "@doresume/contracts";
 import type { Checklist } from "@doresume/contracts";
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@doresume/ui/components/accordion";
+import {
   Field,
   FieldContent,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-  FieldLegend,
-  FieldSeparator,
-  FieldSet,
   FieldTitle,
 } from "@doresume/ui/components/field";
 import { QuestionnaireInput } from "@doresume/ui/components/questionnaire";
@@ -232,6 +235,31 @@ const OptionalSelectField = <T extends string>({
   </Field>
 );
 
+const ChecklistAccordionSection = ({
+  children,
+  description,
+  title,
+  value,
+}: {
+  children: React.ReactNode;
+  description?: string;
+  title: string;
+  value: string;
+}) => (
+  <AccordionItem
+    className="border-b px-4 last:border-b-0 data-open:bg-transparent"
+    value={value}
+  >
+    <AccordionTrigger>{title}</AccordionTrigger>
+    <AccordionContent>
+      {description ? (
+        <FieldDescription className="mb-3">{description}</FieldDescription>
+      ) : null}
+      <FieldGroup>{children}</FieldGroup>
+    </AccordionContent>
+  </AccordionItem>
+);
+
 const ChecklistFields = ({ form }: { form: ChecklistFormApi }) => (
   <FieldGroup>
     <form.Subscribe selector={(state) => state.values}>
@@ -246,9 +274,8 @@ const ChecklistFields = ({ form }: { form: ChecklistFormApi }) => (
         </div>
       )}
     </form.Subscribe>
-    <FieldSet>
-      <FieldLegend>Preferences</FieldLegend>
-      <FieldGroup>
+    <Accordion className="rounded-lg border" defaultValue={["preferences"]}>
+      <ChecklistAccordionSection title="Preferences" value="preferences">
         <YesNoFormField
           form={form}
           label="Open to in-person work?"
@@ -275,12 +302,8 @@ const ChecklistFields = ({ form }: { form: ChecklistFormApi }) => (
           label="Need workplace accommodations?"
           name="needsAccommodations"
         />
-      </FieldGroup>
-    </FieldSet>
-    <FieldSeparator />
-    <FieldSet>
-      <FieldLegend>Background</FieldLegend>
-      <FieldGroup>
+      </ChecklistAccordionSection>
+      <ChecklistAccordionSection title="Background" value="background">
         <YesNoFormField
           form={form}
           label="Active government clearance?"
@@ -292,15 +315,12 @@ const ChecklistFields = ({ form }: { form: ChecklistFormApi }) => (
           label="Family ties to foreign governments?"
           name="familyTiesForeignGovernments"
         />
-      </FieldGroup>
-    </FieldSet>
-    <FieldSeparator />
-    <FieldSet>
-      <FieldLegend>Diversity & Inclusion (Optional)</FieldLegend>
-      <FieldDescription>
-        Employers must report this in aggregate.
-      </FieldDescription>
-      <FieldGroup>
+      </ChecklistAccordionSection>
+      <ChecklistAccordionSection
+        description="Employers must report this in aggregate."
+        title="Diversity & Inclusion (Optional)"
+        value="diversity"
+      >
         <form.Field name="gender">
           {(field) => {
             const isInvalid =
@@ -377,12 +397,11 @@ const ChecklistFields = ({ form }: { form: ChecklistFormApi }) => (
             );
           }}
         </form.Field>
-      </FieldGroup>
-    </FieldSet>
-    <FieldSeparator />
-    <FieldSet>
-      <FieldLegend>Additional info (Optional)</FieldLegend>
-      <FieldGroup>
+      </ChecklistAccordionSection>
+      <ChecklistAccordionSection
+        title="Additional info (Optional)"
+        value="additional-info"
+      >
         <form.Field name="additionalInfo">
           {(field) => {
             const isInvalid =
@@ -412,8 +431,8 @@ const ChecklistFields = ({ form }: { form: ChecklistFormApi }) => (
             );
           }}
         </form.Field>
-      </FieldGroup>
-    </FieldSet>
+      </ChecklistAccordionSection>
+    </Accordion>
   </FieldGroup>
 );
 
