@@ -14,11 +14,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { APP_NAV_MAIN, APP_NAV_SECONDARY, getAppNavTitle } from "@/lib/app-nav";
+import {
+  APP_NAV_MAIN,
+  APP_NAV_SECONDARY,
+  getAppNavContext,
+} from "@/lib/app-nav";
 
 export const AppNavMenu = () => {
   const pathname = usePathname();
-  const currentTitle = getAppNavTitle(pathname);
+  const { icon: CurrentIcon, title: currentTitle } = getAppNavContext(pathname);
 
   return (
     <DropdownMenu>
@@ -44,8 +48,13 @@ export const AppNavMenu = () => {
           </div>
           <div className="flex flex-col text-left leading-tight">
             <span className="text-sm font-medium">doresume</span>
-            <span className="text-muted-foreground text-xs">
-              [{currentTitle}]
+            <span className="text-muted-foreground inline-flex items-center gap-1 text-xs">
+              <span>[</span>
+              {CurrentIcon ? (
+                <CurrentIcon aria-hidden className="size-3 shrink-0" />
+              ) : null}
+              <span>{currentTitle}</span>
+              <span>]</span>
             </span>
           </div>
         </div>

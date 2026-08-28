@@ -56,17 +56,23 @@ export const APP_NAV_SECONDARY: AppNavItem[] = [
   },
 ];
 
-export const getAppNavTitle = (pathname: string) => {
+export interface AppNavContext {
+  icon?: LucideIcon;
+  title: string;
+}
+
+export const getAppNavContext = (pathname: string): AppNavContext => {
   if (pathname.startsWith("/dashboard/applications/")) {
-    return "Application";
+    return { title: "Application" };
   }
 
   if (pathname.startsWith("/networking/")) {
-    return "Company";
+    return { title: "Company" };
   }
 
   if (pathname === "/tracker") {
-    return "Tracker";
+    const tracker = APP_NAV_MAIN.find((item) => item.url === "/tracker");
+    return { icon: tracker?.icon, title: "Tracker" };
   }
 
   if (
@@ -75,14 +81,18 @@ export const getAppNavTitle = (pathname: string) => {
     pathname.startsWith("/workday") ||
     pathname.startsWith("/integrations")
   ) {
-    return "Settings";
+    return { title: "Settings" };
   }
 
   for (const item of APP_NAV_MAIN) {
-    if (item.url === pathname) {
-      return item.title;
+    if (pathname === item.url || pathname.startsWith(`${item.url}/`)) {
+      return { icon: item.icon, title: item.title };
     }
   }
 
-  return "Dashboard";
+  const dashboard = APP_NAV_MAIN.find((item) => item.url === "/dashboard");
+  return { icon: dashboard?.icon, title: "Dashboard" };
 };
+
+export const getAppNavTitle = (pathname: string) =>
+  getAppNavContext(pathname).title;
