@@ -1,10 +1,13 @@
 import {
-  createDefaultResumeDocument,
+  createDefaultResumeProfilesState,
+  getActiveResumeProfile,
   resumeDocumentSchema,
+  resumeProfilesStateSchema,
 } from "@doresume/contracts";
 import type {
   ResumeDocument,
   ResumeDocumentSeedUser,
+  ResumeProfilesState,
 } from "@doresume/contracts";
 import { eq } from "drizzle-orm";
 
@@ -29,9 +32,27 @@ const toSeedUser = (record: {
   state: record.state,
 });
 
-export const getUserResumeDocument = async (
-  userId: string
-): Promise<ResumeDocument> => {
+const parseLegacyDocument = (value: unknown): ResumeDocument | null => {
+  if (!value) {
+    return null;
+  }
+
+  const parsed = resumeDocumentSchema.safeParse(value);
+
+  return parsed.success ? parsed.data : null;
+};
+
+const parseProfilesState = (value: unknown): ResumeProfilesState | null => {
+  if (!value) {
+    return null;
+  }
+
+  const parsed = resumeProfilesStateSchema.safeParse(value);
+
+  return parsed.success ? parsed.data : null;
+};
+
+const getUserRecord = async (userId: string) => {
   const record = await db.query.user.findFirst({
     columns: {
       city: true,
@@ -41,6 +62,7 @@ export const getUserResumeDocument = async (
       name: true,
       phone: true,
       resumeDocument: true,
+      resumeProfiles: true,
       state: true,
     },
     where: eq(user.id, userId),
@@ -50,34 +72,69 @@ export const getUserResumeDocument = async (
     throw new Error("User not found.");
   }
 
-  if (record.resumeDocument) {
-    const parsed = resumeDocumentSchema.safeParse(record.resumeDocument);
+  return record;
+};
 
-    if (parsed.success) {
-      return parsed.data;
-    }
+export const getUserResumeProfiles = async (
+  userId: string
+): Promise<ResumeProfilesState> => {
+  const record = await getUserRecord(userId);
+  const parsedProfiles = parseProfilesState(record.resumeProfiles);
+
+  if (parsedProfiles) {
+    return parsedProfiles;
   }
 
-  return createDefaultResumeDocument(toSeedUser(record));
+  return createDefaultResumeProfilesState(
+    toSeedUser(record),
+    parseLegacyDocument(record.resumeDocument)
+  );
+};
+
+export const saveUserResumeProfiles = async (
+  userId: string,
+  state: ResumeProfilesState
+) => {
+  const parsed = resumeProfilesStateSchema.parse(state);
+  const activeDocument = getActiveResumeProfile(parsed).document;
+
+  await db
+    .update(user)
+    .set({
+      resumeDocument: activeDocument,
+      resumeProfiles: parsed,
+    })
+    .where(eq(user.id, userId));
+};
+
+export const getUserResumeDocument = async (
+  userId: string
+): Promise<ResumeDocument> => {
+  const profiles = await getUserResumeProfiles(userId);
+
+  return getActiveResumeProfile(profiles).document;
 };
 
 export const saveUserResumeDocument = async (
   userId: string,
   document: ResumeDocument
 ) => {
-  const parsed = resumeDocumentSchema.parse(document);
+  const profiles = await getUserResumeProfiles(userId);
+  const activeProfile = getActiveResumeProfile(profiles);
 
-  await db
-    .update(user)
-    .set({ resumeDocument: parsed })
-    .where(eq(user.id, userId));
+  await saveUserResumeProfiles(userId, {
+    ...profiles,
+    profiles: profiles.profiles.map((profile) =>
+      profile.id === activeProfile.id ? { ...profile, document } : profile
+    ),
+  });
 };
 
 export const userHasResumeDocument = async (userId: string) => {
   const record = await db.query.user.findFirst({
-    columns: { resumeDocument: true },
+    columns: { resumeDocument: true, resumeProfiles: true },
     where: eq(user.id, userId),
   });
 
-  return Boolean(record?.resumeDocument);
+  return Boolean(record?.resumeProfiles ?? record?.resumeDocument);
 };

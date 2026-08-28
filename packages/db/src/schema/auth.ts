@@ -6,6 +6,7 @@ import type {
   Industries,
   MinimumSalary,
   ResumeDocument,
+  ResumeProfilesState,
   WorkArrangement,
   WorkEligibility,
   WorkType,
@@ -45,6 +46,7 @@ export const user = pgTable("user", {
   name: text("name").notNull(),
   phone: text("phone"),
   resumeDocument: jsonb("resume_document").$type<ResumeDocument>(),
+  resumeProfiles: jsonb("resume_profiles").$type<ResumeProfilesState>(),
   state: text("state"),
   updatedAt: timestamp("updated_at")
     .defaultNow()

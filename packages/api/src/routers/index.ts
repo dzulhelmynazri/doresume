@@ -18,6 +18,7 @@ import { saveLocation } from "./location";
 import { saveMinimumSalary } from "./minimum-salary";
 import { privateData } from "./private-data";
 import { getResumeDocument, saveResumeDocument } from "./resume-document";
+import { getResumeProfiles, saveResumeProfiles } from "./resume-profiles";
 import { saveWorkArrangement } from "./work-arrangement";
 import { saveWorkType } from "./work-type";
 
@@ -26,6 +27,7 @@ export const appRouter = {
   disconnectIntegration,
   getConnections,
   getResumeDocument,
+  getResumeProfiles,
   healthCheck,
   privateData,
   saveApplicationPassword,
@@ -38,6 +40,7 @@ export const appRouter = {
   saveLocation,
   saveMinimumSalary,
   saveResumeDocument,
+  saveResumeProfiles,
   saveWorkArrangement,
   saveWorkEligibility,
   saveWorkType,

@@ -137,3 +137,14 @@ export {
   type ResumeTemplate,
   type WorkExperienceEntry,
 } from "./resume-document";
+export {
+  createDefaultResumeProfilesState,
+  createResumeProfile,
+  getActiveResumeProfile,
+  getNextProfileName,
+  resumeProfileSchema,
+  resumeProfilesStateSchema,
+  updateActiveProfileDocument,
+  type ResumeProfile,
+  type ResumeProfilesState,
+} from "./resume-profiles";

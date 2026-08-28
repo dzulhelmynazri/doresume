@@ -26,37 +26,38 @@ export const ResumePreviewToolbar = ({
   onChange,
   onExport,
 }: ResumePreviewToolbarProps) => (
-  <div className="flex w-full items-center justify-between gap-3">
-    <span className="text-sm font-medium">Preview</span>
-    <div className="flex items-center gap-2">
-      <ToggleGroup
-        onValueChange={([template]) => {
-          if (!template) {
-            return;
-          }
+  <div className="flex shrink-0 items-center gap-2">
+    <span className="text-muted-foreground hidden text-xs font-medium sm:inline">
+      Preview
+    </span>
+    <ToggleGroup
+      onValueChange={([template]) => {
+        if (!template) {
+          return;
+        }
 
-          onChange((current) =>
-            updateSettings(current, {
-              template: template as ResumeTemplate,
-            })
-          );
-        }}
-        spacing={0}
-        value={[document.settings.template]}
-        variant="outline"
-      >
-        <ToggleGroupItem value="standard">Standard</ToggleGroupItem>
-        <ToggleGroupItem value="jake">Jake</ToggleGroupItem>
-      </ToggleGroup>
-      <Button
-        disabled={isExporting || isSaving}
-        onClick={onExport}
-        type="button"
-      >
-        <DownloadIcon data-icon="inline-start" />
-        {isExporting ? "Exporting..." : "Download PDF"}
-      </Button>
-    </div>
+        onChange((current) =>
+          updateSettings(current, {
+            template: template as ResumeTemplate,
+          })
+        );
+      }}
+      spacing={0}
+      value={[document.settings.template]}
+      variant="outline"
+    >
+      <ToggleGroupItem value="standard">Standard</ToggleGroupItem>
+      <ToggleGroupItem value="jake">Jake</ToggleGroupItem>
+    </ToggleGroup>
+    <Button
+      disabled={isExporting || isSaving}
+      onClick={onExport}
+      size="sm"
+      type="button"
+    >
+      <DownloadIcon data-icon="inline-start" />
+      {isExporting ? "Exporting..." : "Download PDF"}
+    </Button>
   </div>
 );
 

@@ -5,6 +5,7 @@ import type {
   ResumeDocument,
   ResumeFontFamily,
   ResumeFontSize,
+  ResumeProfile,
 } from "@doresume/contracts";
 import { Button } from "@doresume/ui/components/button";
 import {
@@ -21,15 +22,24 @@ import {
 import { AlignJustifyIcon, AlignLeftIcon } from "lucide-react";
 
 import { updateSettings } from "./lib/resume-actions";
+import { ResumeProfileSelector } from "./resume-profile-selector";
 import { SectionsPopover } from "./sections-popover";
 
 interface ResumeToolbarProps {
+  activeProfile: ResumeProfile;
   document: ResumeDocument;
   isDirty: boolean;
   isSaving: boolean;
+  onAddProfile: () => void | Promise<void>;
   onCancel: () => void;
   onChange: (updater: (current: ResumeDocument) => ResumeDocument) => void;
+  onDeleteProfile: (profileId: string) => void | Promise<void>;
+  onRenameProfile: (profileId: string, name: string) => void | Promise<void>;
   onSave: () => void;
+  onSwitchProfile: (profileId: string) => void | Promise<void>;
+  onToggleStarred: (profileId: string) => void | Promise<void>;
+  profileCount: number;
+  profiles: ResumeProfile[];
 }
 
 const FONT_FAMILY_LABELS: Record<ResumeFontFamily, string> = {
@@ -39,15 +49,33 @@ const FONT_FAMILY_LABELS: Record<ResumeFontFamily, string> = {
 };
 
 export const ResumeToolbar = ({
+  activeProfile,
   document,
   isDirty,
   isSaving,
+  onAddProfile,
   onCancel,
   onChange,
+  onDeleteProfile,
+  onRenameProfile,
   onSave,
+  onSwitchProfile,
+  onToggleStarred,
+  profileCount,
+  profiles,
 }: ResumeToolbarProps) => (
-  <div className="flex w-full flex-wrap items-center justify-between gap-3">
-    <div className="flex flex-wrap items-center gap-2">
+  <div className="flex w-full min-w-0 items-center gap-2 overflow-x-auto">
+    <div className="flex shrink-0 items-center gap-2">
+      <ResumeProfileSelector
+        activeProfile={activeProfile}
+        canDelete={profileCount > 1}
+        onAddProfile={onAddProfile}
+        onDeleteProfile={onDeleteProfile}
+        onRenameProfile={onRenameProfile}
+        onSwitchProfile={onSwitchProfile}
+        onToggleStarred={onToggleStarred}
+        profiles={profiles}
+      />
       <SectionsPopover document={document} onChange={onChange} />
 
       <Select
@@ -68,7 +96,7 @@ export const ResumeToolbar = ({
         }}
         value={document.settings.fontFamily}
       >
-        <SelectTrigger>
+        <SelectTrigger className="w-[6.75rem]">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -99,7 +127,7 @@ export const ResumeToolbar = ({
         }}
         value={String(document.settings.fontSize)}
       >
-        <SelectTrigger>
+        <SelectTrigger className="w-14">
           <SelectValue className="flex-none" />
         </SelectTrigger>
         <SelectContent>
@@ -133,16 +161,22 @@ export const ResumeToolbar = ({
       </ToggleGroup>
     </div>
 
-    <div className="flex items-center gap-2">
+    <div className="ml-auto flex shrink-0 items-center gap-2">
       <Button
         disabled={!isDirty || isSaving}
         onClick={onCancel}
+        size="sm"
         type="button"
         variant="outline"
       >
         Cancel
       </Button>
-      <Button disabled={!isDirty || isSaving} onClick={onSave} type="button">
+      <Button
+        disabled={!isDirty || isSaving}
+        onClick={onSave}
+        size="sm"
+        type="button"
+      >
         {isSaving ? "Saving..." : "Save"}
       </Button>
     </div>

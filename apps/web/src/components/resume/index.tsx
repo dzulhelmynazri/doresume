@@ -1,46 +1,65 @@
 "use client";
 
-import type { ResumeDocument } from "@doresume/contracts";
+import type { ResumeProfilesState } from "@doresume/contracts";
 
-import { useResumeDocument } from "./hooks/use-resume-document";
+import { useResumeProfiles } from "./hooks/use-resume-profiles";
 import { ResumeEditorPanel } from "./resume-editor-panel";
 import { ResumePreviewPane, ResumePreviewToolbar } from "./resume-preview-pane";
 import { ResumeToolbar } from "./resume-toolbar";
 
 export const ResumeEditor = ({
-  initialDocument,
+  initialProfiles,
 }: {
-  initialDocument: ResumeDocument;
+  initialProfiles: ResumeProfilesState;
 }) => {
   const {
+    activeProfile,
+    addProfile,
     cancel,
+    deleteProfile,
     document,
     exportPdf,
     isDirty,
     isExporting,
     isSaving,
+    profiles,
+    renameProfile,
     resetKey,
     save,
+    switchProfile,
+    toggleStarred,
     updateDocument,
-  } = useResumeDocument(initialDocument);
+  } = useResumeProfiles(initialProfiles);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="border-border/60 sticky top-0 z-10 shrink-0 border-b">
-        <div className="flex flex-col lg:flex-row lg:items-stretch">
-          <div className="border-border/60 bg-background flex items-center px-4 py-3 lg:w-1/2 lg:border-r">
+        <div className="bg-background flex min-w-0 items-center gap-3 overflow-x-auto px-4 py-2">
+          <div className="flex min-w-0 flex-1 items-center">
             <ResumeToolbar
+              activeProfile={activeProfile}
               document={document}
               isDirty={isDirty}
               isSaving={isSaving}
+              onAddProfile={addProfile}
               onCancel={cancel}
               onChange={updateDocument}
+              onDeleteProfile={deleteProfile}
+              onRenameProfile={renameProfile}
               onSave={() => {
                 void save();
               }}
+              onSwitchProfile={switchProfile}
+              onToggleStarred={toggleStarred}
+              profileCount={profiles.profiles.length}
+              profiles={profiles.profiles}
             />
           </div>
-          <div className="border-border/60 bg-background flex items-center border-t px-4 py-3 lg:w-1/2 lg:border-t-0">
+          <div
+            aria-hidden
+            className="bg-border hidden h-6 w-px shrink-0 lg:block"
+          />
+          <div className="flex shrink-0 items-center">
             <ResumePreviewToolbar
               document={document}
               isExporting={isExporting}

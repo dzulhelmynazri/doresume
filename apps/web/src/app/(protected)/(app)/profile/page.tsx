@@ -1,4 +1,4 @@
-import { getUserResumeDocument } from "@doresume/db/user-resume-document";
+import { getUserResumeProfiles } from "@doresume/db/user-resume-document";
 import { Suspense } from "react";
 
 import { LoadingImage } from "@/components/loading-image";
@@ -7,9 +7,9 @@ import { requireUser } from "@/lib/session";
 
 const ProfilePageContent = async () => {
   const user = await requireUser();
-  const document = await getUserResumeDocument(user.id);
+  const initialProfiles = await getUserResumeProfiles(user.id);
 
-  return <ResumeEditor initialDocument={document} />;
+  return <ResumeEditor initialProfiles={initialProfiles} />;
 };
 
 const ProfilePage = () => (
