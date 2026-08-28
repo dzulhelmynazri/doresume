@@ -1,7 +1,5 @@
-const TrackerPage = () => (
-  <div>
-    <h1>Tracker</h1>
-  </div>
-);
+import { Tracker } from "@/components/tracker";
+
+const TrackerPage = () => <Tracker />;
 
 export default TrackerPage;

@@ -1,5 +1,4 @@
 import { getUserApplicationSettings } from "@doresume/db/user-application-settings";
-import { Spinner } from "@doresume/ui/components/spinner";
 import { Suspense } from "react";
 
 import { requireUser } from "@/lib/session";
@@ -15,11 +14,7 @@ const ApplySettingsPageContent = async () => {
 
 const ApplySettingsPage = () => (
   <Suspense
-    fallback={
-      <div className="py-4">
-        <Spinner />
-      </div>
-    }
+    fallback={<div className="text-muted-foreground py-4">Wait laa...</div>}
   >
     <ApplySettingsPageContent />
   </Suspense>

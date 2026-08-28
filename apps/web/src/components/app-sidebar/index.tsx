@@ -83,6 +83,10 @@ export const getAppNavTitle = (pathname: string) => {
     return "Company";
   }
 
+  if (pathname === "/tracker") {
+    return "Tracker";
+  }
+
   if (
     pathname.startsWith("/apply") ||
     pathname.startsWith("/workday") ||

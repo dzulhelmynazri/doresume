@@ -1,5 +1,4 @@
 import { getIntegrationConnections } from "@doresume/api/composio";
-import { Spinner } from "@doresume/ui/components/spinner";
 import { Suspense } from "react";
 
 import { requireUser } from "@/lib/session";
@@ -15,11 +14,7 @@ const IntegrationsPageContent = async () => {
 
 const IntegrationsPage = () => (
   <Suspense
-    fallback={
-      <div className="py-4">
-        <Spinner />
-      </div>
-    }
+    fallback={<div className="text-muted-foreground py-4">Wait laa...</div>}
   >
     <IntegrationsPageContent />
   </Suspense>
