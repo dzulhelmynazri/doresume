@@ -9,16 +9,13 @@ import { JobStatusBadge } from "./job-status-badge";
 
 const JobApplication = ({ job }: { job: Job }) => (
   <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-    <div className="flex flex-col gap-1">
-      <h1>{job.title}</h1>
-      <p className="text-muted-foreground">{job.company}</p>
-    </div>
-    <JobDetails job={job}>
-      <JobStatusBadge status={job.status} />
-      <JobResumeBadge status={job.resumeStatus} />
-    </JobDetails>
-    <div className="flex items-center justify-between gap-2">
+    <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-1">
+        <h1>{job.title}</h1>
+        <p className="text-muted-foreground">{job.company}</p>
+      </div>
       <Button
+        className="shrink-0"
         nativeButton={false}
         render={
           <Link
@@ -33,13 +30,11 @@ const JobApplication = ({ job }: { job: Job }) => (
         View original posting
         <ArrowUpRight data-icon="inline-end" />
       </Button>
-      <div className="flex items-center gap-2">
-        <Button type="button" variant="outline">
-          Bookmark
-        </Button>
-        <Button type="button">Apply</Button>
-      </div>
     </div>
+    <JobDetails job={job}>
+      <JobStatusBadge status={job.status} />
+      <JobResumeBadge status={job.resumeStatus} />
+    </JobDetails>
   </div>
 );
 
