@@ -1,57 +1,57 @@
 "use client";
 
-import type { ResumeDocument, ResumeProfile } from "@doresume/contracts";
+import type { DocumentBundle, ResumeDocument } from "@doresume/contracts";
 import { Button } from "@doresume/ui/components/button";
 
-import { ResumeProfileSelector } from "./resume-profile-selector";
+import { DocumentSelector } from "./document-selector";
 import { SectionsPopover } from "./sections-popover";
 
 interface ResumeToolbarProps {
-  activeProfile: ResumeProfile;
+  activeDocument: DocumentBundle;
   document: ResumeDocument;
+  documentCount: number;
+  documents: DocumentBundle[];
   isDirty: boolean;
   isSaving: boolean;
-  onAddProfile: () => void | Promise<void>;
+  onAddDocument: () => void | Promise<void>;
   onCancel: () => void;
   onChange: (updater: (current: ResumeDocument) => ResumeDocument) => void;
-  onDeleteProfile: (profileId: string) => void | Promise<void>;
-  onRenameProfile: (profileId: string, name: string) => void | Promise<void>;
+  onDeleteDocument: (documentId: string) => void | Promise<void>;
+  onRenameDocument: (documentId: string, name: string) => void | Promise<void>;
   onSave: () => void;
-  onSwitchProfile: (profileId: string) => void | Promise<void>;
-  onToggleStarred: (profileId: string) => void | Promise<void>;
-  profileCount: number;
-  profiles: ResumeProfile[];
+  onSwitchDocument: (documentId: string) => void | Promise<void>;
+  onToggleStarred: (documentId: string) => void | Promise<void>;
   showSections?: boolean;
 }
 
 export const ResumeToolbar = ({
-  activeProfile,
+  activeDocument,
   document,
+  documentCount,
+  documents,
   isDirty,
   isSaving,
-  onAddProfile,
+  onAddDocument,
   onCancel,
   onChange,
-  onDeleteProfile,
-  onRenameProfile,
+  onDeleteDocument,
+  onRenameDocument,
   onSave,
-  onSwitchProfile,
+  onSwitchDocument,
   onToggleStarred,
-  profileCount,
-  profiles,
   showSections = true,
 }: ResumeToolbarProps) => (
   <div className="flex w-full min-w-0 items-center justify-between gap-2 overflow-x-auto">
     <div className="flex shrink-0 items-center gap-2">
-      <ResumeProfileSelector
-        activeProfile={activeProfile}
-        canDelete={profileCount > 1}
-        onAddProfile={onAddProfile}
-        onDeleteProfile={onDeleteProfile}
-        onRenameProfile={onRenameProfile}
-        onSwitchProfile={onSwitchProfile}
+      <DocumentSelector
+        activeDocument={activeDocument}
+        canDelete={documentCount > 1}
+        documents={documents}
+        onAddDocument={onAddDocument}
+        onDeleteDocument={onDeleteDocument}
+        onRenameDocument={onRenameDocument}
+        onSwitchDocument={onSwitchDocument}
         onToggleStarred={onToggleStarred}
-        profiles={profiles}
       />
       {showSections ? (
         <SectionsPopover document={document} onChange={onChange} />

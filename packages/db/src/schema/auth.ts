@@ -1,12 +1,12 @@
 import type {
   ApplicationSettings,
   Checklist,
+  DocumentsState,
   EducationLevel,
   ExperienceLevel,
   Industries,
   MinimumSalary,
   ResumeDocument,
-  ResumeProfilesState,
   WorkArrangement,
   WorkEligibility,
   WorkType,
@@ -33,6 +33,7 @@ export const user = pgTable("user", {
   city: text("city"),
   country: text("country"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  documents: jsonb("documents").$type<DocumentsState>(),
   educationLevel: text("education_level").$type<EducationLevel>(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
@@ -46,7 +47,6 @@ export const user = pgTable("user", {
   name: text("name").notNull(),
   phone: text("phone"),
   resumeDocument: jsonb("resume_document").$type<ResumeDocument>(),
-  resumeProfiles: jsonb("resume_profiles").$type<ResumeProfilesState>(),
   state: text("state"),
   updatedAt: timestamp("updated_at")
     .defaultNow()

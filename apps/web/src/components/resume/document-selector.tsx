@@ -1,6 +1,6 @@
 "use client";
 
-import type { ResumeProfile, ResumeProfilesState } from "@doresume/contracts";
+import type { DocumentBundle, DocumentsState } from "@doresume/contracts";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,51 +35,51 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-interface ResumeProfileSelectorProps {
-  activeProfile: ResumeProfile;
+interface DocumentSelectorProps {
+  activeDocument: DocumentBundle;
   canDelete: boolean;
-  onAddProfile: () => void;
-  onDeleteProfile: (profileId: string) => void;
-  onRenameProfile: (profileId: string, name: string) => void;
-  onSwitchProfile: (profileId: string) => void;
-  onToggleStarred: (profileId: string) => void;
-  profiles: ResumeProfilesState["profiles"];
+  documents: DocumentsState["documents"];
+  onAddDocument: () => void;
+  onDeleteDocument: (documentId: string) => void;
+  onRenameDocument: (documentId: string, name: string) => void;
+  onSwitchDocument: (documentId: string) => void;
+  onToggleStarred: (documentId: string) => void;
 }
 
-const ProfileGroupDivider = () => (
+const DocumentGroupDivider = () => (
   <div aria-hidden className="bg-border mx-0.5 h-4 w-px shrink-0" />
 );
 
-export const ResumeProfileSelector = ({
-  activeProfile,
+export const DocumentSelector = ({
+  activeDocument,
   canDelete,
-  onAddProfile,
-  onDeleteProfile,
-  onRenameProfile,
-  onSwitchProfile,
+  onAddDocument,
+  onDeleteDocument,
+  onRenameDocument,
+  onSwitchDocument,
   onToggleStarred,
-  profiles,
-}: ResumeProfileSelectorProps) => {
-  const [renameValue, setRenameValue] = useState(activeProfile.name);
+  documents,
+}: DocumentSelectorProps) => {
+  const [renameValue, setRenameValue] = useState(activeDocument.name);
   const [isRenameOpen, setIsRenameOpen] = useState(false);
 
   const handleRenameOpenChange = (open: boolean) => {
     setIsRenameOpen(open);
 
     if (open) {
-      setRenameValue(activeProfile.name);
+      setRenameValue(activeDocument.name);
     }
   };
 
   const handleRenameSubmit = () => {
     const trimmedName = renameValue.trim();
 
-    if (!trimmedName || trimmedName === activeProfile.name) {
+    if (!trimmedName || trimmedName === activeDocument.name) {
       setIsRenameOpen(false);
       return;
     }
 
-    onRenameProfile(activeProfile.id, trimmedName);
+    onRenameDocument(activeDocument.id, trimmedName);
     setIsRenameOpen(false);
   };
 
@@ -96,22 +96,22 @@ export const ResumeProfileSelector = ({
               />
             }
           >
-            <span className="truncate">{activeProfile.name}</span>
+            <span className="truncate">{activeDocument.name}</span>
             <ChevronDownIcon className="text-muted-foreground size-4 shrink-0" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="min-w-48">
-            {profiles.map((profile) => (
+            {documents.map((entry) => (
               <DropdownMenuItem
-                key={profile.id}
+                key={entry.id}
                 className={cn(
-                  profile.id === activeProfile.id && "bg-muted font-medium"
+                  entry.id === activeDocument.id && "bg-muted font-medium"
                 )}
                 onClick={() => {
-                  void onSwitchProfile(profile.id);
+                  void onSwitchDocument(entry.id);
                 }}
               >
-                <span className="flex-1 truncate">{profile.name}</span>
-                {profile.starred ? (
+                <span className="flex-1 truncate">{entry.name}</span>
+                {entry.starred ? (
                   <StarIcon className="size-3.5 fill-current text-amber-500" />
                 ) : null}
               </DropdownMenuItem>
@@ -119,7 +119,7 @@ export const ResumeProfileSelector = ({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <ProfileGroupDivider />
+        <DocumentGroupDivider />
 
         <Popover onOpenChange={handleRenameOpenChange} open={isRenameOpen}>
           <PopoverTrigger
@@ -133,7 +133,7 @@ export const ResumeProfileSelector = ({
             }
           >
             <PencilIcon className="size-3.5" />
-            <span className="sr-only">Rename profile</span>
+            <span className="sr-only">Rename document</span>
           </PopoverTrigger>
           <PopoverContent align="start" className="w-56">
             <form
@@ -146,7 +146,7 @@ export const ResumeProfileSelector = ({
               <Input
                 autoFocus
                 onChange={(event) => setRenameValue(event.target.value)}
-                placeholder="Profile name"
+                placeholder="Document name"
                 value={renameValue}
               />
               <Button size="sm" type="submit">
@@ -156,37 +156,39 @@ export const ResumeProfileSelector = ({
           </PopoverContent>
         </Popover>
 
-        <ProfileGroupDivider />
+        <DocumentGroupDivider />
 
         <Button
-          aria-label={activeProfile.starred ? "Unstar profile" : "Star profile"}
-          aria-pressed={activeProfile.starred}
+          aria-label={
+            activeDocument.starred ? "Remove as default" : "Set as default"
+          }
+          aria-pressed={activeDocument.starred}
           className={cn(
             "size-7",
-            activeProfile.starred
+            activeDocument.starred
               ? "text-amber-500 hover:text-amber-600"
               : "text-muted-foreground hover:text-foreground"
           )}
           onClick={() => {
-            void onToggleStarred(activeProfile.id);
+            void onToggleStarred(activeDocument.id);
           }}
           size="icon-xs"
           type="button"
           variant="ghost"
         >
           <StarIcon
-            className={cn("size-3.5", activeProfile.starred && "fill-current")}
+            className={cn("size-3.5", activeDocument.starred && "fill-current")}
           />
         </Button>
 
-        <ProfileGroupDivider />
+        <DocumentGroupDivider />
 
         <AlertDialog>
           <AlertDialogTrigger
             disabled={!canDelete}
             render={
               <Button
-                aria-label="Delete profile"
+                aria-label="Delete document"
                 className="text-muted-foreground/70 hover:bg-destructive/10 hover:text-destructive size-7 disabled:opacity-40"
                 size="icon-xs"
                 type="button"
@@ -198,20 +200,21 @@ export const ResumeProfileSelector = ({
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete {activeProfile.name}?</AlertDialogTitle>
+              <AlertDialogTitle>Delete {activeDocument.name}?</AlertDialogTitle>
               <AlertDialogDescription>
-                This profile and its resume content will be removed permanently.
+                This document and its resume content will be removed
+                permanently.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
-                  void onDeleteProfile(activeProfile.id);
+                  void onDeleteDocument(activeDocument.id);
                 }}
                 variant="destructive"
               >
-                Delete profile
+                Delete document
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -221,13 +224,13 @@ export const ResumeProfileSelector = ({
       <Button
         className="text-muted-foreground hover:text-foreground h-8 px-2"
         onClick={() => {
-          void onAddProfile();
+          void onAddDocument();
         }}
         type="button"
         variant="ghost"
       >
         <PlusIcon className="size-3.5" data-icon="inline-start" />
-        Add profile
+        Add document
       </Button>
     </div>
   );

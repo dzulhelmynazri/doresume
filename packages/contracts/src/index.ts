@@ -140,19 +140,20 @@ export {
 export {
   createDefaultCoverLetter,
   coverLetterSchema,
+  DOCUMENT_KINDS,
   type CoverLetter,
-  type ProfileDocumentType,
-  PROFILE_DOCUMENT_TYPES,
+  type DocumentKind,
 } from "./cover-letter";
 export {
-  createDefaultResumeProfilesState,
-  createResumeProfile,
-  getActiveResumeProfile,
-  getNextProfileName,
-  resumeProfileSchema,
-  resumeProfilesStateSchema,
-  updateActiveProfileCoverLetter,
-  updateActiveProfileDocument,
-  type ResumeProfile,
-  type ResumeProfilesState,
-} from "./resume-profiles";
+  createDefaultDocumentsState,
+  createDocumentBundle,
+  documentBundleSchema,
+  documentsStateSchema,
+  getActiveDocumentBundle,
+  getNextDocumentName,
+  parseDocumentsState,
+  updateActiveDocumentCoverLetter,
+  updateActiveDocumentResume,
+  type DocumentBundle,
+  type DocumentsState,
+} from "./documents";

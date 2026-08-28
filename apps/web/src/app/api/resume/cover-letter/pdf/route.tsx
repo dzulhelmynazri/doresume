@@ -1,5 +1,5 @@
 import { auth } from "@doresume/auth";
-import { getUserActiveCoverLetter } from "@doresume/db/user-resume-document";
+import { getUserActiveCoverLetter } from "@doresume/db/user-documents";
 import { render } from "takumi-pdf/next";
 
 import { CoverLetterPdfDocument } from "@/components/resume/cover-letter-pdf-document";

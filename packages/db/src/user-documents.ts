@@ -1,15 +1,16 @@
 import {
   createDefaultCoverLetter,
-  createDefaultResumeProfilesState,
-  getActiveResumeProfile,
+  createDefaultDocumentsState,
+  documentsStateSchema,
+  getActiveDocumentBundle,
+  parseDocumentsState,
   resumeDocumentSchema,
-  resumeProfilesStateSchema,
 } from "@doresume/contracts";
 import type {
   CoverLetter,
+  DocumentsState,
   ResumeDocument,
   ResumeDocumentSeedUser,
-  ResumeProfilesState,
 } from "@doresume/contracts";
 import { eq } from "drizzle-orm";
 
@@ -44,27 +45,17 @@ const parseLegacyDocument = (value: unknown): ResumeDocument | null => {
   return parsed.success ? parsed.data : null;
 };
 
-const parseProfilesState = (value: unknown): ResumeProfilesState | null => {
-  if (!value) {
-    return null;
-  }
-
-  const parsed = resumeProfilesStateSchema.safeParse(value);
-
-  return parsed.success ? parsed.data : null;
-};
-
 const getUserRecord = async (userId: string) => {
   const record = await db.query.user.findFirst({
     columns: {
       city: true,
       country: true,
+      documents: true,
       email: true,
       linkedin: true,
       name: true,
       phone: true,
       resumeDocument: true,
-      resumeProfiles: true,
       state: true,
     },
     where: eq(user.id, userId),
@@ -77,34 +68,34 @@ const getUserRecord = async (userId: string) => {
   return record;
 };
 
-export const getUserResumeProfiles = async (
+export const getUserDocuments = async (
   userId: string
-): Promise<ResumeProfilesState> => {
+): Promise<DocumentsState> => {
   const record = await getUserRecord(userId);
-  const parsedProfiles = parseProfilesState(record.resumeProfiles);
+  const parsedDocuments = parseDocumentsState(record.documents);
 
-  if (parsedProfiles) {
-    return parsedProfiles;
+  if (parsedDocuments) {
+    return parsedDocuments;
   }
 
-  return createDefaultResumeProfilesState(
+  return createDefaultDocumentsState(
     toSeedUser(record),
     parseLegacyDocument(record.resumeDocument)
   );
 };
 
-export const saveUserResumeProfiles = async (
+export const saveUserDocuments = async (
   userId: string,
-  state: ResumeProfilesState
+  state: DocumentsState
 ) => {
-  const parsed = resumeProfilesStateSchema.parse(state);
-  const activeDocument = getActiveResumeProfile(parsed).document;
+  const parsed = documentsStateSchema.parse(state);
+  const activeDocument = getActiveDocumentBundle(parsed).document;
 
   await db
     .update(user)
     .set({
+      documents: parsed,
       resumeDocument: activeDocument,
-      resumeProfiles: parsed,
     })
     .where(eq(user.id, userId));
 };
@@ -112,20 +103,20 @@ export const saveUserResumeProfiles = async (
 export const getUserResumeDocument = async (
   userId: string
 ): Promise<ResumeDocument> => {
-  const profiles = await getUserResumeProfiles(userId);
+  const documents = await getUserDocuments(userId);
 
-  return getActiveResumeProfile(profiles).document;
+  return getActiveDocumentBundle(documents).document;
 };
 
 export const getUserActiveCoverLetter = async (
   userId: string
 ): Promise<{ coverLetter: CoverLetter; document: ResumeDocument }> => {
-  const profiles = await getUserResumeProfiles(userId);
-  const activeProfile = getActiveResumeProfile(profiles);
+  const documents = await getUserDocuments(userId);
+  const activeDocument = getActiveDocumentBundle(documents);
 
   return {
-    coverLetter: activeProfile.coverLetter ?? createDefaultCoverLetter(),
-    document: activeProfile.document,
+    coverLetter: activeDocument.coverLetter ?? createDefaultCoverLetter(),
+    document: activeDocument.document,
   };
 };
 
@@ -133,22 +124,22 @@ export const saveUserResumeDocument = async (
   userId: string,
   document: ResumeDocument
 ) => {
-  const profiles = await getUserResumeProfiles(userId);
-  const activeProfile = getActiveResumeProfile(profiles);
+  const documents = await getUserDocuments(userId);
+  const activeDocument = getActiveDocumentBundle(documents);
 
-  await saveUserResumeProfiles(userId, {
-    ...profiles,
-    profiles: profiles.profiles.map((profile) =>
-      profile.id === activeProfile.id ? { ...profile, document } : profile
+  await saveUserDocuments(userId, {
+    ...documents,
+    documents: documents.documents.map((entry) =>
+      entry.id === activeDocument.id ? { ...entry, document } : entry
     ),
   });
 };
 
 export const userHasResumeDocument = async (userId: string) => {
   const record = await db.query.user.findFirst({
-    columns: { resumeDocument: true, resumeProfiles: true },
+    columns: { documents: true, resumeDocument: true },
     where: eq(user.id, userId),
   });
 
-  return Boolean(record?.resumeProfiles ?? record?.resumeDocument);
+  return Boolean(record?.documents ?? record?.resumeDocument);
 };

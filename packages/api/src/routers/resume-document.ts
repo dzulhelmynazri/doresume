@@ -2,7 +2,7 @@ import { resumeDocumentSchema } from "@doresume/contracts";
 import {
   getUserResumeDocument,
   saveUserResumeDocument,
-} from "@doresume/db/user-resume-document";
+} from "@doresume/db/user-documents";
 
 import { protectedProcedure } from "../index";
 

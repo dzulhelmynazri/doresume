@@ -8,6 +8,13 @@
       "when": 1787923951290,
       "tag": "0000_add_resume_profiles",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1787924251290,
+      "tag": "0001_rename_resume_profiles_to_documents",
+      "breakpoints": true
     }
   ]
 }

@@ -179,7 +179,7 @@ const ApplicationSettingsFields = ({
       <FieldLegend>Cover letter</FieldLegend>
       <FieldDescription>
         Generated automatically when a job asks for one. Tailored to the role
-        from your profile (and your saved cover letter, if you have one). No
+        from your documents (and your saved cover letter, if you have one). No
         setup needed.
       </FieldDescription>
     </FieldSet>

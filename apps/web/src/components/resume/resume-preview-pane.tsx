@@ -2,7 +2,7 @@
 
 import type {
   CoverLetter,
-  ProfileDocumentType,
+  DocumentKind,
   ResumeAlignment,
   ResumeDocument,
   ResumeFontFamily,
@@ -41,11 +41,11 @@ import { ResumePreviewDisplay } from "./resume-preview-display";
 
 interface ResumePreviewToolbarProps {
   document: ResumeDocument;
-  documentType: ProfileDocumentType;
+  documentKind: DocumentKind;
   isExporting: boolean;
   isSaving: boolean;
   onChange: (updater: (current: ResumeDocument) => ResumeDocument) => void;
-  onDocumentTypeChange: (documentType: ProfileDocumentType) => void;
+  onDocumentKindChange: (documentKind: DocumentKind) => void;
   onExport: () => void;
 }
 
@@ -55,21 +55,21 @@ const FONT_FAMILY_LABELS: Record<ResumeFontFamily, string> = {
   times: "Times New Roman",
 };
 
-const DOCUMENT_TYPE_LABELS: Record<ProfileDocumentType, string> = {
+const DOCUMENT_KIND_LABELS: Record<DocumentKind, string> = {
   "cover-letter": "Cover letter",
   resume: "Resume",
 };
 
 export const ResumePreviewToolbar = ({
   document,
-  documentType,
+  documentKind,
   isExporting,
   isSaving,
   onChange,
-  onDocumentTypeChange,
+  onDocumentKindChange,
   onExport,
 }: ResumePreviewToolbarProps) => {
-  const isCoverLetter = documentType === "cover-letter";
+  const isCoverLetter = documentKind === "cover-letter";
 
   return (
     <div className="flex w-full min-w-0 items-center justify-between gap-3 overflow-x-auto">
@@ -83,20 +83,20 @@ export const ResumePreviewToolbar = ({
             />
           }
         >
-          <span className="truncate">{DOCUMENT_TYPE_LABELS[documentType]}</span>
+          <span className="truncate">{DOCUMENT_KIND_LABELS[documentKind]}</span>
           <ChevronDownIcon className="text-muted-foreground size-3.5 shrink-0" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="min-w-[8.5rem]">
-          {(Object.keys(DOCUMENT_TYPE_LABELS) as ProfileDocumentType[]).map(
+          {(Object.keys(DOCUMENT_KIND_LABELS) as DocumentKind[]).map(
             (value) => (
               <DropdownMenuItem
                 key={value}
-                className={cn(documentType === value && "bg-muted font-medium")}
+                className={cn(documentKind === value && "bg-muted font-medium")}
                 onClick={() => {
-                  onDocumentTypeChange(value);
+                  onDocumentKindChange(value);
                 }}
               >
-                {DOCUMENT_TYPE_LABELS[value]}
+                {DOCUMENT_KIND_LABELS[value]}
               </DropdownMenuItem>
             )
           )}

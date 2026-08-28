@@ -11,6 +11,7 @@ import {
 import { getAtsFormData } from "./ats-form";
 import { saveChecklist } from "./checklist";
 import { saveContact } from "./contact";
+import { getDocuments, saveDocuments } from "./documents";
 import { saveEducationLevel } from "./education-level";
 import { saveWorkEligibility } from "./eligibility";
 import { saveExperienceLevel } from "./experience-level";
@@ -25,7 +26,6 @@ import { saveLocation } from "./location";
 import { saveMinimumSalary } from "./minimum-salary";
 import { privateData } from "./private-data";
 import { getResumeDocument, saveResumeDocument } from "./resume-document";
-import { getResumeProfiles, saveResumeProfiles } from "./resume-profiles";
 import { saveWorkArrangement } from "./work-arrangement";
 import { saveWorkType } from "./work-type";
 
@@ -36,21 +36,21 @@ export const appRouter = {
   getApplicationSettings,
   getAtsFormData,
   getConnections,
+  getDocuments,
   getResumeDocument,
-  getResumeProfiles,
   healthCheck,
   privateData,
   saveApplicationPassword,
   saveApplicationSettings,
   saveChecklist,
   saveContact,
+  saveDocuments,
   saveEducationLevel,
   saveExperienceLevel,
   saveIndustries,
   saveLocation,
   saveMinimumSalary,
   saveResumeDocument,
-  saveResumeProfiles,
   saveWorkArrangement,
   saveWorkEligibility,
   saveWorkType,

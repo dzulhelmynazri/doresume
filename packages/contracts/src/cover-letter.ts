@@ -7,9 +7,9 @@ export const coverLetterSchema = z.object({
 
 export type CoverLetter = z.infer<typeof coverLetterSchema>;
 
-export const PROFILE_DOCUMENT_TYPES = ["resume", "cover-letter"] as const;
+export const DOCUMENT_KINDS = ["resume", "cover-letter"] as const;
 
-export type ProfileDocumentType = (typeof PROFILE_DOCUMENT_TYPES)[number];
+export type DocumentKind = (typeof DOCUMENT_KINDS)[number];
 
 export const createDefaultCoverLetter = (): CoverLetter => ({
   body: "",

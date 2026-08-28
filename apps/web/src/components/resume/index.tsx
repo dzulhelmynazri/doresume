@@ -1,13 +1,10 @@
 "use client";
 
-import type {
-  ProfileDocumentType,
-  ResumeProfilesState,
-} from "@doresume/contracts";
+import type { DocumentKind, DocumentsState } from "@doresume/contracts";
 import { useState } from "react";
 
 import { CoverLetterEditorPanel } from "./cover-letter-editor-panel";
-import { useResumeProfiles } from "./hooks/use-resume-profiles";
+import { useDocuments } from "./hooks/use-documents";
 import { ResumeEditorPanel } from "./resume-editor-panel";
 import {
   CoverLetterPreviewPane,
@@ -17,34 +14,33 @@ import {
 import { ResumeToolbar } from "./resume-toolbar";
 
 export const ResumeEditor = ({
-  initialProfiles,
+  initialDocuments,
 }: {
-  initialProfiles: ResumeProfilesState;
+  initialDocuments: DocumentsState;
 }) => {
-  const [documentType, setDocumentType] =
-    useState<ProfileDocumentType>("resume");
-  const isCoverLetter = documentType === "cover-letter";
+  const [documentKind, setDocumentKind] = useState<DocumentKind>("resume");
+  const isCoverLetter = documentKind === "cover-letter";
 
   const {
-    activeProfile,
-    addProfile,
+    activeDocument,
+    addDocument,
     cancel,
     coverLetter,
-    deleteProfile,
+    deleteDocument,
     document,
+    documents,
     exportPdf,
     isDirty,
     isExporting,
     isSaving,
-    profiles,
-    renameProfile,
+    renameDocument,
     resetKey,
     save,
-    switchProfile,
+    switchDocument,
     toggleStarred,
     updateCoverLetter,
     updateDocument,
-  } = useResumeProfiles(initialProfiles);
+  } = useDocuments(initialDocuments);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -52,35 +48,35 @@ export const ResumeEditor = ({
         <div className="flex flex-col lg:flex-row lg:items-stretch">
           <div className="border-border/60 bg-background flex min-w-0 items-center px-4 py-2 lg:w-1/2 lg:border-r">
             <ResumeToolbar
-              activeProfile={activeProfile}
+              activeDocument={activeDocument}
               document={document}
+              documentCount={documents.documents.length}
+              documents={documents.documents}
               isDirty={isDirty}
               isSaving={isSaving}
-              onAddProfile={addProfile}
+              onAddDocument={addDocument}
               onCancel={cancel}
               onChange={updateDocument}
-              onDeleteProfile={deleteProfile}
-              onRenameProfile={renameProfile}
+              onDeleteDocument={deleteDocument}
+              onRenameDocument={renameDocument}
               onSave={() => {
                 void save();
               }}
-              onSwitchProfile={switchProfile}
+              onSwitchDocument={switchDocument}
               onToggleStarred={toggleStarred}
-              profileCount={profiles.profiles.length}
-              profiles={profiles.profiles}
               showSections={!isCoverLetter}
             />
           </div>
           <div className="border-border/60 bg-background flex min-w-0 items-center border-t px-4 py-2 lg:w-1/2 lg:border-t-0">
             <ResumePreviewToolbar
               document={document}
-              documentType={documentType}
+              documentKind={documentKind}
               isExporting={isExporting}
               isSaving={isSaving}
               onChange={updateDocument}
-              onDocumentTypeChange={setDocumentType}
+              onDocumentKindChange={setDocumentKind}
               onExport={() => {
-                void exportPdf(documentType);
+                void exportPdf(documentKind);
               }}
             />
           </div>

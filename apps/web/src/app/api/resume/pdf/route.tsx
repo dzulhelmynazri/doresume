@@ -1,5 +1,5 @@
 import { auth } from "@doresume/auth";
-import { getUserResumeDocument } from "@doresume/db/user-resume-document";
+import { getUserResumeDocument } from "@doresume/db/user-documents";
 import { render } from "takumi-pdf/next";
 
 import { ResumePdfDocument } from "@/components/resume/resume-pdf-document";

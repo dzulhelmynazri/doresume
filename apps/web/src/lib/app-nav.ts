@@ -5,7 +5,7 @@ import {
   Earth,
   LifeBuoyIcon,
   ListChecksIcon,
-  Origami,
+  Files,
   SendIcon,
 } from "lucide-react";
 
@@ -37,9 +37,9 @@ export const APP_NAV_MAIN: AppNavItem[] = [
     url: "/networking",
   },
   {
-    icon: Origami,
-    title: "Profile",
-    url: "/profile",
+    icon: Files,
+    title: "Documents",
+    url: "/documents",
   },
 ];
 
