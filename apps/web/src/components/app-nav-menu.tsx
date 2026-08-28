@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "@doresume/ui/components/dropdown-menu";
 import { cn } from "@doresume/ui/lib/utils";
-import { ChevronsUpDownIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -33,7 +32,7 @@ export const AppNavMenu = () => {
         }
       >
         <div className="flex items-center gap-2">
-          <div className="relative size-8 shrink-0 overflow-hidden rounded-lg">
+          <div className="relative size-7 shrink-0 overflow-hidden rounded-lg">
             <Image
               alt="doresume"
               className="size-full [image-rendering:pixelated]"
@@ -43,16 +42,16 @@ export const AppNavMenu = () => {
               width={24}
             />
           </div>
-          <div className="flex flex-col gap-0.5 text-left leading-tight">
+          <div className="flex flex-col text-left leading-tight">
             <span className="text-sm font-medium">doresume</span>
             <span className="text-muted-foreground text-xs">
               [{currentTitle}]
             </span>
           </div>
-          <ChevronsUpDownIcon className="text-muted-foreground size-4 shrink-0" />
+          {/* <ChevronsUpDownIcon className="text-muted-foreground size-4 shrink-0" /> */}
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="min-w-56 rounded-lg">
+      <DropdownMenuContent align="start" className="min-w-56">
         <DropdownMenuGroup>
           {APP_NAV_MAIN.map((item) => {
             const Icon = item.icon;
