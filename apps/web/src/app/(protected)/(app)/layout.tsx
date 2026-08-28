@@ -1,12 +1,10 @@
 import { Separator } from "@doresume/ui/components/separator";
-import { SidebarInset, SidebarProvider } from "@doresume/ui/components/sidebar";
 import { Spinner } from "@doresume/ui/components/spinner";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import type { ReactNode } from "react";
 
 import { AppHeader } from "@/components/app-header";
-import { AppSidebar } from "@/components/app-sidebar";
 import { userIsOnboarded } from "@/lib/onboarding";
 import { requireUser } from "@/lib/session";
 
@@ -18,16 +16,15 @@ const AppLayoutContent = async ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <SidebarProvider className="row-span-full min-h-0 overflow-hidden">
-      <AppSidebar />
-      <SidebarInset>
+    <div className="bg-sidebar row-span-full flex min-h-0 overflow-hidden p-2">
+      <main className="bg-background relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl shadow-sm">
         <AppHeader />
         <Separator />
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
           {children}
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+      </main>
+    </div>
   );
 };
 

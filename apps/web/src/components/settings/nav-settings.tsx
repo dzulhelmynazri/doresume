@@ -1,11 +1,7 @@
 "use client";
 
-import {
-  SidebarGroup,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@doresume/ui/components/sidebar";
+import { Button } from "@doresume/ui/components/button";
+import { cn } from "@doresume/ui/lib/utils";
 import type { LucideIcon } from "lucide-react";
 import { BriefcaseIcon, SlidersHorizontalIcon, ToyBrick } from "lucide-react";
 import Link from "next/link";
@@ -37,26 +33,27 @@ export const SettingsNav = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="w-56 shrink-0 p-4">
-      <SidebarGroup className="p-0">
-        <SidebarMenu>
-          {SETTINGS_NAV_ITEMS.map((item) => {
-            const Icon = item.icon;
+    <nav className="flex w-56 shrink-0 flex-col gap-1 p-4">
+      {SETTINGS_NAV_ITEMS.map((item) => {
+        const Icon = item.icon;
+        const isActive = pathname === item.url;
 
-            return (
-              <SidebarMenuItem key={item.url}>
-                <SidebarMenuButton
-                  isActive={pathname === item.url}
-                  render={<Link aria-label={item.title} href={item.url} />}
-                >
-                  <Icon />
-                  <span>{item.title}</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            );
-          })}
-        </SidebarMenu>
-      </SidebarGroup>
+        return (
+          <Button
+            key={item.url}
+            className={cn(
+              "justify-start gap-2",
+              isActive && "bg-muted font-medium"
+            )}
+            nativeButton={false}
+            render={<Link aria-label={item.title} href={item.url} />}
+            variant="ghost"
+          >
+            <Icon />
+            {item.title}
+          </Button>
+        );
+      })}
     </nav>
   );
 };
