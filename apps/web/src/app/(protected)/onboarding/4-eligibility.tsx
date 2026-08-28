@@ -119,10 +119,11 @@ const ELIGIBILITY_DEFAULTS: WorkEligibilityDraft = {
 };
 
 export const useWorkEligibilityForm = (
-  onValidSubmit: (value: WorkEligibility) => void | Promise<void>
+  onValidSubmit: (value: WorkEligibility) => void | Promise<void>,
+  defaultValues: WorkEligibilityDraft = ELIGIBILITY_DEFAULTS
 ) =>
   useForm({
-    defaultValues: ELIGIBILITY_DEFAULTS,
+    defaultValues,
     onSubmit: async ({ value }) => {
       await onValidSubmit(workEligibilitySchema.parse(value));
     },
@@ -167,20 +168,28 @@ const YesNoField = ({
   </Field>
 );
 
-const WorkEligibilityFields = ({ form }: { form: WorkEligibilityFormApi }) => (
+const WorkEligibilityFields = ({
+  form,
+  syncQuestionnaire = false,
+}: {
+  form: WorkEligibilityFormApi;
+  syncQuestionnaire?: boolean;
+}) => (
   <FieldGroup>
-    <form.Subscribe selector={(state) => state.values}>
-      {(values) => (
-        <div className="sr-only">
-          <QuestionnaireInput
-            key={JSON.stringify(values)}
-            aria-label="Work eligibility"
-            defaultValue={JSON.stringify(values)}
-            readOnly
-          />
-        </div>
-      )}
-    </form.Subscribe>
+    {syncQuestionnaire ? (
+      <form.Subscribe selector={(state) => state.values}>
+        {(values) => (
+          <div className="sr-only">
+            <QuestionnaireInput
+              key={JSON.stringify(values)}
+              aria-label="Work eligibility"
+              defaultValue={JSON.stringify(values)}
+              readOnly
+            />
+          </div>
+        )}
+      </form.Subscribe>
+    ) : null}
     <form.Field name="citizenship">
       {(field) => {
         const selected = getCountriesByCode(field.state.value);
@@ -510,4 +519,4 @@ const WorkEligibilityFields = ({ form }: { form: WorkEligibilityFormApi }) => (
   </FieldGroup>
 );
 
-export { WorkEligibilityFields };
+export { ELIGIBILITY_DEFAULTS, WorkEligibilityFields };

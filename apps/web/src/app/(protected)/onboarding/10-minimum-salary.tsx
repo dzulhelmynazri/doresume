@@ -64,10 +64,11 @@ const isSalaryCurrency = (value: string): value is SalaryCurrency =>
   SALARY_CURRENCIES.some((currency) => currency === value);
 
 export const useMinimumSalaryForm = (
-  onValidSubmit: (value: MinimumSalary) => void | Promise<void>
+  onValidSubmit: (value: MinimumSalary) => void | Promise<void>,
+  defaultValues: MinimumSalary = MINIMUM_SALARY_DEFAULTS
 ) =>
   useForm({
-    defaultValues: MINIMUM_SALARY_DEFAULTS,
+    defaultValues,
     onSubmit: async ({ value }) => {
       await onValidSubmit(minimumSalarySchema.parse(value));
     },
@@ -142,20 +143,28 @@ const SalaryHistogram = ({
   );
 };
 
-const MinimumSalaryFields = ({ form }: { form: MinimumSalaryFormApi }) => (
+const MinimumSalaryFields = ({
+  form,
+  syncQuestionnaire = false,
+}: {
+  form: MinimumSalaryFormApi;
+  syncQuestionnaire?: boolean;
+}) => (
   <FieldGroup>
-    <form.Subscribe selector={(state) => state.values}>
-      {(values) => (
-        <div className="sr-only">
-          <QuestionnaireInput
-            key={JSON.stringify(values)}
-            aria-label="Minimum salary"
-            defaultValue={JSON.stringify(values)}
-            readOnly
-          />
-        </div>
-      )}
-    </form.Subscribe>
+    {syncQuestionnaire ? (
+      <form.Subscribe selector={(state) => state.values}>
+        {(values) => (
+          <div className="sr-only">
+            <QuestionnaireInput
+              key={JSON.stringify(values)}
+              aria-label="Minimum salary"
+              defaultValue={JSON.stringify(values)}
+              readOnly
+            />
+          </div>
+        )}
+      </form.Subscribe>
+    ) : null}
     <form.Field name="period">
       {(periodField) => (
         <ToggleGroup

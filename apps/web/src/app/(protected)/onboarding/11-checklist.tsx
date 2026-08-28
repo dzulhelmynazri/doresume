@@ -98,10 +98,11 @@ const DISABILITY_OPTIONS = [
 ] as const;
 
 export const useChecklistForm = (
-  onValidSubmit: (value: Checklist) => void | Promise<void>
+  onValidSubmit: (value: Checklist) => void | Promise<void>,
+  defaultValues: Checklist = CHECKLIST_DEFAULTS
 ) =>
   useForm({
-    defaultValues: CHECKLIST_DEFAULTS,
+    defaultValues,
     onSubmit: async ({ value }) => {
       await onValidSubmit(checklistSchema.parse(value));
     },
@@ -260,20 +261,28 @@ const ChecklistAccordionSection = ({
   </AccordionItem>
 );
 
-const ChecklistFields = ({ form }: { form: ChecklistFormApi }) => (
+const ChecklistFields = ({
+  form,
+  syncQuestionnaire = false,
+}: {
+  form: ChecklistFormApi;
+  syncQuestionnaire?: boolean;
+}) => (
   <FieldGroup>
-    <form.Subscribe selector={(state) => state.values}>
-      {(values) => (
-        <div className="sr-only">
-          <QuestionnaireInput
-            key={JSON.stringify(values)}
-            aria-label="Checklist"
-            defaultValue={JSON.stringify(values)}
-            readOnly
-          />
-        </div>
-      )}
-    </form.Subscribe>
+    {syncQuestionnaire ? (
+      <form.Subscribe selector={(state) => state.values}>
+        {(values) => (
+          <div className="sr-only">
+            <QuestionnaireInput
+              key={JSON.stringify(values)}
+              aria-label="Checklist"
+              defaultValue={JSON.stringify(values)}
+              readOnly
+            />
+          </div>
+        )}
+      </form.Subscribe>
+    ) : null}
     <Accordion className="rounded-lg border" defaultValue={["preferences"]}>
       <ChecklistAccordionSection title="Preferences" value="preferences">
         <YesNoFormField

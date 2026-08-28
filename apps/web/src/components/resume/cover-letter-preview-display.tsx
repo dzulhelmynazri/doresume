@@ -28,7 +28,7 @@ export const CoverLetterPreviewDisplay = ({
   return (
     <article
       className={cn(
-        "bg-background text-foreground min-h-[11in] w-full rounded-sm border p-[0.75in] shadow-sm",
+        "min-h-[11in] w-full rounded-md border bg-white p-[0.75in] text-black shadow-sm",
         textAlign === "justify" && "text-justify"
       )}
       style={{
@@ -45,7 +45,7 @@ export const CoverLetterPreviewDisplay = ({
         {[header.email, header.phone, header.linkedin, header.location]
           .filter(Boolean)
           .map((line) => (
-            <p className="text-muted-foreground m-0" key={line}>
+            <p className="m-0 text-neutral-600" key={line}>
               {line}
             </p>
           ))}
@@ -59,7 +59,7 @@ export const CoverLetterPreviewDisplay = ({
         {coverLetter.body.trim() ? (
           <p className="m-0 whitespace-pre-wrap">{coverLetter.body}</p>
         ) : (
-          <p className="text-muted-foreground m-0">
+          <p className="m-0 text-neutral-500">
             Your cover letter preview will appear here.
           </p>
         )}

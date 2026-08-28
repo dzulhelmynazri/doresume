@@ -3,7 +3,12 @@
 import { Button } from "@doresume/ui/components/button";
 import { cn } from "@doresume/ui/lib/utils";
 import type { LucideIcon } from "lucide-react";
-import { BriefcaseIcon, SlidersHorizontalIcon, ToyBrick } from "lucide-react";
+import {
+  BriefcaseIcon,
+  SlidersHorizontalIcon,
+  ToyBrick,
+  Terminal,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -16,6 +21,11 @@ const SETTINGS_NAV_ITEMS: {
     icon: SlidersHorizontalIcon,
     title: "Apply settings",
     url: "/apply",
+  },
+  {
+    icon: Terminal,
+    title: "ATS form",
+    url: "/ats",
   },
   {
     icon: BriefcaseIcon,

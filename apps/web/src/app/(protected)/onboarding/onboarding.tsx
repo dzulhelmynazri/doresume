@@ -320,7 +320,7 @@ const Onboarding = ({
           questions for each. We use this to filter out jobs you can&apos;t
           apply to.
         </QuestionnaireDescription>
-        <WorkEligibilityFields form={eligibilityForm} />
+        <WorkEligibilityFields form={eligibilityForm} syncQuestionnaire />
         <QuestionnaireError />
       </QuestionnaireItem>
       <QuestionnaireItem name="industries" required>
@@ -366,7 +366,7 @@ const Onboarding = ({
         <QuestionnaireTitle>
           What&apos;s your desired minimum salary?
         </QuestionnaireTitle>
-        <MinimumSalaryFields form={minimumSalaryForm} />
+        <MinimumSalaryFields form={minimumSalaryForm} syncQuestionnaire />
         <QuestionnaireError />
       </QuestionnaireItem>
       <QuestionnaireItem name="checklist" required>
@@ -375,7 +375,7 @@ const Onboarding = ({
           A few last questions. Tap through. Defaults work for most people. Only
           change what applies.
         </QuestionnaireDescription>
-        <ChecklistFields form={checklistForm} />
+        <ChecklistFields form={checklistForm} syncQuestionnaire />
         <QuestionnaireError />
       </QuestionnaireItem>
       <QuestionnaireItem name="password" required>

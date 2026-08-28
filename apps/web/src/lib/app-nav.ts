@@ -71,6 +71,7 @@ export const getAppNavTitle = (pathname: string) => {
 
   if (
     pathname.startsWith("/apply") ||
+    pathname.startsWith("/ats") ||
     pathname.startsWith("/workday") ||
     pathname.startsWith("/integrations")
   ) {
