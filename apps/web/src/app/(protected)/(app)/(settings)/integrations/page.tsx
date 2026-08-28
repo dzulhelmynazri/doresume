@@ -1,28 +1,35 @@
-import { getIntegrationConnections } from "@doresume/api/composio";
-import { Suspense } from "react";
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
 
 import { LoadingImage } from "@/components/loading-image";
-import { requireUser } from "@/lib/session";
+import { SETTINGS_STALE_TIME_MS } from "@/lib/settings-queries";
+import { orpc } from "@/utils/orpc";
 
 import { Integrations } from "./integrations";
 
-const IntegrationsPageContent = async () => {
-  const user = await requireUser();
-  const { gmail, linkedin, outlook } = await getIntegrationConnections(user.id);
+const IntegrationsPage = () => {
+  const { data, isPending } = useQuery(
+    orpc.getConnections.queryOptions({
+      staleTime: SETTINGS_STALE_TIME_MS,
+    })
+  );
 
-  return <Integrations gmail={gmail} linkedin={linkedin} outlook={outlook} />;
-};
-
-const IntegrationsPage = () => (
-  <Suspense
-    fallback={
+  if (isPending || !data) {
+    return (
       <div className="py-6">
         <LoadingImage />
       </div>
-    }
-  >
-    <IntegrationsPageContent />
-  </Suspense>
-);
+    );
+  }
+
+  return (
+    <Integrations
+      gmail={data.gmail}
+      linkedin={data.linkedin}
+      outlook={data.outlook}
+    />
+  );
+};
 
 export default IntegrationsPage;

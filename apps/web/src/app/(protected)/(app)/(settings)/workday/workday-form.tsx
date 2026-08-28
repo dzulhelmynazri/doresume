@@ -9,19 +9,24 @@ import {
   CardTitle,
 } from "@doresume/ui/components/card";
 import { Spinner } from "@doresume/ui/components/spinner";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import {
   ApplicationPasswordFields,
   useApplicationPasswordForm,
 } from "@/app/(protected)/onboarding/12-application-password";
-import { client } from "@/utils/orpc";
+import { client, orpc } from "@/utils/orpc";
 
 const WorkdayPasswordForm = ({ password }: { password: string }) => {
+  const queryClient = useQueryClient();
   const hasSavedPassword = password.length > 0;
   const form = useApplicationPasswordForm(
     async (value) => {
       await client.saveApplicationPassword(value);
+      await queryClient.invalidateQueries({
+        queryKey: orpc.getApplicationPassword.key(),
+      });
       toast.success("Application password saved.");
     },
     { password }

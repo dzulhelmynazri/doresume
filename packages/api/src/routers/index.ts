@@ -1,7 +1,14 @@
 import type { RouterClient } from "@orpc/server";
 
-import { saveApplicationPassword } from "./application-password";
-import { saveApplicationSettings } from "./application-settings";
+import {
+  getApplicationPassword,
+  saveApplicationPassword,
+} from "./application-password";
+import {
+  getApplicationSettings,
+  saveApplicationSettings,
+} from "./application-settings";
+import { getAtsFormData } from "./ats-form";
 import { saveChecklist } from "./checklist";
 import { saveContact } from "./contact";
 import { saveEducationLevel } from "./education-level";
@@ -25,6 +32,9 @@ import { saveWorkType } from "./work-type";
 export const appRouter = {
   connectIntegration,
   disconnectIntegration,
+  getApplicationPassword,
+  getApplicationSettings,
+  getAtsFormData,
   getConnections,
   getResumeDocument,
   getResumeProfiles,

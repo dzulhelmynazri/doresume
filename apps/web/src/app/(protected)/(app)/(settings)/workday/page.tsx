@@ -1,28 +1,29 @@
-import { getUserApplicationPassword } from "@doresume/db/user-application-password";
-import { Suspense } from "react";
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
 
 import { LoadingImage } from "@/components/loading-image";
-import { requireUser } from "@/lib/session";
+import { SETTINGS_STALE_TIME_MS } from "@/lib/settings-queries";
+import { orpc } from "@/utils/orpc";
 
 import { WorkdayPasswordForm } from "./workday-form";
 
-const WorkdayPasswordPageContent = async () => {
-  const user = await requireUser();
-  const password = await getUserApplicationPassword(user.id);
+const WorkdayPasswordPage = () => {
+  const { data, isPending } = useQuery(
+    orpc.getApplicationPassword.queryOptions({
+      staleTime: SETTINGS_STALE_TIME_MS,
+    })
+  );
 
-  return <WorkdayPasswordForm password={password ?? ""} />;
-};
-
-const WorkdayPasswordPage = () => (
-  <Suspense
-    fallback={
+  if (isPending || !data) {
+    return (
       <div className="py-6">
         <LoadingImage />
       </div>
-    }
-  >
-    <WorkdayPasswordPageContent />
-  </Suspense>
-);
+    );
+  }
+
+  return <WorkdayPasswordForm password={data.password} />;
+};
 
 export default WorkdayPasswordPage;

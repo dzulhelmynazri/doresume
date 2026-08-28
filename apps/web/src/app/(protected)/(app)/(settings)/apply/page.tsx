@@ -1,28 +1,29 @@
-import { getUserApplicationSettings } from "@doresume/db/user-application-settings";
-import { Suspense } from "react";
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
 
 import { LoadingImage } from "@/components/loading-image";
-import { requireUser } from "@/lib/session";
+import { SETTINGS_STALE_TIME_MS } from "@/lib/settings-queries";
+import { orpc } from "@/utils/orpc";
 
 import { ApplySettingsForm } from "./apply-form";
 
-const ApplySettingsPageContent = async () => {
-  const user = await requireUser();
-  const settings = await getUserApplicationSettings(user.id);
+const ApplySettingsPage = () => {
+  const { data, isPending } = useQuery(
+    orpc.getApplicationSettings.queryOptions({
+      staleTime: SETTINGS_STALE_TIME_MS,
+    })
+  );
 
-  return <ApplySettingsForm settings={settings} />;
-};
-
-const ApplySettingsPage = () => (
-  <Suspense
-    fallback={
+  if (isPending || !data) {
+    return (
       <div className="py-6">
         <LoadingImage />
       </div>
-    }
-  >
-    <ApplySettingsPageContent />
-  </Suspense>
-);
+    );
+  }
+
+  return <ApplySettingsForm settings={data.settings} />;
+};
 
 export default ApplySettingsPage;

@@ -1,40 +1,35 @@
-import { getUserChecklist } from "@doresume/db/user-checklist";
-import { getUserWorkEligibility } from "@doresume/db/user-eligibility";
-import { getUserMinimumSalary } from "@doresume/db/user-minimum-salary";
-import { Suspense } from "react";
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
 
 import { LoadingImage } from "@/components/loading-image";
-import { requireUser } from "@/lib/session";
+import { SETTINGS_STALE_TIME_MS } from "@/lib/settings-queries";
+import { orpc } from "@/utils/orpc";
 
 import { AtsForm } from "./ats-form";
 
-const AtsPageContent = async () => {
-  const user = await requireUser();
-  const [eligibility, minimumSalary, checklist] = await Promise.all([
-    getUserWorkEligibility(user.id),
-    getUserMinimumSalary(user.id),
-    getUserChecklist(user.id),
-  ]);
-
-  return (
-    <AtsForm
-      checklist={checklist}
-      eligibility={eligibility}
-      minimumSalary={minimumSalary}
-    />
+const AtsPage = () => {
+  const { data, isPending } = useQuery(
+    orpc.getAtsFormData.queryOptions({
+      staleTime: SETTINGS_STALE_TIME_MS,
+    })
   );
-};
 
-const AtsPage = () => (
-  <Suspense
-    fallback={
+  if (isPending || !data) {
+    return (
       <div className="py-6">
         <LoadingImage />
       </div>
-    }
-  >
-    <AtsPageContent />
-  </Suspense>
-);
+    );
+  }
+
+  return (
+    <AtsForm
+      checklist={data.checklist}
+      eligibility={data.eligibility}
+      minimumSalary={data.minimumSalary}
+    />
+  );
+};
 
 export default AtsPage;

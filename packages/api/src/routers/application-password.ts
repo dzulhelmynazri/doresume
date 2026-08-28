@@ -1,7 +1,16 @@
 import { applicationPasswordSchema } from "@doresume/contracts";
-import { saveUserApplicationPassword } from "@doresume/db/user-application-password";
+import {
+  getUserApplicationPassword,
+  saveUserApplicationPassword,
+} from "@doresume/db/user-application-password";
 
 import { protectedProcedure } from "../index";
+
+export const getApplicationPassword = protectedProcedure.handler(
+  async ({ context }) => ({
+    password: (await getUserApplicationPassword(context.session.user.id)) ?? "",
+  })
+);
 
 export const saveApplicationPassword = protectedProcedure
   .input(applicationPasswordSchema)

@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@doresume/ui/components/card";
 import { Spinner } from "@doresume/ui/components/spinner";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import {
@@ -17,16 +18,20 @@ import {
   ApplicationSettingsFields,
   useApplicationSettingsForm,
 } from "@/app/(protected)/onboarding/13-application-settings";
-import { client } from "@/utils/orpc";
+import { client, orpc } from "@/utils/orpc";
 
 const ApplySettingsForm = ({
   settings,
 }: {
   settings: ApplicationSettings | null;
 }) => {
+  const queryClient = useQueryClient();
   const hasSavedSettings = settings !== null;
   const form = useApplicationSettingsForm(async (value) => {
     await client.saveApplicationSettings(value);
+    await queryClient.invalidateQueries({
+      queryKey: orpc.getApplicationSettings.key(),
+    });
     toast.success("Apply settings saved.");
   }, settings ?? APPLICATION_SETTINGS_DEFAULTS);
 

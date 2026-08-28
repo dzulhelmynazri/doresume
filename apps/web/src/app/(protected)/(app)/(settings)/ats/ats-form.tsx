@@ -15,6 +15,7 @@ import {
 } from "@doresume/ui/components/card";
 import { FieldSeparator } from "@doresume/ui/components/field";
 import { Spinner } from "@doresume/ui/components/spinner";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -33,7 +34,7 @@ import {
   ChecklistFields,
   useChecklistForm,
 } from "@/app/(protected)/onboarding/11-checklist";
-import { client } from "@/utils/orpc";
+import { client, orpc } from "@/utils/orpc";
 
 const AtsForm = ({
   checklist,
@@ -44,6 +45,7 @@ const AtsForm = ({
   eligibility: WorkEligibility | null;
   minimumSalary: MinimumSalary | null;
 }) => {
+  const queryClient = useQueryClient();
   const hasSavedData =
     eligibility !== null || minimumSalary !== null || checklist !== null;
   const [isSaving, setIsSaving] = useState(false);
@@ -91,6 +93,9 @@ const AtsForm = ({
       } = savedSections.current;
 
       if (savedEligibility && salary && savedChecklist) {
+        await queryClient.invalidateQueries({
+          queryKey: orpc.getAtsFormData.key(),
+        });
         toast.success("ATS form saved.");
         return;
       }

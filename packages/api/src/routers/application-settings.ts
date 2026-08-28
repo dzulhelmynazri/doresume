@@ -1,7 +1,16 @@
 import { applicationSettingsSchema } from "@doresume/contracts";
-import { saveUserApplicationSettings } from "@doresume/db/user-application-settings";
+import {
+  saveUserApplicationSettings,
+  getUserApplicationSettings,
+} from "@doresume/db/user-application-settings";
 
 import { protectedProcedure } from "../index";
+
+export const getApplicationSettings = protectedProcedure.handler(
+  async ({ context }) => ({
+    settings: await getUserApplicationSettings(context.session.user.id),
+  })
+);
 
 export const saveApplicationSettings = protectedProcedure
   .input(applicationSettingsSchema)

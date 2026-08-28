@@ -40,12 +40,13 @@ import { Spinner } from "@doresume/ui/components/spinner";
 import { Gmail } from "@doresume/ui/socials/gmail";
 import { LinkedIn } from "@doresume/ui/socials/linkedin";
 import { Outlook } from "@doresume/ui/socials/outlook";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
 
-import { client } from "@/utils/orpc";
+import { client, orpc } from "@/utils/orpc";
 
 export interface ToolkitConnectionState {
   connected: boolean;
@@ -67,7 +68,7 @@ const IntegrationItem = ({
   title: string;
   toolkit: IntegrationToolkit;
 }) => {
-  const router = useRouter();
+  const queryClient = useQueryClient();
   const [connectOpen, setConnectOpen] = useState(false);
   const [disconnectOpen, setDisconnectOpen] = useState(false);
   const [isConnecting, startConnecting] = useTransition();
@@ -91,8 +92,10 @@ const IntegrationItem = ({
       try {
         await client.disconnectIntegration({ toolkit });
         setDisconnectOpen(false);
+        await queryClient.invalidateQueries({
+          queryKey: orpc.getConnections.key(),
+        });
         toast.success(`${title} disconnected.`);
-        router.refresh();
       } catch (error) {
         toast.error(
           error instanceof Error
@@ -195,6 +198,7 @@ export const Integrations = ({
   linkedin: ToolkitConnectionState;
   outlook: ToolkitConnectionState;
 }) => {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -212,8 +216,10 @@ export const Integrations = ({
     }
 
     router.replace("/integrations");
-    router.refresh();
-  }, [router, searchParams]);
+    void queryClient.invalidateQueries({
+      queryKey: orpc.getConnections.key(),
+    });
+  }, [queryClient, router, searchParams]);
 
   const integrations = [
     {
