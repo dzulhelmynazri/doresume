@@ -34,8 +34,8 @@ export const ResumeEditor = ({
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="border-border/60 sticky top-0 z-10 shrink-0 border-b">
-        <div className="bg-background flex min-w-0 items-center gap-3 overflow-x-auto px-4 py-2">
-          <div className="flex min-w-0 flex-1 items-center">
+        <div className="flex flex-col lg:flex-row lg:items-stretch">
+          <div className="border-border/60 bg-background flex min-w-0 items-center px-4 py-2 lg:w-1/2 lg:border-r">
             <ResumeToolbar
               activeProfile={activeProfile}
               document={document}
@@ -55,11 +55,7 @@ export const ResumeEditor = ({
               profiles={profiles.profiles}
             />
           </div>
-          <div
-            aria-hidden
-            className="bg-border hidden h-6 w-px shrink-0 lg:block"
-          />
-          <div className="flex shrink-0 items-center">
+          <div className="border-border/60 bg-background flex min-w-0 items-center border-t px-4 py-2 lg:w-1/2 lg:border-t-0">
             <ResumePreviewToolbar
               document={document}
               isExporting={isExporting}
