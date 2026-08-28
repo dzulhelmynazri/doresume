@@ -102,14 +102,14 @@ const SortableSectionRow = ({
       <Button
         aria-label={isVisible ? `Hide ${title}` : `Show ${title}`}
         onClick={onToggleVisibility}
-        size="icon-xs"
+        size="icon"
         type="button"
         variant="ghost"
       >
         {isVisible ? (
-          <EyeIcon className="size-4" />
+          <EyeIcon />
         ) : (
-          <EyeOffIcon className="text-muted-foreground size-4" />
+          <EyeOffIcon className="text-muted-foreground" />
         )}
       </Button>
     </div>
