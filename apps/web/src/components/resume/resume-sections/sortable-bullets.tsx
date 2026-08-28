@@ -19,7 +19,7 @@ import { CSS } from "@dnd-kit/utilities";
 import type { ResumeBullet } from "@doresume/contracts";
 import { Button } from "@doresume/ui/components/button";
 import { cn } from "@doresume/ui/lib/utils";
-import { GripVerticalIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import { GripVerticalIcon, Trash2Icon } from "lucide-react";
 
 import { ResumeTextEditor } from "../resume-text-editor";
 
@@ -54,7 +54,10 @@ const SortableBulletRow = ({
 
   return (
     <div
-      className={cn("flex items-start gap-2", isDragging && "opacity-60")}
+      className={cn(
+        "border-border flex items-center gap-2 border-b px-1 py-2",
+        isDragging && "opacity-60"
+      )}
       ref={setNodeRef}
       style={{
         transform: CSS.Transform.toString(transform),
@@ -63,7 +66,7 @@ const SortableBulletRow = ({
     >
       <button
         aria-label="Reorder bullet"
-        className="text-muted-foreground hover:text-foreground mt-2 cursor-grab active:cursor-grabbing"
+        className="text-muted-foreground hover:text-foreground shrink-0 cursor-grab rounded p-1 transition-colors active:cursor-grabbing"
         type="button"
         {...attributes}
         {...listeners}
@@ -71,17 +74,18 @@ const SortableBulletRow = ({
         <GripVerticalIcon className="size-4" />
       </button>
       <ResumeTextEditor
-        className="min-h-16 flex-1"
+        className="flex-1 py-0.5"
+        lineBreakOnEnter
         onChange={onChange}
         placeholder={placeholder ?? "Describe your impact..."}
         value={bullet.text ?? ""}
       />
       <Button
         aria-label="Remove bullet"
-        onClick={onRemove}
-        size="icon"
-        type="button"
         variant="ghost"
+        onClick={onRemove}
+        type="button"
+        size="icon"
       >
         <Trash2Icon />
       </Button>
@@ -117,7 +121,7 @@ export const SortableBullets = ({
   };
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="border-border rounded-md border">
       <DndContext
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
@@ -138,9 +142,13 @@ export const SortableBullets = ({
           ))}
         </SortableContext>
       </DndContext>
-      <Button onClick={onAdd} type="button" variant="ghost">
-        <PlusIcon data-icon="inline-start" />
-        Add bullet
+      <Button
+        className="w-full rounded-t-none"
+        onClick={onAdd}
+        type="button"
+        variant="ghost"
+      >
+        + Add bullet
       </Button>
     </div>
   );
