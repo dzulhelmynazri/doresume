@@ -15,12 +15,14 @@ import {
   updateActiveProfileCoverLetter,
   updateActiveProfileDocument,
 } from "@doresume/contracts";
+import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { client } from "@/utils/orpc";
+import { client, orpc } from "@/utils/orpc";
 
 export const useResumeProfiles = (initialProfiles: ResumeProfilesState) => {
+  const queryClient = useQueryClient();
   const [savedProfiles, setSavedProfiles] =
     useState<ResumeProfilesState>(initialProfiles);
   const [profiles, setProfiles] =
@@ -46,8 +48,11 @@ export const useResumeProfiles = (initialProfiles: ResumeProfilesState) => {
       await client.saveResumeProfiles(nextProfiles);
       setSavedProfiles(nextProfiles);
       setProfiles(nextProfiles);
+      await queryClient.invalidateQueries({
+        queryKey: orpc.getResumeProfiles.key(),
+      });
     },
-    []
+    [queryClient]
   );
 
   const updateDocument = useCallback(

@@ -140,3 +140,5 @@ Oxlint + Oxfmt's linter will catch most issues automatically. Focus your attenti
 ---
 
 Most formatting and common issues are automatically fixed by Oxlint + Oxfmt. Run `bun x ultracite fix` before committing to ensure compliance.
+
+--featured-1: oklch(0.8 0.12 75); --featured-2: oklch(0.78 0.1 230); --featured-3: oklch(0.76 0.12 300); --featured-4: oklch(0.78 0.12 15); --featured-5: oklch(0.78 0.1 175);

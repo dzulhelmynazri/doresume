@@ -1,27 +1,31 @@
-import { getUserResumeProfiles } from "@doresume/db/user-resume-document";
-import { Suspense } from "react";
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
 
 import { LoadingImage } from "@/components/loading-image";
 import { ResumeEditor } from "@/components/resume";
-import { requireUser } from "@/lib/session";
+import { orpc } from "@/utils/orpc";
 
-const ProfilePageContent = async () => {
-  const user = await requireUser();
-  const initialProfiles = await getUserResumeProfiles(user.id);
+const STALE_TIME_MS = 5 * 60 * 1000;
 
-  return <ResumeEditor initialProfiles={initialProfiles} />;
-};
+const ProfilePage = () => {
+  const { data, isPending } = useQuery(
+    orpc.getResumeProfiles.queryOptions({
+      staleTime: STALE_TIME_MS,
+    })
+  );
 
-const ProfilePage = () => (
-  <Suspense
-    fallback={
+  if (isPending || !data) {
+    return (
       <div className="p-6">
         <LoadingImage />
       </div>
-    }
-  >
-    <ProfilePageContent />
-  </Suspense>
-);
+    );
+  }
+
+  const { profiles } = data;
+
+  return <ResumeEditor initialProfiles={profiles} />;
+};
 
 export default ProfilePage;
