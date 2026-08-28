@@ -1,10 +1,10 @@
 import { Separator } from "@doresume/ui/components/separator";
-import { Spinner } from "@doresume/ui/components/spinner";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import type { ReactNode } from "react";
 
 import { AppHeader } from "@/components/app-header";
+import { LoadingImage } from "@/components/loading-image";
 import { userIsOnboarded } from "@/lib/onboarding";
 import { requireUser } from "@/lib/session";
 
@@ -32,7 +32,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => (
   <Suspense
     fallback={
       <div className="row-span-full flex min-h-0 items-center justify-center">
-        <Spinner />
+        <LoadingImage />
       </div>
     }
   >

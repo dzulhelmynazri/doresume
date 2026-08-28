@@ -1,6 +1,7 @@
 import { getIntegrationConnections } from "@doresume/api/composio";
 import { Suspense } from "react";
 
+import { LoadingImage } from "@/components/loading-image";
 import { requireUser } from "@/lib/session";
 
 import { Integrations } from "./integrations";
@@ -14,7 +15,11 @@ const IntegrationsPageContent = async () => {
 
 const IntegrationsPage = () => (
   <Suspense
-    fallback={<div className="text-muted-foreground py-4">Wait laa...</div>}
+    fallback={
+      <div className="py-6">
+        <LoadingImage />
+      </div>
+    }
   >
     <IntegrationsPageContent />
   </Suspense>

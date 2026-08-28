@@ -27,7 +27,7 @@ export const AppNavMenu = () => {
           <Button
             type="button"
             variant="ghost"
-            className="h-auto gap-2 px-2 py-1.5"
+            className="h-auto gap-2 px-3 py-1.5"
           />
         }
       >
@@ -48,7 +48,6 @@ export const AppNavMenu = () => {
               [{currentTitle}]
             </span>
           </div>
-          {/* <ChevronsUpDownIcon className="text-muted-foreground size-4 shrink-0" /> */}
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="min-w-56">
