@@ -12,6 +12,7 @@ import { usePathname } from "next/navigation";
 
 import { getAppNavTitle } from "@/components/app-sidebar";
 import { ModeToggle } from "@/components/mode-toggle";
+import { UserMenu } from "@/components/user-menu";
 
 export const AppHeader = () => {
   const pathname = usePathname();
@@ -33,7 +34,10 @@ export const AppHeader = () => {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <ModeToggle />
+      <div className="flex items-center gap-2">
+        <ModeToggle />
+        <UserMenu />
+      </div>
     </header>
   );
 };

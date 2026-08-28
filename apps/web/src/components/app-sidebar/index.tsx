@@ -3,7 +3,6 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -25,7 +24,6 @@ import * as React from "react";
 
 import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
-import { NavUser } from "./nav-user";
 
 const data = {
   navMain: [
@@ -137,8 +135,5 @@ export const AppSidebar = ({
       <NavMain items={data.navMain} />
       <NavSecondary items={data.navSecondary} className="mt-auto" />
     </SidebarContent>
-    <SidebarFooter>
-      <NavUser />
-    </SidebarFooter>
   </Sidebar>
 );
