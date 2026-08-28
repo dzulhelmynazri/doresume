@@ -163,6 +163,11 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  *::-webkit-scrollbar {
+    display: none;
   }
   body {
     @apply font-sans bg-background text-foreground;

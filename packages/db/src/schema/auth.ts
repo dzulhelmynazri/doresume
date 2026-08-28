@@ -5,6 +5,7 @@ import type {
   ExperienceLevel,
   Industries,
   MinimumSalary,
+  ResumeDocument,
   WorkArrangement,
   WorkEligibility,
   WorkType,
@@ -43,6 +44,7 @@ export const user = pgTable("user", {
   minimumSalary: jsonb("minimum_salary").$type<MinimumSalary>(),
   name: text("name").notNull(),
   phone: text("phone"),
+  resumeDocument: jsonb("resume_document").$type<ResumeDocument>(),
   state: text("state"),
   updatedAt: timestamp("updated_at")
     .defaultNow()

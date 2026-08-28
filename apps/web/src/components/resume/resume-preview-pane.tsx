@@ -1,0 +1,75 @@
+"use client";
+
+import type { ResumeDocument, ResumeTemplate } from "@doresume/contracts";
+import { Button } from "@doresume/ui/components/button";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@doresume/ui/components/toggle-group";
+import { DownloadIcon } from "lucide-react";
+
+import { updateSettings } from "./lib/resume-actions";
+import { ResumePreviewDisplay } from "./resume-preview-display";
+
+interface ResumePreviewToolbarProps {
+  document: ResumeDocument;
+  isExporting: boolean;
+  isSaving: boolean;
+  onChange: (updater: (current: ResumeDocument) => ResumeDocument) => void;
+  onExport: () => void;
+}
+
+export const ResumePreviewToolbar = ({
+  document,
+  isExporting,
+  isSaving,
+  onChange,
+  onExport,
+}: ResumePreviewToolbarProps) => (
+  <div className="flex w-full items-center justify-between gap-3">
+    <span className="text-sm font-medium">Preview</span>
+    <div className="flex items-center gap-2">
+      <ToggleGroup
+        onValueChange={([template]) => {
+          if (!template) {
+            return;
+          }
+
+          onChange((current) =>
+            updateSettings(current, {
+              template: template as ResumeTemplate,
+            })
+          );
+        }}
+        spacing={0}
+        value={[document.settings.template]}
+        variant="outline"
+      >
+        <ToggleGroupItem value="standard">Standard</ToggleGroupItem>
+        <ToggleGroupItem value="jake">Jake</ToggleGroupItem>
+      </ToggleGroup>
+      <Button
+        disabled={isExporting || isSaving}
+        onClick={onExport}
+        type="button"
+      >
+        <DownloadIcon data-icon="inline-start" />
+        {isExporting ? "Exporting..." : "Download PDF"}
+      </Button>
+    </div>
+  </div>
+);
+
+interface ResumePreviewPaneProps {
+  document: ResumeDocument;
+}
+
+export const ResumePreviewPane = ({ document }: ResumePreviewPaneProps) => (
+  <div className="flex h-full flex-col">
+    <div className="flex flex-1 justify-center overflow-y-auto p-6">
+      <div className="w-full max-w-[8.5in]">
+        <ResumePreviewDisplay document={document} />
+      </div>
+    </div>
+  </div>
+);
