@@ -41,7 +41,7 @@ const normalizeEducationBullets = (
   bullets: z.infer<typeof bulletSchema>[] | undefined,
   details: string | undefined
 ): z.infer<typeof bulletSchema>[] => {
-  if ((bullets?.length ?? 0) > 0) {
+  if (bullets && bullets.length > 0) {
     return bullets;
   }
 
@@ -118,11 +118,11 @@ const normalizeCustomSectionEntries = (
   entries: z.infer<typeof customSectionEntrySchema>[] | undefined,
   bullets: z.infer<typeof bulletSchema>[] | undefined
 ): z.infer<typeof customSectionEntrySchema>[] => {
-  if ((entries?.length ?? 0) > 0) {
+  if (entries && entries.length > 0) {
     return entries;
   }
 
-  if ((bullets?.length ?? 0) > 0) {
+  if (bullets && bullets.length > 0) {
     return [
       {
         bullets,
@@ -342,7 +342,9 @@ export const createEmptyWorkExperience = (): WorkExperienceEntry => ({
 export const createEmptyEducation = (): EducationEntry => ({
   bullets: [createEmptyBullet()],
   degree: "",
+  endDate: undefined,
   id: createResumeId(),
+  location: undefined,
   school: "",
   startDate: "",
   visible: true,

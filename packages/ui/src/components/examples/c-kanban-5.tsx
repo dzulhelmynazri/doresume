@@ -1,6 +1,6 @@
 "use client"
 
-import { ComponentProps, useState } from "react"
+import { type ComponentProps, useState } from "react"
 import { Badge } from "@doresume/ui/components/reui/badge"
 import {
   Frame,
@@ -138,6 +138,10 @@ export function Pattern() {
       <KanbanBoard className="grid grid-cols-3">
         {Object.entries(columns).map(([colId, features]) => {
           const col = COLUMNS[colId]
+          if (!col) {
+            return null
+          }
+
           return (
             <KanbanColumn key={colId} value={colId}>
               <Frame spacing="sm" className="h-full">

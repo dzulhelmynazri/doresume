@@ -139,6 +139,10 @@ const MEASURING_CONFIG = {
   droppable: { strategy: MeasuringStrategy.Always },
 }
 
+function getColumnItems<T>(columns: Record<string, T[]>, key: string): T[] {
+  return columns[key] ?? []
+}
+
 export interface KanbanMoveEvent {
   event: DragEndEvent
   activeContainer: string
@@ -226,7 +230,7 @@ function Kanban<T>({
     if (process.env.NODE_ENV !== "production") {
       const seen = new Set<string>()
       for (const key of keys) {
-        for (const item of columns[key]) {
+        for (const item of getColumnItems(columns, key)) {
           const itemId = getItemValue(item)
           if (seen.has(itemId)) {
             console.warn(
@@ -250,7 +254,7 @@ function Kanban<T>({
     (id: UniqueIdentifier) => {
       if (isColumn(id)) return id as string
       return columnIds.find((key) =>
-        columns[key].some((item) => getItemValue(item) === id)
+        getColumnItems(columns, key).some((item) => getItemValue(item) === id)
       )
     },
     [columns, columnIds, getItemValue, isColumn]
@@ -288,7 +292,9 @@ function Kanban<T>({
       let overContainer: string | undefined
       let overIndex = -1
       for (const key of Object.keys(finalValue)) {
-        const found = finalValue[key].findIndex((item) => getId(item) === id)
+        const found = getColumnItems(finalValue, key).findIndex(
+          (item) => getId(item) === id
+        )
         if (found !== -1) {
           overContainer = key
           overIndex = found
@@ -332,7 +338,9 @@ function Kanban<T>({
           let container: string | undefined
           let index = -1
           for (const key of keys) {
-            const found = snapshot[key].findIndex((item) => getId(item) === id)
+            const found = getColumnItems(snapshot, key).findIndex(
+              (item) => getId(item) === id
+            )
             if (found !== -1) {
               container = key
               index = found
@@ -365,8 +373,8 @@ function Kanban<T>({
       }
 
       if (activeContainer !== overContainer) {
-        const activeItems = columns[activeContainer]
-        const overItems = columns[overContainer]
+        const activeItems = getColumnItems(columns, activeContainer)
+        const overItems = getColumnItems(columns, overContainer)
 
         const activeIndex = activeItems.findIndex(
           (item: T) => getItemValue(item) === active.id
@@ -383,6 +391,9 @@ function Kanban<T>({
         const newActiveItems = [...activeItems]
         const newOverItems = [...overItems]
         const [movedItem] = newActiveItems.splice(activeIndex, 1)
+        if (movedItem === undefined) {
+          return
+        }
         newOverItems.splice(overIndex, 0, movedItem)
 
         setColumns({
@@ -392,17 +403,18 @@ function Kanban<T>({
         })
       } else {
         const container = activeContainer
-        const activeIndex = columns[container].findIndex(
+        const containerItems = getColumnItems(columns, container)
+        const activeIndex = containerItems.findIndex(
           (item: T) => getItemValue(item) === active.id
         )
-        const overIndex = columns[container].findIndex(
+        const overIndex = containerItems.findIndex(
           (item: T) => getItemValue(item) === over.id
         )
 
         if (activeIndex !== overIndex) {
           setColumns({
             ...columns,
-            [container]: arrayMove(columns[container], activeIndex, overIndex),
+            [container]: arrayMove(containerItems, activeIndex, overIndex),
           })
         }
       }
@@ -456,12 +468,12 @@ function Kanban<T>({
         const overContainer = findContainer(over.id)
 
         if (activeContainer && overContainer) {
-          const activeIndex = columns[activeContainer].findIndex(
+          const activeIndex = getColumnItems(columns, activeContainer).findIndex(
             (item: T) => getItemValue(item) === active.id
           )
           const overIndex = isColumn(over.id)
-            ? columns[overContainer].length
-            : columns[overContainer].findIndex(
+            ? getColumnItems(columns, overContainer).length
+            : getColumnItems(columns, overContainer).findIndex(
                 (item: T) => getItemValue(item) === over.id
               )
 
@@ -491,7 +503,7 @@ function Kanban<T>({
           )
           const newColumns: Record<string, T[]> = {}
           newOrder.forEach((key) => {
-            newColumns[key] = columns[key]
+            newColumns[key] = getColumnItems(columns, key)
           })
           setColumns(newColumns)
           commitChange(newColumns, event, "column")
@@ -516,17 +528,18 @@ function Kanban<T>({
         activeContainer === overContainer
       ) {
         const container = activeContainer
-        const activeIndex = columns[container].findIndex(
+        const containerItems = getColumnItems(columns, container)
+        const activeIndex = containerItems.findIndex(
           (item: T) => getItemValue(item) === active.id
         )
-        const overIndex = columns[container].findIndex(
+        const overIndex = containerItems.findIndex(
           (item: T) => getItemValue(item) === over.id
         )
 
         if (activeIndex !== overIndex) {
           const newColumns = {
             ...columns,
-            [container]: arrayMove(columns[container], activeIndex, overIndex),
+            [container]: arrayMove(containerItems, activeIndex, overIndex),
           }
           setColumns(newColumns)
           commitChange(newColumns, event, "item")
