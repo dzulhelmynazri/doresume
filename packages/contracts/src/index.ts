@@ -138,12 +138,20 @@ export {
   type WorkExperienceEntry,
 } from "./resume-document";
 export {
+  createDefaultCoverLetter,
+  coverLetterSchema,
+  type CoverLetter,
+  type ProfileDocumentType,
+  PROFILE_DOCUMENT_TYPES,
+} from "./cover-letter";
+export {
   createDefaultResumeProfilesState,
   createResumeProfile,
   getActiveResumeProfile,
   getNextProfileName,
   resumeProfileSchema,
   resumeProfilesStateSchema,
+  updateActiveProfileCoverLetter,
   updateActiveProfileDocument,
   type ResumeProfile,
   type ResumeProfilesState,

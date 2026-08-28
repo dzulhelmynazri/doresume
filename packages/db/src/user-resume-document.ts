@@ -1,10 +1,12 @@
 import {
+  createDefaultCoverLetter,
   createDefaultResumeProfilesState,
   getActiveResumeProfile,
   resumeDocumentSchema,
   resumeProfilesStateSchema,
 } from "@doresume/contracts";
 import type {
+  CoverLetter,
   ResumeDocument,
   ResumeDocumentSeedUser,
   ResumeProfilesState,
@@ -113,6 +115,18 @@ export const getUserResumeDocument = async (
   const profiles = await getUserResumeProfiles(userId);
 
   return getActiveResumeProfile(profiles).document;
+};
+
+export const getUserActiveCoverLetter = async (
+  userId: string
+): Promise<{ coverLetter: CoverLetter; document: ResumeDocument }> => {
+  const profiles = await getUserResumeProfiles(userId);
+  const activeProfile = getActiveResumeProfile(profiles);
+
+  return {
+    coverLetter: activeProfile.coverLetter ?? createDefaultCoverLetter(),
+    document: activeProfile.document,
+  };
 };
 
 export const saveUserResumeDocument = async (

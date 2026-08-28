@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { createDefaultCoverLetter, coverLetterSchema } from "./cover-letter";
+import type { CoverLetter } from "./cover-letter";
 import {
   createDefaultResumeDocument,
   createResumeId,
@@ -8,6 +10,7 @@ import {
 import type { ResumeDocument, ResumeDocumentSeedUser } from "./resume-document";
 
 export const resumeProfileSchema = z.object({
+  coverLetter: coverLetterSchema.default(createDefaultCoverLetter()),
   document: resumeDocumentSchema,
   id: z.string().uuid(),
   name: z.string().trim().min(1).max(100),
@@ -23,14 +26,17 @@ export type ResumeProfile = z.infer<typeof resumeProfileSchema>;
 export type ResumeProfilesState = z.infer<typeof resumeProfilesStateSchema>;
 
 export const createResumeProfile = ({
+  coverLetter = createDefaultCoverLetter(),
   document,
   name,
   starred = false,
 }: {
+  coverLetter?: CoverLetter;
   document: ResumeDocument;
   name: string;
   starred?: boolean;
 }): ResumeProfile => ({
+  coverLetter,
   document,
   id: createResumeId(),
   name,
@@ -98,5 +104,15 @@ export const updateActiveProfileDocument = (
   ...state,
   profiles: state.profiles.map((profile) =>
     profile.id === state.activeProfileId ? { ...profile, document } : profile
+  ),
+});
+
+export const updateActiveProfileCoverLetter = (
+  state: ResumeProfilesState,
+  coverLetter: CoverLetter
+): ResumeProfilesState => ({
+  ...state,
+  profiles: state.profiles.map((profile) =>
+    profile.id === state.activeProfileId ? { ...profile, coverLetter } : profile
   ),
 });

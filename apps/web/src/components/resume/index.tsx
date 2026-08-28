@@ -1,10 +1,19 @@
 "use client";
 
-import type { ResumeProfilesState } from "@doresume/contracts";
+import type {
+  ProfileDocumentType,
+  ResumeProfilesState,
+} from "@doresume/contracts";
+import { useState } from "react";
 
+import { CoverLetterEditorPanel } from "./cover-letter-editor-panel";
 import { useResumeProfiles } from "./hooks/use-resume-profiles";
 import { ResumeEditorPanel } from "./resume-editor-panel";
-import { ResumePreviewPane, ResumePreviewToolbar } from "./resume-preview-pane";
+import {
+  CoverLetterPreviewPane,
+  ResumePreviewPane,
+  ResumePreviewToolbar,
+} from "./resume-preview-pane";
 import { ResumeToolbar } from "./resume-toolbar";
 
 export const ResumeEditor = ({
@@ -12,10 +21,15 @@ export const ResumeEditor = ({
 }: {
   initialProfiles: ResumeProfilesState;
 }) => {
+  const [documentType, setDocumentType] =
+    useState<ProfileDocumentType>("resume");
+  const isCoverLetter = documentType === "cover-letter";
+
   const {
     activeProfile,
     addProfile,
     cancel,
+    coverLetter,
     deleteProfile,
     document,
     exportPdf,
@@ -28,6 +42,7 @@ export const ResumeEditor = ({
     save,
     switchProfile,
     toggleStarred,
+    updateCoverLetter,
     updateDocument,
   } = useResumeProfiles(initialProfiles);
 
@@ -53,16 +68,19 @@ export const ResumeEditor = ({
               onToggleStarred={toggleStarred}
               profileCount={profiles.profiles.length}
               profiles={profiles.profiles}
+              showSections={!isCoverLetter}
             />
           </div>
           <div className="border-border/60 bg-background flex min-w-0 items-center border-t px-4 py-2 lg:w-1/2 lg:border-t-0">
             <ResumePreviewToolbar
               document={document}
+              documentType={documentType}
               isExporting={isExporting}
               isSaving={isSaving}
               onChange={updateDocument}
+              onDocumentTypeChange={setDocumentType}
               onExport={() => {
-                void exportPdf();
+                void exportPdf(documentType);
               }}
             />
           </div>
@@ -73,17 +91,31 @@ export const ResumeEditor = ({
         <div className="bg-muted/40 dark:bg-background flex min-h-0 w-full flex-col overflow-hidden lg:w-1/2">
           <div className="min-h-0 flex-1 overflow-y-auto p-2">
             <div className="mx-auto w-full">
-              <ResumeEditorPanel
-                document={document}
-                onChange={updateDocument}
-                resetKey={resetKey}
-              />
+              {isCoverLetter ? (
+                <CoverLetterEditorPanel
+                  coverLetter={coverLetter}
+                  onChange={updateCoverLetter}
+                />
+              ) : (
+                <ResumeEditorPanel
+                  document={document}
+                  onChange={updateDocument}
+                  resetKey={resetKey}
+                />
+              )}
             </div>
           </div>
         </div>
 
         <div className="border-border/60 bg-muted/40 dark:bg-background flex min-h-[50vh] w-full flex-col overflow-hidden lg:min-h-0 lg:w-1/2 lg:border-l">
-          <ResumePreviewPane document={document} />
+          {isCoverLetter ? (
+            <CoverLetterPreviewPane
+              coverLetter={coverLetter}
+              document={document}
+            />
+          ) : (
+            <ResumePreviewPane document={document} />
+          )}
         </div>
       </div>
     </div>

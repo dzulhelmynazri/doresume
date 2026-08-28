@@ -21,6 +21,7 @@ interface ResumeToolbarProps {
   onToggleStarred: (profileId: string) => void | Promise<void>;
   profileCount: number;
   profiles: ResumeProfile[];
+  showSections?: boolean;
 }
 
 export const ResumeToolbar = ({
@@ -38,6 +39,7 @@ export const ResumeToolbar = ({
   onToggleStarred,
   profileCount,
   profiles,
+  showSections = true,
 }: ResumeToolbarProps) => (
   <div className="flex w-full min-w-0 items-center justify-between gap-2 overflow-x-auto">
     <div className="flex shrink-0 items-center gap-2">
@@ -51,7 +53,9 @@ export const ResumeToolbar = ({
         onToggleStarred={onToggleStarred}
         profiles={profiles}
       />
-      <SectionsPopover document={document} onChange={onChange} />
+      {showSections ? (
+        <SectionsPopover document={document} onChange={onChange} />
+      ) : null}
     </div>
 
     <div className="flex shrink-0 items-center gap-2">

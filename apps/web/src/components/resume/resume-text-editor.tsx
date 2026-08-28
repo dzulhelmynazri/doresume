@@ -90,13 +90,21 @@ export const ResumeTextEditor = ({
   }, [editor, safeValue]);
 
   if (!editor || editor.isDestroyed) {
-    return null;
+    return (
+      <div
+        className={cn(
+          "bg-muted/30 min-h-[6rem] animate-pulse rounded-md border",
+          className
+        )}
+      />
+    );
   }
 
   return (
     <EditorContent
       className={cn(
-        "prose prose-sm max-w-none [&_.ProseMirror]:min-h-[1.5rem] [&_.ProseMirror]:outline-none [&_.ProseMirror_p]:m-0",
+        "prose prose-sm max-w-none cursor-text",
+        "[&_.ProseMirror]:min-h-[1.5rem] [&_.ProseMirror]:outline-none [&_.ProseMirror_p]:m-0",
         "[&_.ProseMirror_p.is-editor-empty:first-child::before]:text-muted-foreground",
         "[&_.ProseMirror_p.is-editor-empty:first-child::before]:content-[attr(data-placeholder)]",
         "[&_.ProseMirror_p.is-editor-empty:first-child::before]:float-left",

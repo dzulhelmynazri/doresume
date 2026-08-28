@@ -1,11 +1,18 @@
 "use client";
 
-import type { ResumeDocument, ResumeProfilesState } from "@doresume/contracts";
+import type {
+  CoverLetter,
+  ProfileDocumentType,
+  ResumeDocument,
+  ResumeProfilesState,
+} from "@doresume/contracts";
 import {
+  createDefaultCoverLetter,
   createDefaultResumeDocument,
   createResumeProfile,
   getActiveResumeProfile,
   getNextProfileName,
+  updateActiveProfileCoverLetter,
   updateActiveProfileDocument,
 } from "@doresume/contracts";
 import { useCallback, useMemo, useState } from "react";
@@ -27,6 +34,7 @@ export const useResumeProfiles = (initialProfiles: ResumeProfilesState) => {
     [profiles]
   );
   const { document } = activeProfile;
+  const coverLetter = activeProfile.coverLetter ?? createDefaultCoverLetter();
 
   const isDirty = useMemo(
     () => JSON.stringify(profiles) !== JSON.stringify(savedProfiles),
@@ -48,6 +56,21 @@ export const useResumeProfiles = (initialProfiles: ResumeProfilesState) => {
         updateActiveProfileDocument(
           current,
           updater(getActiveResumeProfile(current).document)
+        )
+      );
+    },
+    []
+  );
+
+  const updateCoverLetter = useCallback(
+    (updater: (current: CoverLetter) => CoverLetter) => {
+      setProfiles((current) =>
+        updateActiveProfileCoverLetter(
+          current,
+          updater(
+            getActiveResumeProfile(current).coverLetter ??
+              createDefaultCoverLetter()
+          )
         )
       );
     },
@@ -197,46 +220,61 @@ export const useResumeProfiles = (initialProfiles: ResumeProfilesState) => {
     [persistProfiles, profiles]
   );
 
-  const exportPdf = useCallback(async () => {
-    setIsExporting(true);
+  const exportPdf = useCallback(
+    async (documentType: ProfileDocumentType = "resume") => {
+      setIsExporting(true);
 
-    try {
-      if (isDirty) {
-        await persistProfiles(profiles);
-      }
+      try {
+        if (isDirty) {
+          await persistProfiles(profiles);
+        }
 
-      const response = await fetch("/api/resume/pdf");
+        const endpoint =
+          documentType === "cover-letter"
+            ? "/api/resume/cover-letter/pdf"
+            : "/api/resume/pdf";
+        const response = await fetch(endpoint);
 
-      if (!response.ok) {
+        if (!response.ok) {
+          toast.error("Could not export PDF. Try again.");
+          setIsExporting(false);
+          return;
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const link = window.document.createElement("a");
+        const disposition = response.headers.get("Content-Disposition");
+        const fallbackFilename =
+          documentType === "cover-letter" ? "cover-letter.pdf" : "resume.pdf";
+        const filename = disposition?.includes('filename="')
+          ? (disposition.split('filename="')[1]?.split('"')[0] ??
+            fallbackFilename)
+          : fallbackFilename;
+
+        link.href = url;
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(url);
+        toast.success(
+          documentType === "cover-letter"
+            ? "Cover letter exported."
+            : "Resume exported."
+        );
+        setIsExporting(false);
+      } catch {
         toast.error("Could not export PDF. Try again.");
         setIsExporting(false);
-        return;
       }
-
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = window.document.createElement("a");
-      const disposition = response.headers.get("Content-Disposition");
-      const filename = disposition?.includes('filename="')
-        ? (disposition.split('filename="')[1]?.split('"')[0] ?? "resume.pdf")
-        : "resume.pdf";
-
-      link.href = url;
-      link.download = filename;
-      link.click();
-      URL.revokeObjectURL(url);
-      toast.success("Resume exported.");
-      setIsExporting(false);
-    } catch {
-      toast.error("Could not export PDF. Try again.");
-      setIsExporting(false);
-    }
-  }, [isDirty, persistProfiles, profiles]);
+    },
+    [isDirty, persistProfiles, profiles]
+  );
 
   return {
     activeProfile,
     addProfile,
     cancel,
+    coverLetter,
     deleteProfile,
     document,
     exportPdf,
@@ -249,6 +287,7 @@ export const useResumeProfiles = (initialProfiles: ResumeProfilesState) => {
     save,
     switchProfile,
     toggleStarred,
+    updateCoverLetter,
     updateDocument,
   };
 };
