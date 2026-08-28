@@ -1,10 +1,5 @@
 "use client";
 
-import type {
-  Checklist,
-  MinimumSalary,
-  WorkEligibility,
-} from "@doresume/contracts";
 import { Button } from "@doresume/ui/components/button";
 import {
   CardContent,
@@ -15,7 +10,7 @@ import {
 } from "@doresume/ui/components/card";
 import { FieldSeparator } from "@doresume/ui/components/field";
 import { Spinner } from "@doresume/ui/components/spinner";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -34,20 +29,18 @@ import {
   ChecklistFields,
   useChecklistForm,
 } from "@/app/(protected)/onboarding/11-checklist";
+import { LoadingImage } from "@/components/loading-image";
 import { client, orpc } from "@/utils/orpc";
 
-const AtsForm = ({
-  checklist,
-  eligibility,
-  minimumSalary,
-}: {
-  checklist: Checklist | null;
-  eligibility: WorkEligibility | null;
-  minimumSalary: MinimumSalary | null;
-}) => {
+const SETTINGS_STALE_TIME_MS = 5 * 60 * 1000;
+
+const AtsForm = () => {
   const queryClient = useQueryClient();
-  const hasSavedData =
-    eligibility !== null || minimumSalary !== null || checklist !== null;
+  const { data, isPending } = useQuery(
+    orpc.getAtsFormData.queryOptions({
+      staleTime: SETTINGS_STALE_TIME_MS,
+    })
+  );
   const [isSaving, setIsSaving] = useState(false);
   const savedSections = useRef({
     checklist: false,
@@ -58,17 +51,17 @@ const AtsForm = ({
   const eligibilityForm = useWorkEligibilityForm(async (value) => {
     await client.saveWorkEligibility(value);
     savedSections.current.eligibility = true;
-  }, eligibility ?? ELIGIBILITY_DEFAULTS);
+  }, data?.eligibility ?? ELIGIBILITY_DEFAULTS);
 
   const salaryForm = useMinimumSalaryForm(async (value) => {
     await client.saveMinimumSalary(value);
     savedSections.current.salary = true;
-  }, minimumSalary ?? MINIMUM_SALARY_DEFAULTS);
+  }, data?.minimumSalary ?? MINIMUM_SALARY_DEFAULTS);
 
   const checklistForm = useChecklistForm(async (value) => {
     await client.saveChecklist(value);
     savedSections.current.checklist = true;
-  }, checklist ?? CHECKLIST_DEFAULTS);
+  }, data?.checklist ?? CHECKLIST_DEFAULTS);
 
   const handleSave = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -97,14 +90,27 @@ const AtsForm = ({
           queryKey: orpc.getAtsFormData.key(),
         });
         toast.success("ATS form saved.");
-        return;
+      } else {
+        toast.error("Fix the highlighted fields before saving.");
       }
-
-      toast.error("Fix the highlighted fields before saving.");
-    } finally {
-      setIsSaving(false);
+    } catch {
+      toast.error("Failed to save ATS form.");
     }
+
+    setIsSaving(false);
   };
+
+  if (isPending || !data) {
+    return (
+      <div className="py-6">
+        <LoadingImage />
+      </div>
+    );
+  }
+
+  const { checklist, eligibility, minimumSalary } = data;
+  const hasSavedData =
+    eligibility !== null || minimumSalary !== null || checklist !== null;
 
   return (
     <form className="py-4" onSubmit={handleSave}>

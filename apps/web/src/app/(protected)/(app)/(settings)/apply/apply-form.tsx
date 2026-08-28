@@ -1,6 +1,5 @@
 "use client";
 
-import type { ApplicationSettings } from "@doresume/contracts";
 import { Button } from "@doresume/ui/components/button";
 import {
   CardContent,
@@ -10,7 +9,7 @@ import {
   CardTitle,
 } from "@doresume/ui/components/card";
 import { Spinner } from "@doresume/ui/components/spinner";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import {
@@ -18,22 +17,36 @@ import {
   ApplicationSettingsFields,
   useApplicationSettingsForm,
 } from "@/app/(protected)/onboarding/13-application-settings";
+import { LoadingImage } from "@/components/loading-image";
 import { client, orpc } from "@/utils/orpc";
 
-const ApplySettingsForm = ({
-  settings,
-}: {
-  settings: ApplicationSettings | null;
-}) => {
+const SETTINGS_STALE_TIME_MS = 5 * 60 * 1000;
+
+const ApplySettingsForm = () => {
   const queryClient = useQueryClient();
-  const hasSavedSettings = settings !== null;
+  const { data, isPending } = useQuery(
+    orpc.getApplicationSettings.queryOptions({
+      staleTime: SETTINGS_STALE_TIME_MS,
+    })
+  );
   const form = useApplicationSettingsForm(async (value) => {
     await client.saveApplicationSettings(value);
     await queryClient.invalidateQueries({
       queryKey: orpc.getApplicationSettings.key(),
     });
     toast.success("Apply settings saved.");
-  }, settings ?? APPLICATION_SETTINGS_DEFAULTS);
+  }, data?.settings ?? APPLICATION_SETTINGS_DEFAULTS);
+
+  if (isPending || !data) {
+    return (
+      <div className="py-6">
+        <LoadingImage />
+      </div>
+    );
+  }
+
+  const { settings } = data;
+  const hasSavedSettings = settings !== null;
 
   return (
     <form

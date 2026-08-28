@@ -9,18 +9,25 @@ import {
   CardTitle,
 } from "@doresume/ui/components/card";
 import { Spinner } from "@doresume/ui/components/spinner";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import {
   ApplicationPasswordFields,
   useApplicationPasswordForm,
 } from "@/app/(protected)/onboarding/12-application-password";
+import { LoadingImage } from "@/components/loading-image";
 import { client, orpc } from "@/utils/orpc";
 
-const WorkdayPasswordForm = ({ password }: { password: string }) => {
+const SETTINGS_STALE_TIME_MS = 5 * 60 * 1000;
+
+const WorkdayPasswordForm = () => {
   const queryClient = useQueryClient();
-  const hasSavedPassword = password.length > 0;
+  const { data, isPending } = useQuery(
+    orpc.getApplicationPassword.queryOptions({
+      staleTime: SETTINGS_STALE_TIME_MS,
+    })
+  );
   const form = useApplicationPasswordForm(
     async (value) => {
       await client.saveApplicationPassword(value);
@@ -29,8 +36,19 @@ const WorkdayPasswordForm = ({ password }: { password: string }) => {
       });
       toast.success("Application password saved.");
     },
-    { password }
+    { password: data?.password ?? "" }
   );
+
+  if (isPending || !data) {
+    return (
+      <div className="py-6">
+        <LoadingImage />
+      </div>
+    );
+  }
+
+  const { password } = data;
+  const hasSavedPassword = password.length > 0;
 
   return (
     <form

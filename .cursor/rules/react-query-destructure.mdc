@@ -1,0 +1,53 @@
+---
+description: Destructure useQuery results in client components (data, isPending)
+globs: apps/web/**/*.tsx
+alwaysApply: false
+---
+
+# React Query destructuring
+
+When using `useQuery` in client components, destructure the result. Do not access `query.data` or `query.isPending` via dot notation.
+
+## Pattern
+
+1. Destructure `{ data, isPending }` from `useQuery(...)`.
+2. Hooks that must run before the loading guard (e.g. form hooks) use `data?.field ?? default`.
+3. Early return when `isPending || !data`.
+4. After the guard, destructure fields from `data` for render-time values.
+
+```tsx
+const { data, isPending } = useQuery(
+  orpc.getApplicationPassword.queryOptions({
+    staleTime: SETTINGS_STALE_TIME_MS,
+  })
+);
+
+const form = useApplicationPasswordForm(onSave, {
+  password: data?.password ?? "",
+});
+
+if (isPending || !data) {
+  return (
+    <div className="py-6">
+      <LoadingImage />
+    </div>
+  );
+}
+
+const { password } = data;
+const hasSavedPassword = password.length > 0;
+```
+
+## Avoid
+
+```tsx
+// ❌ Dot access on query object
+const passwordQuery = useQuery(...);
+if (passwordQuery.isPending || !passwordQuery.data) { ... }
+const password = passwordQuery.data.password;
+
+// ❌ Split Content wrapper just to satisfy hooks — inline in one component
+const FormContent = ({ password }: { password: string }) => { ... };
+```
+
+Reference: `apps/web/src/app/(protected)/(app)/(settings)/*/apply-form.tsx`, `workday-form.tsx`, `ats-form.tsx`, `integrations.tsx`.

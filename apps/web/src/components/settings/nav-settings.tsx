@@ -14,8 +14,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
-import { SETTINGS_STALE_TIME_MS } from "@/lib/settings-queries";
 import { orpc } from "@/utils/orpc";
+
+const SETTINGS_STALE_TIME_MS = 5 * 60 * 1000;
 
 const SETTINGS_NAV_ITEMS: {
   icon: LucideIcon;
@@ -44,31 +45,19 @@ const SETTINGS_NAV_ITEMS: {
   },
 ];
 
-const prefetchSettingsQueries = (
-  queryClient: ReturnType<typeof useQueryClient>
-) => {
-  const queryOptions = { staleTime: SETTINGS_STALE_TIME_MS };
-
-  void queryClient.prefetchQuery(
-    orpc.getApplicationSettings.queryOptions(queryOptions)
-  );
-  void queryClient.prefetchQuery(
-    orpc.getAtsFormData.queryOptions(queryOptions)
-  );
-  void queryClient.prefetchQuery(
-    orpc.getApplicationPassword.queryOptions(queryOptions)
-  );
-  void queryClient.prefetchQuery(
-    orpc.getConnections.queryOptions(queryOptions)
-  );
-};
-
 export const SettingsNav = () => {
   const pathname = usePathname();
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    prefetchSettingsQueries(queryClient);
+    const queryOptions = { staleTime: SETTINGS_STALE_TIME_MS };
+
+    void Promise.allSettled([
+      queryClient.query(orpc.getApplicationSettings.queryOptions(queryOptions)),
+      queryClient.query(orpc.getAtsFormData.queryOptions(queryOptions)),
+      queryClient.query(orpc.getApplicationPassword.queryOptions(queryOptions)),
+      queryClient.query(orpc.getConnections.queryOptions(queryOptions)),
+    ]);
   }, [queryClient]);
 
   return (

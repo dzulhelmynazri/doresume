@@ -107,6 +107,12 @@ Match the nearest existing package. Do not add architecture the task did not ask
 
 - Use ref as a prop instead of `React.forwardRef`
 
+**TanStack Query (client components):**
+
+- Destructure `useQuery` as `{ data, isPending }` — not `query.data` / `query.isPending`
+- Use `data?.field ?? default` for hooks before the loading guard; destructure from `data` after `if (isPending || !data)`
+- See `.cursor/rules/react-query-destructure.mdc` for the full pattern
+
 **Solid/Svelte/Vue/Qwik:**
 
 - Use `class` and `for` attributes (not `className` or `htmlFor`)
