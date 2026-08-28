@@ -9,4 +9,5 @@ export const nextConfig = {
   },
   partialPrefetching: true,
   reactCompiler: true,
+  serverExternalPackages: ["@firecrawl/anydoc"],
 } satisfies NextConfig;

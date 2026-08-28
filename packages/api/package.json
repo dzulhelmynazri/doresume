@@ -15,6 +15,7 @@
     "@doresume/auth": "workspace:*",
     "@doresume/contracts": "workspace:*",
     "@doresume/db": "workspace:*",
+    "@doresume/doc-parser": "workspace:*",
     "@doresume/email": "workspace:*",
     "@doresume/env": "workspace:*",
     "@doresume/storage": "workspace:*",

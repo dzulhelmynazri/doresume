@@ -120,6 +120,14 @@ export const getUserActiveCoverLetter = async (
   };
 };
 
+export const getResumeDocumentSeedUser = async (
+  userId: string
+): Promise<ResumeDocumentSeedUser> => {
+  const record = await getUserRecord(userId);
+
+  return toSeedUser(record);
+};
+
 export const saveUserResumeDocument = async (
   userId: string,
   document: ResumeDocument
@@ -131,6 +139,26 @@ export const saveUserResumeDocument = async (
     ...documents,
     documents: documents.documents.map((entry) =>
       entry.id === activeDocument.id ? { ...entry, document } : entry
+    ),
+  });
+};
+
+export const saveUserResumeDocumentFromUpload = async (
+  userId: string,
+  document: ResumeDocument,
+  fileName: string
+) => {
+  const documents = await getUserDocuments(userId);
+  const activeDocument = getActiveDocumentBundle(documents);
+  const displayName =
+    fileName.replace(/\.[^.]+$/u, "").trim() || activeDocument.name;
+
+  await saveUserDocuments(userId, {
+    ...documents,
+    documents: documents.documents.map((entry) =>
+      entry.id === activeDocument.id
+        ? { ...entry, document, name: displayName }
+        : entry
     ),
   });
 };

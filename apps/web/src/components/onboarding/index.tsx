@@ -101,6 +101,7 @@ const Onboarding = ({
   const [uploaded, setUploaded] = useState<UploadedResume | null>(
     initialResume
   );
+  const [isParsing, setIsParsing] = useState(false);
   const [isFinishing, setIsFinishing] = useState(false);
   const locationForm = useLocationForm(async (value) => {
     await client.saveLocation(value);
@@ -248,7 +249,22 @@ const Onboarding = ({
   const settingsForm = useApplicationSettingsForm(finishOnboarding);
 
   const { isUploading } = files;
-  const canContinueResume = uploaded !== null && !isUploading;
+  const canContinueResume = uploaded !== null && !isUploading && !isParsing;
+
+  const handleResumeUploaded = async (resume: UploadedResume) => {
+    setUploaded(resume);
+    setIsParsing(true);
+
+    try {
+      await client.parseResume({ key: resume.key });
+    } catch {
+      toast.error(
+        "We saved your resume but could not parse it. You can edit it in Documents."
+      );
+    }
+
+    setIsParsing(false);
+  };
 
   return (
     <Questionnaire
@@ -287,11 +303,14 @@ const Onboarding = ({
         </div>
         <ResumeDropzone
           files={files}
+          isParsing={isParsing}
           uploaded={uploaded}
           onClear={() => {
             setUploaded(null);
           }}
-          onUploaded={setUploaded}
+          onUploaded={(resume) => {
+            void handleResumeUploaded(resume);
+          }}
         />
         <QuestionnaireError />
       </QuestionnaireItem>

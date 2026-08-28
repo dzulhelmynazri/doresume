@@ -13,6 +13,12 @@
       "skillPath": "skills/composio/SKILL.md",
       "computedHash": "60d7d3cf79e25c061030309af40eaa2a9de6df8f6b87977932996a9909232886"
     },
+    "convert-documents-to-markdown": {
+      "source": "firecrawl/anydoc",
+      "sourceType": "github",
+      "skillPath": "skills/convert-documents-to-markdown/SKILL.md",
+      "computedHash": "f5cf8f73b291fd0e29adb9a762dcda267245b44ffbdabc3321771aac1c41fb11"
+    },
     "expo-dev-client": {
       "source": "expo/skills",
       "sourceType": "github",

@@ -44,6 +44,7 @@ export interface UploadedResume {
 
 interface ResumeDropzoneProps {
   files: UseFilesResult;
+  isParsing?: boolean;
   onClear: () => void;
   onUploaded: (resume: UploadedResume) => void;
   uploaded: UploadedResume | null;
@@ -164,6 +165,18 @@ const UploadingResumeAttachment = ({
   </Attachment>
 );
 
+const ParsingResumeAttachment = ({ name }: { name: string }) => (
+  <Attachment className="w-full" state="uploading">
+    <AttachmentMedia>
+      <Spinner />
+    </AttachmentMedia>
+    <AttachmentContent>
+      <AttachmentTitle>{name}</AttachmentTitle>
+      <AttachmentDescription>Parsing resume…</AttachmentDescription>
+    </AttachmentContent>
+  </Attachment>
+);
+
 const UploadedResumeAttachment = ({
   onPick,
   onRemove,
@@ -198,6 +211,7 @@ const UploadedResumeAttachment = ({
 
 const ResumeDropzone = ({
   files,
+  isParsing = false,
   onClear,
   onUploaded,
   uploaded,
@@ -262,7 +276,7 @@ const ResumeDropzone = ({
 
   let attachment = (
     <EmptyResumeDropzone
-      disabled={isUploading}
+      disabled={isUploading || isParsing}
       isDragActive={isDragActive}
       onDragActiveChange={setIsDragActive}
       onFiles={(fileList) => {
@@ -283,6 +297,8 @@ const ResumeDropzone = ({
         }}
       />
     );
+  } else if (isParsing && uploaded) {
+    attachment = <ParsingResumeAttachment name={uploaded.name} />;
   } else if (uploaded) {
     attachment = (
       <UploadedResumeAttachment
@@ -300,7 +316,7 @@ const ResumeDropzone = ({
         accept={RESUME_ACCEPT}
         aria-hidden
         className="sr-only"
-        disabled={isUploading}
+        disabled={isUploading || isParsing}
         tabIndex={-1}
         type="file"
         onChange={(event) => {

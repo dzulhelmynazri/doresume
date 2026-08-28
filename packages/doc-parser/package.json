@@ -1,0 +1,25 @@
+{
+  "name": "@doresume/doc-parser",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@doresume/contracts": "workspace:*",
+    "@doresume/env": "workspace:*",
+    "@firecrawl/anydoc": "^0.2.4",
+    "ai": "^7.0.84",
+    "dedent": "^1.7.2",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@doresume/ts-config": "workspace:*",
+    "typescript": "^6.0.3"
+  }
+}

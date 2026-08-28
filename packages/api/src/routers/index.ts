@@ -24,6 +24,7 @@ import {
 } from "./integrations";
 import { saveLocation } from "./location";
 import { saveMinimumSalary } from "./minimum-salary";
+import { parseResume } from "./parse-resume";
 import { privateData } from "./private-data";
 import { getResumeDocument, saveResumeDocument } from "./resume-document";
 import { saveWorkArrangement } from "./work-arrangement";
@@ -39,6 +40,7 @@ export const appRouter = {
   getDocuments,
   getResumeDocument,
   healthCheck,
+  parseResume,
   privateData,
   saveApplicationPassword,
   saveApplicationSettings,

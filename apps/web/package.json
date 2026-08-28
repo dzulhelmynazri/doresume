@@ -20,6 +20,7 @@
     "@doresume/next-config": "workspace:*",
     "@doresume/storage": "workspace:*",
     "@doresume/ui": "workspace:*",
+    "@firecrawl/anydoc": "^0.2.4",
     "@orpc/client": "catalog:",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
