@@ -12,11 +12,11 @@ import { Spinner } from "@doresume/ui/components/spinner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { LoadingImage } from "@/components/loading-image";
 import {
   ApplicationPasswordFields,
   useApplicationPasswordForm,
-} from "@/app/(protected)/onboarding/12-application-password";
-import { LoadingImage } from "@/components/loading-image";
+} from "@/components/onboarding/12-application-password";
 import { client, orpc } from "@/utils/orpc";
 
 const SETTINGS_STALE_TIME_MS = 5 * 60 * 1000;

@@ -12,12 +12,12 @@ import { Spinner } from "@doresume/ui/components/spinner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { LoadingImage } from "@/components/loading-image";
 import {
   APPLICATION_SETTINGS_DEFAULTS,
   ApplicationSettingsFields,
   useApplicationSettingsForm,
-} from "@/app/(protected)/onboarding/13-application-settings";
-import { LoadingImage } from "@/components/loading-image";
+} from "@/components/onboarding/13-application-settings";
 import { client, orpc } from "@/utils/orpc";
 
 const SETTINGS_STALE_TIME_MS = 5 * 60 * 1000;

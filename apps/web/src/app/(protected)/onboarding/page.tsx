@@ -2,11 +2,10 @@ import { Spinner } from "@doresume/ui/components/spinner";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
+import Onboarding from "@/components/onboarding";
 import { userIsOnboarded } from "@/lib/onboarding";
 import { getUserResume } from "@/lib/resume";
 import { requireUser } from "@/lib/session";
-
-import Onboarding from "./onboarding";
 
 const OnboardingPageContent = async () => {
   const user = await requireUser();

@@ -6,8 +6,8 @@ import {
 
 import { protectedProcedure } from "../index";
 
-export const getDocuments = protectedProcedure.handler(async ({ context }) => 
-  await getUserDocuments(context.session.user.id)
+export const getDocuments = protectedProcedure.handler(
+  async ({ context }) => await getUserDocuments(context.session.user.id)
 );
 
 export const saveDocuments = protectedProcedure

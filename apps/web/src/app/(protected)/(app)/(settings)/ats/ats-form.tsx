@@ -14,22 +14,22 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
+import { LoadingImage } from "@/components/loading-image";
 import {
   ELIGIBILITY_DEFAULTS,
   useWorkEligibilityForm,
   WorkEligibilityFields,
-} from "@/app/(protected)/onboarding/4-eligibility";
+} from "@/components/onboarding/4-eligibility";
 import {
   MINIMUM_SALARY_DEFAULTS,
   MinimumSalaryFields,
   useMinimumSalaryForm,
-} from "@/app/(protected)/onboarding/10-minimum-salary";
+} from "@/components/onboarding/10-minimum-salary";
 import {
   CHECKLIST_DEFAULTS,
   ChecklistFields,
   useChecklistForm,
-} from "@/app/(protected)/onboarding/11-checklist";
-import { LoadingImage } from "@/components/loading-image";
+} from "@/components/onboarding/11-checklist";
 import { client, orpc } from "@/utils/orpc";
 
 const SETTINGS_STALE_TIME_MS = 5 * 60 * 1000;
