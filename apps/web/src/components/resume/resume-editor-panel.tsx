@@ -181,7 +181,7 @@ export const ResumeEditorPanel = ({
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       <ResumeEditorSection
         description="Name, title, and contact information."
         title="Personal details"
@@ -198,7 +198,7 @@ export const ResumeEditorPanel = ({
           items={document.sectionOrder}
           strategy={verticalListSortingStrategy}
         >
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
             {document.sectionOrder.map((sectionId) => (
               <SortableEditorSection
                 document={document}

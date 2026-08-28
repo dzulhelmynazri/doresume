@@ -26,9 +26,9 @@ export const ResumeEditor = ({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="border-border/60 bg-background sticky top-0 z-10 shrink-0 border-b">
+      <div className="border-border/60 sticky top-0 z-10 shrink-0 border-b">
         <div className="flex flex-col lg:flex-row lg:items-stretch">
-          <div className="border-border/60 flex items-center px-4 py-3 lg:w-1/2 lg:border-r">
+          <div className="border-border/60 bg-background flex items-center px-4 py-3 lg:w-1/2 lg:border-r">
             <ResumeToolbar
               document={document}
               isDirty={isDirty}
@@ -40,7 +40,7 @@ export const ResumeEditor = ({
               }}
             />
           </div>
-          <div className="border-border/60 flex items-center border-t px-4 py-3 lg:w-1/2 lg:border-t-0">
+          <div className="border-border/60 bg-background flex items-center border-t px-4 py-3 lg:w-1/2 lg:border-t-0">
             <ResumePreviewToolbar
               document={document}
               isExporting={isExporting}
@@ -54,9 +54,9 @@ export const ResumeEditor = ({
         </div>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        <div className="flex min-h-0 w-full flex-col lg:w-1/2">
-          <div className="flex-1 overflow-y-auto px-4 py-6">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
+        <div className="bg-muted/40 dark:bg-background flex min-h-0 w-full flex-col overflow-hidden lg:w-1/2">
+          <div className="min-h-0 flex-1 overflow-y-auto p-2">
             <div className="mx-auto w-full">
               <ResumeEditorPanel
                 document={document}
@@ -67,7 +67,7 @@ export const ResumeEditor = ({
           </div>
         </div>
 
-        <div className="border-border/60 min-h-[50vh] w-full lg:min-h-0 lg:w-1/2 lg:border-l">
+        <div className="border-border/60 bg-muted/40 dark:bg-background flex min-h-[50vh] w-full flex-col overflow-hidden lg:min-h-0 lg:w-1/2 lg:border-l">
           <ResumePreviewPane document={document} />
         </div>
       </div>

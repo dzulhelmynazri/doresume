@@ -65,10 +65,12 @@ interface ResumePreviewPaneProps {
 }
 
 export const ResumePreviewPane = ({ document }: ResumePreviewPaneProps) => (
-  <div className="flex h-full flex-col">
-    <div className="flex flex-1 justify-center overflow-y-auto p-6">
-      <div className="w-full max-w-[8.5in]">
-        <ResumePreviewDisplay document={document} />
+  <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+    <div className="min-h-0 flex-1 overflow-y-auto">
+      <div className="flex justify-center p-2">
+        <div className="w-full max-w-[8.5in]">
+          <ResumePreviewDisplay document={document} />
+        </div>
       </div>
     </div>
   </div>
