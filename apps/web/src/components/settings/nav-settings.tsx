@@ -7,7 +7,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   BriefcaseIcon,
   CreditCardIcon,
-  SlidersHorizontalIcon,
+  Crown,
   ToyBrick,
   Terminal,
 } from "lucide-react";
@@ -25,7 +25,7 @@ const SETTINGS_NAV_ITEMS: {
   url: string;
 }[] = [
   {
-    icon: SlidersHorizontalIcon,
+    icon: Crown,
     title: "Apply settings",
     url: "/apply",
   },
