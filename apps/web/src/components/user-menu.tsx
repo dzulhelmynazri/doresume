@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@doresume/ui/components/dropdown-menu";
 import { Skeleton } from "@doresume/ui/components/skeleton";
-import { CreditCardIcon, LogOutIcon, SettingsIcon } from "lucide-react";
+import { LogOutIcon, SlidersHorizontalIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -91,12 +91,8 @@ export const UserMenu = () => {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem render={<Link href="/apply" />}>
-            <SettingsIcon />
+            <SlidersHorizontalIcon />
             Settings
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <CreditCardIcon />
-            Billing
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

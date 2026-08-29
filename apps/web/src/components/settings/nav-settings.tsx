@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { LucideIcon } from "lucide-react";
 import {
   BriefcaseIcon,
+  CreditCardIcon,
   SlidersHorizontalIcon,
   ToyBrick,
   Terminal,
@@ -42,6 +43,11 @@ const SETTINGS_NAV_ITEMS: {
     icon: ToyBrick,
     title: "Integrations",
     url: "/integrations",
+  },
+  {
+    icon: CreditCardIcon,
+    title: "Billing",
+    url: "/billing",
   },
 ];
 

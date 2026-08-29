@@ -7,6 +7,7 @@ import {
   ListChecksIcon,
   Files,
   SendIcon,
+  SlidersHorizontalIcon,
 } from "lucide-react";
 
 export interface AppNavItem {
@@ -79,9 +80,10 @@ export const getAppNavContext = (pathname: string): AppNavContext => {
     pathname.startsWith("/apply") ||
     pathname.startsWith("/ats") ||
     pathname.startsWith("/workday") ||
-    pathname.startsWith("/integrations")
+    pathname.startsWith("/integrations") ||
+    pathname.startsWith("/billing")
   ) {
-    return { title: "Settings" };
+    return { icon: SlidersHorizontalIcon, title: "Settings" };
   }
 
   for (const item of APP_NAV_MAIN) {
