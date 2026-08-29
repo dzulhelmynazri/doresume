@@ -63,7 +63,7 @@ export interface AppNavContext {
 
 export const getAppNavContext = (pathname: string): AppNavContext => {
   if (pathname.startsWith("/dashboard/applications/")) {
-    return { title: "Application" };
+    return { icon: Earth, title: "Dashboard > Application" };
   }
 
   if (pathname.startsWith("/networking/")) {
