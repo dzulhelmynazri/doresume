@@ -2,13 +2,10 @@ import { expo } from "@better-auth/expo";
 import { createDb } from "@doresume/db";
 import * as schema from "@doresume/db/schema/auth";
 import { env } from "@doresume/env/server";
-import { polar, checkout, portal } from "@polar-sh/better-auth";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { lastLoginMethod } from "better-auth/plugins";
-
-import { polarClient } from "./lib/payments";
 
 export const createAuth = () => {
   const db = createDb();
@@ -24,23 +21,6 @@ export const createAuth = () => {
       enabled: true,
     },
     plugins: [
-      polar({
-        client: polarClient,
-        createCustomerOnSignUp: true,
-        use: [
-          checkout({
-            authenticatedUsersOnly: true,
-            products: [
-              {
-                productId: "your-product-id",
-                slug: "pro",
-              },
-            ],
-            successUrl: env.POLAR_SUCCESS_URL,
-          }),
-          portal(),
-        ],
-      }),
       expo(),
       lastLoginMethod({
         storeInDatabase: true,

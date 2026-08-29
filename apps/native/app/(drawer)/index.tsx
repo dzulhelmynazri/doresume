@@ -1,64 +1,13 @@
-import { env } from "@doresume/env/native";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
-import * as Linking from "expo-linking";
-import * as WebBrowser from "expo-web-browser";
 import { Card, Chip, useThemeColor } from "heroui-native";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 import { Container } from "@/components/container";
 import { SignIn } from "@/components/sign-in";
 import { SignUp } from "@/components/sign-up";
-import { authClient, polarNativeClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 import { orpc, queryClient } from "@/utils/orpc";
-
-const openPolarLink = async (url: string, returnUrl: string) => {
-  await WebBrowser.openAuthSessionAsync(url, returnUrl);
-};
-
-const getPolarReturnUrl = (returnUrl: string) => {
-  const url = new URL("/polar/success", env.EXPO_PUBLIC_SERVER_URL);
-  url.searchParams.set("returnUrl", returnUrl);
-  return url.toString();
-};
-
-const handlePolarCheckout = async () => {
-  const returnUrl = Linking.createURL("/");
-  const polarReturnUrl = getPolarReturnUrl(returnUrl);
-  const { data, error } = await polarNativeClient.checkout({
-    redirect: false,
-    returnUrl: polarReturnUrl,
-    slug: "pro",
-    successUrl: polarReturnUrl,
-  });
-
-  if (error || !data?.url) {
-    Alert.alert(
-      "Checkout unavailable",
-      error?.message ?? "Unable to create a checkout session."
-    );
-    return;
-  }
-
-  await openPolarLink(data.url, returnUrl);
-};
-
-const handlePolarPortal = async () => {
-  const returnUrl = Linking.createURL("/");
-  const { data, error } = await polarNativeClient.customer.portal({
-    redirect: false,
-  });
-
-  if (error || !data?.url) {
-    Alert.alert(
-      "Portal unavailable",
-      error?.message ?? "Unable to open the customer portal."
-    );
-    return;
-  }
-
-  await openPolarLink(data.url, returnUrl);
-};
 
 const getConnectionDescription = (
   isConnected: boolean,
@@ -113,24 +62,6 @@ const Home = () => {
           >
             <Text className="text-foreground font-medium">Sign Out</Text>
           </Pressable>
-          <View className="mt-4 gap-3">
-            <Pressable
-              className="bg-primary self-start rounded-lg px-4 py-3 active:opacity-70"
-              onPress={handlePolarCheckout}
-            >
-              <Text className="text-foreground font-medium">
-                Upgrade to Pro
-              </Text>
-            </Pressable>
-            <Pressable
-              className="border-border self-start rounded-lg border px-4 py-3 active:opacity-70"
-              onPress={handlePolarPortal}
-            >
-              <Text className="text-foreground font-medium">
-                Manage Subscription
-              </Text>
-            </Pressable>
-          </View>
         </Card>
       ) : null}
 

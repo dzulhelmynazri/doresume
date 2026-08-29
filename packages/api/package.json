@@ -23,6 +23,7 @@
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",
+    "autumn-js": "^1.2.55",
     "dotenv": "catalog:",
     "next": "catalog:",
     "zod": "catalog:"

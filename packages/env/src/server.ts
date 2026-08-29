@@ -7,6 +7,7 @@ export const env = createEnv({
   runtimeEnv: process.env,
   server: {
     AI_GATEWAY_API_KEY: z.string().min(1),
+    AUTUMN_SECRET_KEY: z.string().min(1),
     AWS_ACCESS_KEY_ID: z.string().min(1),
     AWS_ENDPOINT_URL_S3: z.url(),
     AWS_REGION: z.string().min(1),
@@ -24,8 +25,6 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "production", "test"])
       .default("development"),
-    POLAR_ACCESS_TOKEN: z.string().min(1),
-    POLAR_SUCCESS_URL: z.url(),
     RESEND_API_KEY: z.string().min(1),
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

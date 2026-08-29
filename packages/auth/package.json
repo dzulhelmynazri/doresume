@@ -14,8 +14,6 @@
     "@better-auth/expo": "catalog:",
     "@doresume/db": "workspace:*",
     "@doresume/env": "workspace:*",
-    "@polar-sh/better-auth": "catalog:",
-    "@polar-sh/sdk": "^0.49.0",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
     "zod": "catalog:"

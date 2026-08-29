@@ -10,7 +10,9 @@ import {
 } from "./application-settings";
 import {
   getApplicationProcedure,
+  getUsageBalanceProcedure,
   listApplicationsProcedure,
+  saveApplicationProcedure,
 } from "./applications";
 import { getAtsFormData } from "./ats-form";
 import { saveChecklist } from "./checklist";
@@ -44,10 +46,12 @@ export const appRouter = {
   getConnections,
   getDocuments,
   getResumeDocument,
+  getUsageBalance: getUsageBalanceProcedure,
   healthCheck,
   listApplications: listApplicationsProcedure,
   parseResume,
   privateData,
+  saveApplication: saveApplicationProcedure,
   saveApplicationPassword,
   saveApplicationSettings,
   saveChecklist,
