@@ -6,7 +6,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@doresume/ui/components/dropdown-menu";
 import { cn } from "@doresume/ui/lib/utils";
@@ -14,11 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import {
-  APP_NAV_MAIN,
-  APP_NAV_SECONDARY,
-  getAppNavContext,
-} from "@/lib/app-nav";
+import { APP_NAV_MAIN, getAppNavContext } from "@/lib/app-nav";
 
 export const AppNavMenu = () => {
   const pathname = usePathname();
@@ -69,22 +64,6 @@ export const AppNavMenu = () => {
               <DropdownMenuItem
                 key={item.url}
                 className={cn(isActive && "bg-muted")}
-                render={<Link aria-label={item.title} href={item.url} />}
-              >
-                <Icon />
-                {item.title}
-              </DropdownMenuItem>
-            );
-          })}
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          {APP_NAV_SECONDARY.map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <DropdownMenuItem
-                key={item.title}
                 render={<Link aria-label={item.title} href={item.url} />}
               >
                 <Icon />

@@ -3,10 +3,8 @@ import {
   BookUser,
   BriefcaseIcon,
   Earth,
-  LifeBuoyIcon,
   ListChecksIcon,
   Files,
-  SendIcon,
   SlidersHorizontalIcon,
 } from "lucide-react";
 
@@ -44,17 +42,12 @@ export const APP_NAV_MAIN: AppNavItem[] = [
   },
 ];
 
-export const APP_NAV_SECONDARY: AppNavItem[] = [
-  {
-    icon: LifeBuoyIcon,
-    title: "Support",
-    url: "/dashboard",
-  },
-  {
-    icon: SendIcon,
-    title: "Feedback",
-    url: "/dashboard",
-  },
+const SETTINGS_ROUTES = [
+  "/apply",
+  "/ats",
+  "/workday",
+  "/integrations",
+  "/billing",
 ];
 
 export interface AppNavContext {
@@ -72,17 +65,10 @@ export const getAppNavContext = (pathname: string): AppNavContext => {
   }
 
   if (pathname === "/tracker") {
-    const tracker = APP_NAV_MAIN.find((item) => item.url === "/tracker");
-    return { icon: tracker?.icon, title: "Tracker" };
+    return { icon: ListChecksIcon, title: "Tracker" };
   }
 
-  if (
-    pathname.startsWith("/apply") ||
-    pathname.startsWith("/ats") ||
-    pathname.startsWith("/workday") ||
-    pathname.startsWith("/integrations") ||
-    pathname.startsWith("/billing")
-  ) {
+  if (SETTINGS_ROUTES.some((route) => pathname.startsWith(route))) {
     return { icon: SlidersHorizontalIcon, title: "Settings" };
   }
 
@@ -92,8 +78,7 @@ export const getAppNavContext = (pathname: string): AppNavContext => {
     }
   }
 
-  const dashboard = APP_NAV_MAIN.find((item) => item.url === "/dashboard");
-  return { icon: dashboard?.icon, title: "Dashboard" };
+  return { icon: Earth, title: "Dashboard" };
 };
 
 export const getAppNavTitle = (pathname: string) =>
