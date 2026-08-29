@@ -25,7 +25,6 @@
       "name": "apply-agent",
       "version": "0.1.0",
       "dependencies": {
-        "@doresume/ats-adapters": "workspace:*",
         "@vercel/connect": "1.0.0",
         "ai": "^7.0.79",
         "eve": "^0.45.0",
@@ -172,7 +171,6 @@
         "@dnd-kit/sortable": "^10.0.0",
         "@dnd-kit/utilities": "^3.2.2",
         "@doresume/api": "workspace:*",
-        "@doresume/ats-adapters": "workspace:*",
         "@doresume/auth": "workspace:*",
         "@doresume/contracts": "workspace:*",
         "@doresume/db": "workspace:*",
@@ -248,17 +246,6 @@
         "typescript": "^6.0.3",
       },
     },
-    "packages/ats-adapters": {
-      "name": "@doresume/ats-adapters",
-      "version": "0.1.0",
-      "dependencies": {
-        "zod": "catalog:",
-      },
-      "devDependencies": {
-        "@doresume/ts-config": "workspace:*",
-        "typescript": "^6.0.3",
-      },
-    },
     "packages/auth": {
       "name": "@doresume/auth",
       "dependencies": {
@@ -288,7 +275,6 @@
     "packages/db": {
       "name": "@doresume/db",
       "dependencies": {
-        "@doresume/ats-adapters": "workspace:*",
         "@doresume/contracts": "workspace:*",
         "@doresume/env": "workspace:*",
         "@neondatabase/serverless": "^1.1.0",
@@ -768,8 +754,6 @@
     "@dnd-kit/utilities": ["@dnd-kit/utilities@3.2.2", "", { "dependencies": { "tslib": "^2.0.0" }, "peerDependencies": { "react": ">=16.8.0" } }, "sha512-+MKAJEOfaBe5SmV6t34p80MMKhjvUz0vRrvVJbPT0WElzaOJ/1xs+D+KDv+tD/NE5ujfrChEcshd4fLn0wpiqg=="],
 
     "@doresume/api": ["@doresume/api@workspace:packages/api"],
-
-    "@doresume/ats-adapters": ["@doresume/ats-adapters@workspace:packages/ats-adapters"],
 
     "@doresume/auth": ["@doresume/auth@workspace:packages/auth"],
 

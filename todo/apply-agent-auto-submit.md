@@ -10,7 +10,7 @@ Status: PLAN — not implemented yet. Builds on `todo/application-password-decry
 - Apply-agent compiles into the web app via `withEve` (`apps/web/next.config.ts`), so the tool runs with server env + `@doresume/db` already available. No new API surface needed between web and agent.
 - No Stagehand LLM key needed: omit `model` in `Stagehand.create()` → inference routes through Browserbase Model Gateway, billed to the Browserbase account.
 - Browserbase session config: region `ap-southeast-1` (closest to MY), `proxies: true` (MyFutureJobs 403s non-browser / datacenter traffic), `solveCaptchas: true`, `recordSession: false`.
-- Existing `applyClient.normalize()` already handles MyFutureJobs via the generic adapter — no new adapter needed for v1.
+- ATS adapter layer removed (`packages/ats-adapters` deleted, incl. `applyClient` and the form-snapshot web UI) — adapter/normalization design deferred to planning; decide shape before Phase 2.
 
 ## Security rules (non-negotiable)
 
@@ -45,8 +45,8 @@ Env values needed (`apps/web/.env` + Vercel):
 - [ ] New `agent/tools/run_job_application.ts` (eve `defineTool`):
   - Input: `applicationId` only — never jobUrl/userId from the model.
   - Loads application row, user profile, decrypted password; missing password → `missing_credentials` status pointing to Settings.
-  - Runs the flow, normalizes via `applyClient.normalize(jobUrl, rawFields, values)`, sets `submittedAt` when submitted.
-  - `saveApplication()` with status `submitted`/`failed` + formSnapshot (existing web UI already renders this).
+  - Runs the flow, normalizes raw fields + values into the snapshot shape (adapter TBD — see Stack decisions), sets `submittedAt` when submitted.
+  - `saveApplication()` with status `submitted`/`failed` + formSnapshot (jsonb column stays; type re-decided with the new adapter design).
   - Billing note: tool only updates; metered creation stays in the `saveApplication` oRPC procedure.
 - [ ] `agent/instructions.md`: unattended (never ask confirmation), never self-retry failures, never ask users for passwords in chat; map statuses to user-facing messages.
 - [ ] Answer resolver — match field labels English + BM (Nama, Emel, Telefon, Poskod, Negeri, Bandar, Alamat, Gaji, Jantina, Bangsa, Pendidikan, Pengalaman): name, email, phone, LinkedIn, address/city/state/zip/country, salary (from `minimumSalary`), education/experience (label lookups from contracts), gender/race/disability/veteran (checklist → labels), yes/no checklist answers (relocate, clearance, accommodations, start immediately, transportation, in-person).
@@ -54,7 +54,7 @@ Env values needed (`apps/web/.env` + Vercel):
 ## Phase 3 — web trigger
 
 - [ ] Dashboard `handleApply` (`apps/web/src/components/jobs/index.tsx`): create the application via `orpc.saveApplication` first (feature check + usage tracking), then send the `applicationId` to apply-agent through the eve channel mounted by `withEve`.
-- [ ] Application row starts `pending` → agent sets `submitted`/`failed`; `ApplicationFormSnapshotView` shows the captured form.
+- [ ] Application row starts `pending` → agent sets `submitted`/`failed`; snapshot UI deleted with the adapter layer — re-plan how the captured form is shown.
 
 ## Phase 4 — hardening (before real users)
 

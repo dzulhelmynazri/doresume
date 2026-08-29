@@ -1,4 +1,3 @@
-import type { ApplicationFormSnapshot } from "@doresume/ats-adapters";
 import { and, desc, eq } from "drizzle-orm";
 
 import { db } from "./index";
@@ -12,7 +11,7 @@ export interface SaveApplicationInput {
   companyName?: string;
   jobTitle?: string;
   jobUrl?: string;
-  formSnapshot?: ApplicationFormSnapshot;
+  formSnapshot?: Record<string, unknown>;
   status?: ApplicationStatus;
 }
 

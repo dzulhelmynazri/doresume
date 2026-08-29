@@ -6,7 +6,7 @@ const ApplicationPage = async ({
   params: Promise<{ id: string }>;
 }) => {
   const { id } = await params;
-  redirect(`/dashboard/applications/${id}/form`);
+  redirect(`/dashboard/applications/${id}/job`);
 };
 
 export default ApplicationPage;

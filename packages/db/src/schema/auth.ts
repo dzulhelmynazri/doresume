@@ -1,4 +1,3 @@
-import type { ApplicationFormSnapshot } from "@doresume/ats-adapters";
 import type {
   ApplicationSettings,
   Checklist,
@@ -131,7 +130,7 @@ export const application = pgTable(
   {
     companyName: text("company_name"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    formSnapshot: jsonb("form_snapshot").$type<ApplicationFormSnapshot>(),
+    formSnapshot: jsonb("form_snapshot"),
     id: text("id").primaryKey(),
     jobTitle: text("job_title"),
     jobUrl: text("job_url"),

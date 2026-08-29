@@ -85,10 +85,7 @@ export const ApplicationsNav = ({ id: propId }: ApplicationsNavProps) => {
     <nav className="flex w-56 shrink-0 flex-col gap-1 p-4">
       {navItems.map((item) => {
         const Icon = item.icon;
-        const isExactMatch = pathname === item.url;
-        const isRootApplicationForm =
-          item.slug === "form" && pathname === `/dashboard/applications/${id}`;
-        const isActive = isExactMatch || isRootApplicationForm;
+        const isActive = pathname === item.url;
 
         return (
           <Button
