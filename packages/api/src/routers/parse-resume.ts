@@ -2,8 +2,8 @@ import {
   getResumeDocumentSeedUser,
   saveUserResumeDocumentFromUpload,
 } from "@doresume/db/user-documents";
-import { parseResumeBytes } from "@doresume/doc-parser";
 import { env } from "@doresume/env/server";
+import { parseResumeBytes } from "@doresume/resume-parser";
 import { storage } from "@doresume/storage";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";

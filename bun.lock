@@ -228,9 +228,9 @@
         "@doresume/auth": "workspace:*",
         "@doresume/contracts": "workspace:*",
         "@doresume/db": "workspace:*",
-        "@doresume/doc-parser": "workspace:*",
         "@doresume/email": "workspace:*",
         "@doresume/env": "workspace:*",
+        "@doresume/resume-parser": "workspace:*",
         "@doresume/storage": "workspace:*",
         "@orpc/client": "catalog:",
         "@orpc/openapi": "catalog:",
@@ -288,21 +288,6 @@
         "typescript": "^6.0.3",
       },
     },
-    "packages/doc-parser": {
-      "name": "@doresume/doc-parser",
-      "dependencies": {
-        "@doresume/contracts": "workspace:*",
-        "@doresume/env": "workspace:*",
-        "@firecrawl/anydoc": "^0.2.4",
-        "ai": "^7.0.84",
-        "dedent": "^1.7.2",
-        "zod": "catalog:",
-      },
-      "devDependencies": {
-        "@doresume/ts-config": "workspace:*",
-        "typescript": "^6.0.3",
-      },
-    },
     "packages/email": {
       "name": "@doresume/email",
       "dependencies": {
@@ -339,6 +324,21 @@
       },
       "peerDependencies": {
         "next": "catalog:",
+      },
+    },
+    "packages/resume-parser": {
+      "name": "@doresume/resume-parser",
+      "dependencies": {
+        "@doresume/contracts": "workspace:*",
+        "@doresume/env": "workspace:*",
+        "@firecrawl/anydoc": "^0.2.4",
+        "ai": "^7.0.84",
+        "dedent": "^1.7.2",
+        "zod": "catalog:",
+      },
+      "devDependencies": {
+        "@doresume/ts-config": "workspace:*",
+        "typescript": "^6.0.3",
       },
     },
     "packages/storage": {
@@ -762,13 +762,13 @@
 
     "@doresume/db": ["@doresume/db@workspace:packages/db"],
 
-    "@doresume/doc-parser": ["@doresume/doc-parser@workspace:packages/doc-parser"],
-
     "@doresume/email": ["@doresume/email@workspace:packages/email"],
 
     "@doresume/env": ["@doresume/env@workspace:packages/env"],
 
     "@doresume/next-config": ["@doresume/next-config@workspace:packages/next-config"],
+
+    "@doresume/resume-parser": ["@doresume/resume-parser@workspace:packages/resume-parser"],
 
     "@doresume/storage": ["@doresume/storage@workspace:packages/storage"],
 

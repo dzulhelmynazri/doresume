@@ -1,5 +1,5 @@
 {
-  "name": "@doresume/doc-parser",
+  "name": "@doresume/resume-parser",
   "type": "module",
   "exports": {
     ".": {
