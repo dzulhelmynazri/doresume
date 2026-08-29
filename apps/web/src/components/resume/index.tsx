@@ -15,10 +15,12 @@ import { ResumeToolbar } from "./resume-toolbar";
 
 export const ResumeEditor = ({
   initialDocuments,
+  initialKind = "resume",
 }: {
   initialDocuments: DocumentsState;
+  initialKind?: DocumentKind;
 }) => {
-  const [documentKind, setDocumentKind] = useState<DocumentKind>("resume");
+  const [documentKind, setDocumentKind] = useState<DocumentKind>(initialKind);
   const isCoverLetter = documentKind === "cover-letter";
 
   const {
