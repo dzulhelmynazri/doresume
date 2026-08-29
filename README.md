@@ -95,18 +95,23 @@ doresume/
 │   ├── crawler-agent/    # Durable AI agent (eve)
 │   └── networking-agent/ # Durable AI agent (eve)
 ├── apps/
-│   ├── web/         # Fullstack application (Next.js)
-│   ├── marketing/   # Marketing site (Next.js)
-│   ├── docs/        # Documentation site (Blume)
-│   ├── native/      # Mobile application (React Native, Expo)
-│   └── extension/   # Browser extension (WXT)
+│   ├── web/              # Fullstack application (Next.js)
+│   ├── marketing/        # Marketing site (Next.js)
+│   ├── docs/             # Documentation site (Blume)
+│   ├── native/           # Mobile application (React Native, Expo)
+│   └── extension/        # Browser extension (WXT)
 ├── packages/
-│   ├── ui/          # Shared shadcn/ui components and styles
-│   ├── api/         # API layer / business logic
-│   ├── auth/        # Authentication configuration & logic
-│   ├── db/          # Database schema & queries
-│   ├── email/       # Transactional email (Email SDK)
-│   └── storage/     # Object storage (Files SDK)
+│   ├── api/              # API layer / business logic
+│   ├── auth/             # Authentication configuration & logic
+│   ├── contracts/        # Shared schemas, types & contracts
+│   ├── db/               # Database schema & queries
+│   ├── email/            # Transactional email (Email SDK)
+│   ├── env/              # Type-safe environment variables
+│   ├── next-config/      # Shared Next.js configuration
+│   ├── resume-parser/    # AI document & resume parsing
+│   ├── storage/          # Object storage (Files SDK)
+│   ├── ts-config/        # Shared TypeScript configurations
+│   └── ui/               # Shared shadcn/ui components and styles
 ```
 
 ## Available Scripts
