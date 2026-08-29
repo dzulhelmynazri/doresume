@@ -10,11 +10,16 @@ import {
 } from "./application-settings";
 import {
   getApplicationProcedure,
-  getUsageBalanceProcedure,
   listApplicationsProcedure,
   saveApplicationProcedure,
 } from "./applications";
 import { getAtsFormData } from "./ats-form";
+import {
+  billingAttach,
+  billingOpenPortal,
+  getApplicationsBalance,
+  getBillingCustomer,
+} from "./billing";
 import { saveChecklist } from "./checklist";
 import { saveContact } from "./contact";
 import { getDocuments, saveDocuments } from "./documents";
@@ -37,16 +42,19 @@ import { saveWorkArrangement } from "./work-arrangement";
 import { saveWorkType } from "./work-type";
 
 export const appRouter = {
+  billingAttach,
+  billingOpenPortal,
   connectIntegration,
   disconnectIntegration,
   getApplication: getApplicationProcedure,
   getApplicationPassword,
   getApplicationSettings,
+  getApplicationsBalance,
   getAtsFormData,
+  getBillingCustomer,
   getConnections,
   getDocuments,
   getResumeDocument,
-  getUsageBalance: getUsageBalanceProcedure,
   healthCheck,
   listApplications: listApplicationsProcedure,
   parseResume,

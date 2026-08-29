@@ -55,3 +55,71 @@ export const getFeatureBalance = async (
     usage: balance.usage,
   };
 };
+
+// ── Billing ─────────────────────────────────────────────────────────
+
+export interface CustomerSubscription {
+  planId: string;
+  status: string;
+  canceledAt: number | null;
+}
+
+export interface CustomerData {
+  balances: Record<string, BalanceInfo>;
+  subscriptions: CustomerSubscription[];
+}
+
+/**
+ * Get the full customer record for billing UI.
+ */
+export const getCustomerData = async (
+  customerId: string
+): Promise<CustomerData> => {
+  const customer = await autumn.customers.get({ customerId });
+
+  const subscriptions: CustomerSubscription[] =
+    customer.subscriptions?.map((sub) => ({
+      canceledAt: sub.canceledAt ?? null,
+      planId: sub.planId,
+      status: sub.status,
+    })) ?? [];
+
+  const balances: Record<string, BalanceInfo> = {};
+  if (customer.balances) {
+    for (const [key, bal] of Object.entries(customer.balances)) {
+      balances[key] = {
+        granted: bal.granted,
+        remaining: bal.remaining,
+        unlimited: bal.unlimited,
+        usage: bal.usage,
+      };
+    }
+  }
+
+  return { balances, subscriptions };
+};
+
+/**
+ * Attach a plan — returns a payment URL to redirect the customer to.
+ */
+export const attachPlan = async (
+  customerId: string,
+  planId: string
+): Promise<{ paymentUrl: string | null }> => {
+  const result = await autumn.billing.attach({ customerId, planId });
+  return { paymentUrl: result.paymentUrl ?? null };
+};
+
+/**
+ * Open the Stripe billing portal for managing subscriptions.
+ */
+export const openBillingPortal = async (
+  customerId: string,
+  returnUrl: string
+): Promise<{ url: string }> => {
+  const result = await autumn.billing.openCustomerPortal({
+    customerId,
+    returnUrl,
+  });
+  return { url: result.url };
+};

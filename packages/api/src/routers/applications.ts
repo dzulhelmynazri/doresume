@@ -6,7 +6,7 @@ import {
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 
-import { checkFeatureAccess, getFeatureBalance, trackUsage } from "../autumn";
+import { checkFeatureAccess, trackUsage } from "../autumn";
 import { protectedProcedure } from "../index";
 
 export const getApplicationProcedure = protectedProcedure
@@ -55,10 +55,3 @@ export const saveApplicationProcedure = protectedProcedure
 
     await trackUsage(userId, "applications");
   });
-
-export const getUsageBalanceProcedure = protectedProcedure.handler(
-  ({ context }) => {
-    const userId = context.session.user.id;
-    return getFeatureBalance(userId, "applications");
-  }
-);

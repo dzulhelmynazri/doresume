@@ -13,11 +13,12 @@ import {
 import { Spinner } from "@doresume/ui/components/spinner";
 import { Tabs, TabsList, TabsTrigger } from "@doresume/ui/components/tabs";
 import { cn } from "@doresume/ui/lib/utils";
-import { useCustomer } from "autumn-js/react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircleIcon } from "lucide-react";
 import { useState, useTransition } from "react";
 
 import { LoadingImage } from "@/components/loading-image";
+import { orpc } from "@/utils/orpc";
 
 type BillingPeriod = "annual" | "monthly" | "quarterly";
 
@@ -72,13 +73,39 @@ const formatPrice = (amount: number) =>
   }).format(amount);
 
 const Billing = () => {
-  const { attach, data, isLoading, openCustomerPortal } = useCustomer();
+  const queryClient = useQueryClient();
+  const { data, isPending } = useQuery(orpc.getBillingCustomer.queryOptions());
   const [period, setPeriod] = useState<BillingPeriod>("monthly");
   const [isActing, startAction] = useTransition();
 
-  const activeSub = data?.subscriptions?.find(
-    (s: { status: string }) => s.status === "active"
-  );
+  const invalidateCustomer = () => {
+    void queryClient.invalidateQueries({
+      queryKey: orpc.getBillingCustomer.queryKey(),
+    });
+  };
+
+  const handleAttach = (planId: string) => {
+    startAction(async () => {
+      const result = await orpc.billingAttach.call({ planId });
+      if (result.paymentUrl) {
+        window.location.href = result.paymentUrl;
+      }
+      invalidateCustomer();
+    });
+  };
+
+  const handleOpenPortal = () => {
+    startAction(async () => {
+      const result = await orpc.billingOpenPortal.call({
+        returnUrl: `${window.location.origin}/settings/billing`,
+      });
+      if (result.url) {
+        window.location.href = result.url;
+      }
+    });
+  };
+
+  const activeSub = data?.subscriptions?.find((s) => s.status === "active");
   const activePlanId: string | null = activeSub?.planId ?? null;
 
   const getPlanId = (plan: PlanConfig) => {
@@ -95,7 +122,7 @@ const Billing = () => {
     return activePlanId === plan.id || activePlanId.startsWith(`${plan.id}-`);
   };
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="py-6">
         <LoadingImage />
@@ -191,11 +218,9 @@ const Billing = () => {
                   <Button
                     className="w-full"
                     disabled={isActing}
-                    onClick={() =>
-                      startAction(() => {
-                        openCustomerPortal();
-                      })
-                    }
+                    onClick={() => {
+                      handleOpenPortal();
+                    }}
                     size="sm"
                     type="button"
                     variant="outline"
@@ -207,11 +232,9 @@ const Billing = () => {
                   <Button
                     className="w-full"
                     disabled={isActing}
-                    onClick={() =>
-                      startAction(() => {
-                        attach({ planId, redirectMode: "always" });
-                      })
-                    }
+                    onClick={() => {
+                      handleAttach(planId);
+                    }}
                     size="sm"
                     type="button"
                     variant={isFeatured ? "default" : "outline"}

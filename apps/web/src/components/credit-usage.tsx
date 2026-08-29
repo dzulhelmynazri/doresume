@@ -7,7 +7,9 @@ import Link from "next/link";
 import { orpc } from "@/utils/orpc";
 
 const CreditUsage = () => {
-  const { data: balance } = useQuery(orpc.getUsageBalance.queryOptions());
+  const { data: balance } = useQuery(
+    orpc.getApplicationsBalance.queryOptions()
+  );
 
   if (!balance) {
     return null;
