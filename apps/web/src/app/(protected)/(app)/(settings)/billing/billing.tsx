@@ -38,6 +38,12 @@ const SUFFIX: Record<BillingPeriod, string> = {
   quarterly: "-quarterly",
 };
 
+const PERIOD_LABEL: Record<BillingPeriod, string> = {
+  annual: "/yr",
+  monthly: "/mo",
+  quarterly: "/qtr",
+};
+
 interface PlanConfig {
   features: string[];
   id: string;
@@ -56,13 +62,13 @@ const PLANS: PlanConfig[] = [
     features: ["300 applications", "Gmail & Outlook integration"],
     id: "starter",
     name: "Starter",
-    price: { annual: 9, monthly: 19, quarterly: 12 },
+    price: { annual: 159, monthly: 19, quarterly: 49 },
   },
   {
     features: ["1000 applications", "Gmail & Outlook integration"],
     id: "pro",
     name: "Pro",
-    price: { annual: 19, monthly: 39, quarterly: 24 },
+    price: { annual: 299, monthly: 39, quarterly: 79 },
   },
 ];
 
@@ -197,7 +203,7 @@ const Billing = () => {
                     <span className="text-2xl font-bold">
                       {formatPrice(price)}
                       <span className="text-muted-foreground ml-0.5 text-sm font-normal">
-                        /mo
+                        {PERIOD_LABEL[period]}
                       </span>
                     </span>
                   )}
