@@ -265,6 +265,7 @@
         "@better-auth/expo": "catalog:",
         "@doresume/db": "workspace:*",
         "@doresume/env": "workspace:*",
+        "autumn-js": "^1.2.55",
         "better-auth": "catalog:",
         "dotenv": "catalog:",
         "zod": "catalog:",

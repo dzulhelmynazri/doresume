@@ -1,41 +1,30 @@
 import { env } from "@doresume/env/server";
 import { Autumn } from "autumn-js";
 
-export const autumn = new Autumn({
+const autumn = new Autumn({
   secretKey: env.AUTUMN_SECRET_KEY,
 });
 
 /**
  * Check if the user has remaining balance for a feature.
- * Returns `{ allowed: true }` if the user can proceed.
  */
 export const checkFeatureAccess = async (
   customerId: string,
-  featureId: string,
-  requiredBalance = 1
+  featureId: string
 ) => {
-  const { allowed } = await autumn.check({
-    customerId,
-    featureId,
-    requiredBalance,
-  });
+  const { allowed } = await autumn.check({ customerId, featureId });
   return { allowed };
 };
 
 /**
  * Record usage after a successful action.
- * Only call after the protected action has completed.
  */
 export const trackUsage = async (
   customerId: string,
   featureId: string,
   value = 1
 ) => {
-  await autumn.track({
-    customerId,
-    featureId,
-    value,
-  });
+  await autumn.track({ customerId, featureId, value });
 };
 
 export interface BalanceInfo {
@@ -46,8 +35,7 @@ export interface BalanceInfo {
 }
 
 /**
- * Get the balance for a specific feature using the backend SDK.
- * Returns usage, granted, remaining, and unlimited status.
+ * Get the balance for a specific feature.
  */
 export const getFeatureBalance = async (
   customerId: string,

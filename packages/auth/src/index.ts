@@ -2,6 +2,7 @@ import { expo } from "@better-auth/expo";
 import { createDb } from "@doresume/db";
 import * as schema from "@doresume/db/schema/auth";
 import { env } from "@doresume/env/server";
+import { autumn } from "autumn-js/better-auth";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
@@ -26,6 +27,15 @@ export const createAuth = () => {
         storeInDatabase: true,
       }),
       nextCookies(),
+      autumn({
+        identify: ({ session }) => ({
+          customerData: {
+            email: session?.user.email,
+            name: session?.user.name,
+          },
+          customerId: session?.user.id ?? "",
+        }),
+      }),
     ],
     secret: env.BETTER_AUTH_SECRET,
     socialProviders: {

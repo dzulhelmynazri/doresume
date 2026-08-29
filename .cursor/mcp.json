@@ -21,8 +21,8 @@
     "expo-mcp": {
       "url": "https://mcp.expo.dev/mcp"
     },
-    "polar": {
-      "url": "https://mcp.polar.sh/mcp/polar-mcp"
+    "autumn": {
+      "url": "https://mcp.useautumn.com/mcp"
     }
   }
 }

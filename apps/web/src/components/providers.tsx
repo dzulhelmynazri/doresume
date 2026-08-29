@@ -17,7 +17,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => (
     enableSystem
     disableTransitionOnChange
   >
-    <AutumnProvider>
+    <AutumnProvider useBetterAuth={true}>
       <TooltipProvider>
         <QueryClientProvider client={queryClient}>
           {children}
