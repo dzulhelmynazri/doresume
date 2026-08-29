@@ -60,11 +60,24 @@ export const ApplicationsNav = ({ id: propId }: ApplicationsNavProps) => {
   useEffect(() => {
     const queryOptions = { staleTime: APPLICATIONS_STALE_TIME_MS };
 
-    void Promise.allSettled([
+    const queries: Promise<unknown>[] = [
       queryClient.query(orpc.getDocuments.queryOptions(queryOptions)),
       queryClient.query(orpc.getAtsFormData.queryOptions(queryOptions)),
-    ]);
-  }, [queryClient]);
+    ];
+
+    if (id) {
+      queries.push(
+        queryClient.query(
+          orpc.getApplication.queryOptions({
+            input: { id },
+            staleTime: APPLICATIONS_STALE_TIME_MS,
+          })
+        )
+      );
+    }
+
+    void Promise.allSettled(queries);
+  }, [id, queryClient]);
 
   const navItems = getApplicationsNavItems(id);
 

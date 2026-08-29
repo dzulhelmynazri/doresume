@@ -8,6 +8,10 @@ import {
   getApplicationSettings,
   saveApplicationSettings,
 } from "./application-settings";
+import {
+  getApplicationProcedure,
+  listApplicationsProcedure,
+} from "./applications";
 import { getAtsFormData } from "./ats-form";
 import { saveChecklist } from "./checklist";
 import { saveContact } from "./contact";
@@ -33,6 +37,7 @@ import { saveWorkType } from "./work-type";
 export const appRouter = {
   connectIntegration,
   disconnectIntegration,
+  getApplication: getApplicationProcedure,
   getApplicationPassword,
   getApplicationSettings,
   getAtsFormData,
@@ -40,6 +45,7 @@ export const appRouter = {
   getDocuments,
   getResumeDocument,
   healthCheck,
+  listApplications: listApplicationsProcedure,
   parseResume,
   privateData,
   saveApplicationPassword,

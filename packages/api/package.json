@@ -11,7 +11,7 @@
   },
   "scripts": {},
   "dependencies": {
-    "@composio/core": "^0.17.0",
+    "@composio/core": "^0.18.0",
     "@doresume/auth": "workspace:*",
     "@doresume/contracts": "workspace:*",
     "@doresume/db": "workspace:*",
