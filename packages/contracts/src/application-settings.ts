@@ -7,6 +7,7 @@ export const RESUME_OPTIMIZATION_MODES = [
 ] as const;
 
 export const applicationSettingsSchema = z.object({
+  allowAccountCreation: z.boolean(),
   autoApproveEdits: z.boolean(),
   resumeOptimization: z.enum(RESUME_OPTIMIZATION_MODES),
   reviewBeforeSubmit: z.boolean(),

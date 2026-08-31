@@ -40,31 +40,17 @@ import {
   useWorkArrangementForm,
 } from "./9-work-arrangement";
 import { MinimumSalaryFields, useMinimumSalaryForm } from "./10-minimum-salary";
-import { ChecklistFields, useChecklistForm } from "./11-checklist";
 import {
   ApplicationPasswordFields,
   useApplicationPasswordForm,
-} from "./12-application-password";
+} from "./11-application-password";
 import {
   ApplicationSettingsFields,
   useApplicationSettingsForm,
-} from "./13-application-settings";
+} from "./12-application-settings";
+import { InboxFields } from "./13-inbox";
+import { ChecklistFields, useChecklistForm } from "./14-checklist";
 
-const ONBOARDING_STEPS = [
-  "resume",
-  "location",
-  "contact",
-  "eligibility",
-  "industries",
-  "experience",
-  "workType",
-  "education",
-  "workArrangement",
-  "minimumSalary",
-  "checklist",
-  "password",
-  "settings",
-] as const;
 const ONBOARDING_ITEMS = [
   { name: "resume", required: true },
   { name: "location", required: true },
@@ -76,19 +62,23 @@ const ONBOARDING_ITEMS = [
   { name: "education", required: true },
   { name: "workArrangement", required: true },
   { name: "minimumSalary", required: true },
-  { name: "checklist", required: true },
   { name: "password", required: true },
   { name: "settings", required: true },
+  { name: "inbox", required: false },
+  { name: "checklist", required: true },
 ] as const;
+const ONBOARDING_STEPS = ONBOARDING_ITEMS.map((item) => item.name);
+
+type OnboardingStep = (typeof ONBOARDING_ITEMS)[number]["name"];
+
+const ONBOARDING_STEP_NAMES = new Set<string>(ONBOARDING_STEPS);
 
 const onboardingStepParser = parseAsStringLiteral(ONBOARDING_STEPS)
   .withDefault("resume")
   .withOptions({ history: "push" });
 
-const isOnboardingStep = (
-  value: string
-): value is (typeof ONBOARDING_STEPS)[number] =>
-  ONBOARDING_STEPS.some((step) => step === value);
+const isOnboardingStep = (value: string): value is OnboardingStep =>
+  ONBOARDING_STEP_NAMES.has(value);
 
 const Onboarding = ({
   initialResume,
@@ -139,104 +129,100 @@ const Onboarding = ({
   const finishOnboarding = async (applicationSettings: ApplicationSettings) => {
     setIsFinishing(true);
 
+    const validateStep = async (
+      form: {
+        handleSubmit: () => Promise<void>;
+        state: { isValid: boolean };
+      },
+      targetStep: OnboardingStep,
+      message: string
+    ) => {
+      await form.handleSubmit();
+
+      if (form.state.isValid) {
+        return true;
+      }
+
+      toast.error(message);
+      void setStep(targetStep);
+      return false;
+    };
+
     try {
-      await locationForm.handleSubmit();
+      const steps: {
+        form: {
+          handleSubmit: () => Promise<void>;
+          state: { isValid: boolean };
+        };
+        message: string;
+        step: OnboardingStep;
+      }[] = [
+        {
+          form: locationForm,
+          message: "Enter your location to continue.",
+          step: "location",
+        },
+        {
+          form: contactForm,
+          message: "Check your contact details.",
+          step: "contact",
+        },
+        {
+          form: eligibilityForm,
+          message: "Add where you can work.",
+          step: "eligibility",
+        },
+        {
+          form: industriesForm,
+          message: "Choose the industries you want to work in.",
+          step: "industries",
+        },
+        {
+          form: experienceLevelForm,
+          message: "Choose the experience level that fits you best.",
+          step: "experience",
+        },
+        {
+          form: workTypeForm,
+          message: "Choose what type of work you're open to.",
+          step: "workType",
+        },
+        {
+          form: educationLevelForm,
+          message: "Choose your highest education level.",
+          step: "education",
+        },
+        {
+          form: workArrangementForm,
+          message: "Choose how you'd like to work.",
+          step: "workArrangement",
+        },
+        {
+          form: minimumSalaryForm,
+          message: "Enter your desired minimum salary.",
+          step: "minimumSalary",
+        },
+        {
+          form: passwordForm,
+          message: "Set a password for application sites.",
+          step: "password",
+        },
+        {
+          form: checklistForm,
+          message: "Finish the checklist to continue.",
+          step: "checklist",
+        },
+      ];
 
-      if (!locationForm.state.isValid) {
-        toast.error("Enter your location to continue.");
-        void setStep("location");
-        setIsFinishing(false);
-        return;
-      }
+      for (const { form, message, step: targetStep } of steps) {
+        // Sequential on purpose: each step saves before the next is checked.
+        // oxlint-disable-next-line promise/no-await-in-loop
+        const isValid = await validateStep(form, targetStep, message);
 
-      await contactForm.handleSubmit();
-
-      if (!contactForm.state.isValid) {
-        toast.error("Check your contact details.");
-        void setStep("contact");
-        setIsFinishing(false);
-        return;
-      }
-
-      await eligibilityForm.handleSubmit();
-
-      if (!eligibilityForm.state.isValid) {
-        toast.error("Add where you can work.");
-        void setStep("eligibility");
-        setIsFinishing(false);
-        return;
-      }
-
-      await industriesForm.handleSubmit();
-
-      if (!industriesForm.state.isValid) {
-        toast.error("Choose the industries you want to work in.");
-        void setStep("industries");
-        setIsFinishing(false);
-        return;
-      }
-
-      await experienceLevelForm.handleSubmit();
-
-      if (!experienceLevelForm.state.isValid) {
-        toast.error("Choose the experience level that fits you best.");
-        void setStep("experience");
-        setIsFinishing(false);
-        return;
-      }
-
-      await workTypeForm.handleSubmit();
-
-      if (!workTypeForm.state.isValid) {
-        toast.error("Choose what type of work you're open to.");
-        void setStep("workType");
-        setIsFinishing(false);
-        return;
-      }
-
-      await educationLevelForm.handleSubmit();
-
-      if (!educationLevelForm.state.isValid) {
-        toast.error("Choose your highest education level.");
-        void setStep("education");
-        setIsFinishing(false);
-        return;
-      }
-
-      await workArrangementForm.handleSubmit();
-
-      if (!workArrangementForm.state.isValid) {
-        toast.error("Choose how you'd like to work.");
-        void setStep("workArrangement");
-        setIsFinishing(false);
-        return;
-      }
-
-      await minimumSalaryForm.handleSubmit();
-
-      if (!minimumSalaryForm.state.isValid) {
-        toast.error("Enter your desired minimum salary.");
-        void setStep("minimumSalary");
-        setIsFinishing(false);
-        return;
-      }
-
-      await checklistForm.handleSubmit();
-
-      if (!checklistForm.state.isValid) {
-        toast.error("Finish the checklist to continue.");
-        void setStep("checklist");
-        setIsFinishing(false);
-        return;
-      }
-
-      await passwordForm.handleSubmit();
-
-      if (!passwordForm.state.isValid) {
-        toast.error("Set a password for application sites.");
-        void setStep("password");
-        setIsFinishing(false);
-        return;
+        if (!isValid) {
+          setIsFinishing(false);
+          return;
+        }
       }
 
       await client.saveApplicationSettings(applicationSettings);
@@ -388,15 +374,6 @@ const Onboarding = ({
         <MinimumSalaryFields form={minimumSalaryForm} syncQuestionnaire />
         <QuestionnaireError />
       </QuestionnaireItem>
-      <QuestionnaireItem name="checklist" required>
-        <QuestionnaireTitle>Quick checklist</QuestionnaireTitle>
-        <QuestionnaireDescription>
-          A few last questions. Tap through. Defaults work for most people. Only
-          change what applies.
-        </QuestionnaireDescription>
-        <ChecklistFields form={checklistForm} syncQuestionnaire />
-        <QuestionnaireError />
-      </QuestionnaireItem>
       <QuestionnaireItem name="password" required>
         <QuestionnaireTitle>Application password</QuestionnaireTitle>
         <QuestionnaireDescription>
@@ -418,6 +395,17 @@ const Onboarding = ({
         <ApplicationPasswordFields form={passwordForm} />
         <QuestionnaireError />
       </QuestionnaireItem>
+      <QuestionnaireItem name="inbox">
+        <QuestionnaireTitle>Connect your inbox</QuestionnaireTitle>
+        <QuestionnaireDescription>
+          Some job sites send a verification code before an application can be
+          submitted. Connect your inbox so our agent can read those codes and
+          finish the application for you. You can also connect later from
+          settings.
+        </QuestionnaireDescription>
+        <InboxFields />
+        <QuestionnaireError />
+      </QuestionnaireItem>
       <QuestionnaireItem name="settings" required>
         <QuestionnaireTitle>How should we apply?</QuestionnaireTitle>
         <QuestionnaireDescription>
@@ -436,6 +424,15 @@ const Onboarding = ({
           )}
         </settingsForm.Subscribe>
         <ApplicationSettingsFields form={settingsForm} />
+        <QuestionnaireError />
+      </QuestionnaireItem>
+      <QuestionnaireItem name="checklist" required>
+        <QuestionnaireTitle>Quick checklist</QuestionnaireTitle>
+        <QuestionnaireDescription>
+          A few last questions. Tap through. Defaults work for most people. Only
+          change what applies.
+        </QuestionnaireDescription>
+        <ChecklistFields form={checklistForm} syncQuestionnaire />
         <QuestionnaireError />
       </QuestionnaireItem>
       <QuestionnaireActions>

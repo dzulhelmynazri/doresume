@@ -1,7 +1,7 @@
-import { Spinner } from "@doresume/ui/components/spinner";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
+import { LoadingImage } from "@/components/loading-image";
 import Onboarding from "@/components/onboarding";
 import { userIsOnboarded } from "@/lib/onboarding";
 import { getUserResume } from "@/lib/resume";
@@ -24,7 +24,7 @@ const OnboardingPageContent = async () => {
 const OnboardingPage = () => (
   <div className="row-span-full min-h-0 overflow-y-auto">
     <div className="flex min-h-full flex-col items-center justify-center px-6 py-12">
-      <Suspense fallback={<Spinner />}>
+      <Suspense fallback={<LoadingImage />}>
         <OnboardingPageContent />
       </Suspense>
     </div>

@@ -16,7 +16,7 @@ import { LoadingImage } from "@/components/loading-image";
 import {
   ApplicationPasswordFields,
   useApplicationPasswordForm,
-} from "@/components/onboarding/12-application-password";
+} from "@/components/onboarding/11-application-password";
 import { client, orpc } from "@/utils/orpc";
 
 const SETTINGS_STALE_TIME_MS = 5 * 60 * 1000;

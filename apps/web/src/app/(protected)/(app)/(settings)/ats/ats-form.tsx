@@ -29,7 +29,7 @@ import {
   CHECKLIST_DEFAULTS,
   ChecklistFields,
   useChecklistForm,
-} from "@/components/onboarding/11-checklist";
+} from "@/components/onboarding/14-checklist";
 import { client, orpc } from "@/utils/orpc";
 
 const SETTINGS_STALE_TIME_MS = 5 * 60 * 1000;

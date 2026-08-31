@@ -22,6 +22,7 @@ import { Switch } from "@doresume/ui/components/switch";
 import { useForm } from "@tanstack/react-form";
 
 const APPLICATION_SETTINGS_DEFAULTS: ApplicationSettings = {
+  allowAccountCreation: false,
   autoApproveEdits: false,
   resumeOptimization: "honest",
   reviewBeforeSubmit: true,
@@ -124,6 +125,40 @@ const AutoApproveField = ({ form }: { form: ApplicationSettingsFormApi }) => (
   </form.Field>
 );
 
+const AccountCreationField = ({
+  form,
+}: {
+  form: ApplicationSettingsFormApi;
+}) => (
+  <form.Field name="allowAccountCreation">
+    {(field) => {
+      const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
+      return (
+        <Field data-invalid={isInvalid} orientation="horizontal">
+          <FieldContent>
+            <FieldLabel htmlFor={field.name}>
+              Allow account creation?
+            </FieldLabel>
+            <FieldDescription>
+              Some job sites need an account before you can apply. We sign up
+              with your email and application password, then verify through your
+              connected inbox.
+            </FieldDescription>
+            {isInvalid ? <FieldError errors={field.state.meta.errors} /> : null}
+          </FieldContent>
+          <Switch
+            aria-invalid={isInvalid}
+            checked={field.state.value}
+            id={field.name}
+            onCheckedChange={field.handleChange}
+          />
+        </Field>
+      );
+    }}
+  </form.Field>
+);
+
 const ApplicationSettingsFields = ({
   form,
 }: {
@@ -174,6 +209,8 @@ const ApplicationSettingsFields = ({
         );
       }}
     </form.Field>
+    <FieldSeparator />
+    <AccountCreationField form={form} />
     <FieldSeparator />
     <FieldSet>
       <FieldLegend>Cover letter</FieldLegend>

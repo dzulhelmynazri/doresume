@@ -14,12 +14,17 @@ export const getConnections = protectedProcedure.handler(({ context }) =>
 );
 
 export const connectIntegration = protectedProcedure
-  .input(z.object({ toolkit: integrationToolkitSchema }))
+  .input(
+    z.object({
+      returnTo: z.string().startsWith("/").optional(),
+      toolkit: integrationToolkitSchema,
+    })
+  )
   .handler(({ context, input }) =>
     authorizeIntegration(
       context.session.user.id,
       input.toolkit,
-      `${env.BETTER_AUTH_URL}/integrations`
+      `${env.BETTER_AUTH_URL}${input.returnTo ?? "/integrations"}`
     )
   );
 

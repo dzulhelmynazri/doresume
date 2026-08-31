@@ -17,7 +17,7 @@ import {
   APPLICATION_SETTINGS_DEFAULTS,
   ApplicationSettingsFields,
   useApplicationSettingsForm,
-} from "@/components/onboarding/13-application-settings";
+} from "@/components/onboarding/12-application-settings";
 import { client, orpc } from "@/utils/orpc";
 
 const SETTINGS_STALE_TIME_MS = 5 * 60 * 1000;
@@ -29,13 +29,16 @@ const ApplySettingsForm = () => {
       staleTime: SETTINGS_STALE_TIME_MS,
     })
   );
-  const form = useApplicationSettingsForm(async (value) => {
-    await client.saveApplicationSettings(value);
-    await queryClient.invalidateQueries({
-      queryKey: orpc.getApplicationSettings.key(),
-    });
-    toast.success("Apply settings saved.");
-  }, data?.settings ?? APPLICATION_SETTINGS_DEFAULTS);
+  const form = useApplicationSettingsForm(
+    async (value) => {
+      await client.saveApplicationSettings(value);
+      await queryClient.invalidateQueries({
+        queryKey: orpc.getApplicationSettings.key(),
+      });
+      toast.success("Apply settings saved.");
+    },
+    { ...APPLICATION_SETTINGS_DEFAULTS, ...data?.settings }
+  );
 
   if (isPending || !data) {
     return (
