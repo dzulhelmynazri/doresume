@@ -1,7 +1,7 @@
 import { and, desc, eq } from "drizzle-orm";
 
 import { db } from "./index";
-import { application } from "./schema/auth";
+import { application } from "./schema/application";
 
 export type ApplicationStatus = "pending" | "submitted" | "failed";
 
@@ -9,9 +9,11 @@ export interface SaveApplicationInput {
   id: string;
   userId: string;
   companyName?: string;
+  confirmationUrl?: string;
   jobTitle?: string;
   jobUrl?: string;
   formSnapshot?: Record<string, unknown>;
+  portal?: string;
   status?: ApplicationStatus;
 }
 
@@ -50,4 +52,25 @@ export const updateApplicationStatus = async (
     .update(application)
     .set({ status, updatedAt: new Date() })
     .where(and(eq(application.id, id), eq(application.userId, userId)));
+};
+
+export interface ApplicationOutcome {
+  confirmationUrl?: string;
+  portal?: string;
+  status: ApplicationStatus;
+}
+
+/**
+ * Agent-side write path: apply-agent records the submission outcome on an
+ * application it was asked to process. Ownership was already checked when the
+ * user triggered the application, so this updates by id alone.
+ */
+export const updateApplicationOutcome = async (
+  id: string,
+  outcome: ApplicationOutcome
+) => {
+  await db
+    .update(application)
+    .set({ ...outcome, updatedAt: new Date() })
+    .where(eq(application.id, id));
 };

@@ -33,6 +33,7 @@ import {
   disconnectIntegration,
   getConnections,
 } from "./integrations";
+import { getJobProcedure, listJobsProcedure } from "./jobs";
 import { saveLocation } from "./location";
 import { saveMinimumSalary } from "./minimum-salary";
 import { parseResume } from "./parse-resume";
@@ -54,9 +55,11 @@ export const appRouter = {
   getBillingCustomer,
   getConnections,
   getDocuments,
+  getJob: getJobProcedure,
   getResumeDocument,
   healthCheck,
   listApplications: listApplicationsProcedure,
+  listJobs: listJobsProcedure,
   parseResume,
   privateData,
   saveApplication: saveApplicationProcedure,

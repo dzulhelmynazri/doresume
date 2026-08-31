@@ -1,12 +1,12 @@
 import { expo } from "@better-auth/expo";
 import { createDb } from "@doresume/db";
-import * as schema from "@doresume/db/schema/auth";
+import * as schema from "@doresume/db/schema";
 import { env } from "@doresume/env/server";
 import { autumn } from "autumn-js/better-auth";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { lastLoginMethod } from "better-auth/plugins";
+import { bearer, lastLoginMethod } from "better-auth/plugins";
 
 export const createAuth = () => {
   const db = createDb();
@@ -15,13 +15,15 @@ export const createAuth = () => {
     baseURL: env.BETTER_AUTH_URL,
     database: drizzleAdapter(db, {
       provider: "pg",
-
       schema,
     }),
     emailAndPassword: {
       enabled: true,
     },
     plugins: [
+      // Accepts `Authorization: Bearer <session token>`, which the native
+      // app and the eve agents use to identify the signed-in user.
+      bearer(),
       expo(),
       lastLoginMethod({
         storeInDatabase: true,

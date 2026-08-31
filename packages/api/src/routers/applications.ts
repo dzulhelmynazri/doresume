@@ -29,9 +29,12 @@ export const saveApplicationProcedure = protectedProcedure
   .input(
     z.object({
       companyName: z.string().optional(),
+      confirmationUrl: z.string().optional(),
       id: z.string(),
       jobTitle: z.string().optional(),
       jobUrl: z.string().optional(),
+      portal: z.string().optional(),
+      status: z.enum(["failed", "pending", "submitted"]).optional(),
     })
   )
   .handler(async ({ context, input }) => {
@@ -47,9 +50,12 @@ export const saveApplicationProcedure = protectedProcedure
 
     await saveApplication({
       companyName: input.companyName,
+      confirmationUrl: input.confirmationUrl,
       id: input.id,
       jobTitle: input.jobTitle,
       jobUrl: input.jobUrl,
+      portal: input.portal,
+      status: input.status,
       userId,
     });
 

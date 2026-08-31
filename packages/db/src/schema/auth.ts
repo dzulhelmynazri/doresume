@@ -125,33 +125,8 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)]
 );
 
-export const application = pgTable(
-  "application",
-  {
-    companyName: text("company_name"),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    formSnapshot: jsonb("form_snapshot"),
-    id: text("id").primaryKey(),
-    jobTitle: text("job_title"),
-    jobUrl: text("job_url"),
-    status: text("status")
-      .$type<"pending" | "submitted" | "failed">()
-      .default("pending")
-      .notNull(),
-    updatedAt: timestamp("updated_at")
-      .defaultNow()
-      .$onUpdate(() => /* @__PURE__ */ new Date())
-      .notNull(),
-    userId: text("user_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-  },
-  (table) => [index("application_userId_idx").on(table.userId)]
-);
-
 export const userRelations = relations(user, ({ many }) => ({
   accounts: many(account),
-  applications: many(application),
   sessions: many(session),
 }));
 
@@ -165,13 +140,6 @@ export const sessionRelations = relations(session, ({ one }) => ({
 export const accountRelations = relations(account, ({ one }) => ({
   user: one(user, {
     fields: [account.userId],
-    references: [user.id],
-  }),
-}));
-
-export const applicationRelations = relations(application, ({ one }) => ({
-  user: one(user, {
-    fields: [application.userId],
     references: [user.id],
   }),
 }));

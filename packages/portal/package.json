@@ -1,0 +1,25 @@
+{
+  "name": "@doresume/portal",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./generic": {
+      "default": "./src/adapters/generic.ts"
+    },
+    "./greenhouse": {
+      "default": "./src/adapters/greenhouse.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@doresume/ts-config": "workspace:*",
+    "typescript": "^6.0.3"
+  }
+}
