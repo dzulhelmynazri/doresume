@@ -16,6 +16,7 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@doresume/db": "workspace:*",
     "@vercel/connect": "1.0.0",
     "ai": "^7.0.79",
     "eve": "^0.45.0",
