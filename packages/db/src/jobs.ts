@@ -5,11 +5,17 @@ import { job } from "./schema/job";
 
 export interface SaveJobInput {
   id: string;
+  userId: string;
   company?: string;
   description?: string;
+  employmentType?: string;
   location?: string;
+  matchPercent?: number;
   portal?: string;
   postedAt?: Date;
+  salaryMax?: number;
+  salaryMin?: number;
+  seniority?: string;
   title: string;
   url: string;
 }
@@ -21,7 +27,7 @@ export const saveJob = async (input: SaveJobInput) => {
     .values({ id, ...rest })
     .onConflictDoUpdate({
       set: { ...rest, updatedAt: new Date() },
-      target: job.url,
+      target: [job.url, job.userId],
     });
 };
 
@@ -32,10 +38,11 @@ export const getJob = async (id: string) => {
   return record ?? null;
 };
 
-export const listJobs = async (limit = 50) => {
+export const listJobs = async (userId: string, limit = 50) => {
   const records = await db.query.job.findMany({
     limit,
     orderBy: desc(job.createdAt),
+    where: eq(job.userId, userId),
   });
   return records;
 };

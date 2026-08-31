@@ -1,20 +1,6 @@
 # Remaining gaps to one-click apply
 
-Ordered by dependency. Items marked done list what was verified, so work does not repeat.
-
-## Done: agent-side inbox access (Composio)
-
-- `@composio/core` + `@composio/experimental` wired in `agents/apply-agent` via the eve provider.
-- `agent/lib/composio.ts` builds the inbox session (`toolkits: ["gmail", "outlook"]`) for a user id; `agent/tools/composio.ts` resolves it from `ctx.session.auth.current?.principalId`.
-- `agent/instructions.md` tells the agent to search/run inbox tools for OTP emails and stop if no inbox is connected.
-- Verified: 6 meta-tools resolve in eve-native shape; `session.toolkits()` reports connection state.
-
-## Done: agent route auth (better-auth)
-
-- `agent/lib/better-auth.ts` exports `betterAuth()`: verifies the better-auth session on inbound requests and maps it to `{ principalId: user.id, principalType: "user" }`.
-- `agent/channels/eve.ts` walk is now `[betterAuth(), vercelOidc(), localDev()]`; `placeholderAuth()` removed.
-- `bearer()` plugin added to `packages/auth/src/index.ts` — better-auth `get-session` only reads signed cookies; bearer tokens need the plugin.
-- Verified: real session token as `Authorization: Bearer` resolves the correct principal; missing/bogus tokens fall through.
+Ordered by dependency.
 
 ## Gap 1: /jobs on live data + Apply persists an application
 
@@ -32,7 +18,7 @@ Ordered by dependency. Items marked done list what was verified, so work does no
 
 ## Gap 2: Apply click launches apply-agent with the signed-in user
 
-Nothing starts an eve session yet. Route auth is ready (see Done above), so this is purely client wiring.
+Nothing starts an eve session yet. Route auth is ready, so this is purely client wiring.
 
 ### Do
 

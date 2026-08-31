@@ -1,0 +1,10 @@
+ALTER TABLE "job" ADD COLUMN "employment_type" text;
+ALTER TABLE "job" ADD COLUMN "match_percent" integer;
+ALTER TABLE "job" ADD COLUMN "salary_max" integer;
+ALTER TABLE "job" ADD COLUMN "salary_min" integer;
+ALTER TABLE "job" ADD COLUMN "seniority" text;
+ALTER TABLE "job" ADD COLUMN "user_id" text NOT NULL;
+ALTER TABLE "job" ADD CONSTRAINT "job_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+DROP INDEX "job_url_uidx";
+CREATE INDEX "job_userId_idx" ON "job" USING btree ("user_id");
+CREATE UNIQUE INDEX "job_url_uidx" ON "job" USING btree ("url","user_id");

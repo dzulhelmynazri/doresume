@@ -15,6 +15,13 @@
       "when": 1787924251290,
       "tag": "0001_rename_resume_profiles_to_documents",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788176155000,
+      "tag": "0002_add_job_matching_fields",
+      "breakpoints": true
     }
   ]
 }

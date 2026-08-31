@@ -45,6 +45,7 @@
       "name": "crawler-agent",
       "version": "0.1.0",
       "dependencies": {
+        "@doresume/auth": "workspace:*",
         "@doresume/db": "workspace:*",
         "@vercel/connect": "1.0.0",
         "ai": "^7.0.79",

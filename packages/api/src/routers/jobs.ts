@@ -11,4 +11,7 @@ export const listJobsProcedure = protectedProcedure
   .input(
     z.object({ limit: z.number().int().min(1).max(100).optional() }).optional()
   )
-  .handler(async ({ input }) => await listJobs(input?.limit));
+  .handler(
+    async ({ context, input }) =>
+      await listJobs(context.session.user.id, input?.limit)
+  );
