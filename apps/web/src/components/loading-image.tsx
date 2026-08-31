@@ -6,6 +6,7 @@ export const LoadingImage = () => (
     height={100}
     loading="eager"
     priority
+    unoptimized
     src="/confused.gif"
     width={100}
   />
