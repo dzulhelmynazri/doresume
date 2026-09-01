@@ -1,3 +1,6 @@
+import { SALARY_PERIOD_UNITS } from "@doresume/contracts";
+import type { SalaryCurrency, SalaryPeriod } from "@doresume/contracts";
+
 import { GROVE_SECTIONS } from "./grove-sections";
 import type { JobSection } from "./grove-sections";
 
@@ -25,8 +28,10 @@ export interface Job {
   location: string;
   matchPercent: number;
   resumeStatus: ResumeStatus;
+  salaryCurrency: SalaryCurrency;
   salaryMax: number;
   salaryMin: number;
+  salaryPeriod: SalaryPeriod;
   sections: JobSection[];
   seniority: string;
   status: JobStatus;
@@ -37,8 +42,13 @@ export interface Job {
 
 const formatThousands = (value: number) => `${Math.round(value / 1000)}k`;
 
-export const formatSalaryRange = (min: number, max: number): string =>
-  `USD ${formatThousands(min)} - ${formatThousands(max)} /yr`;
+export const formatSalaryRange = (
+  min: number,
+  max: number,
+  currency: SalaryCurrency,
+  period: SalaryPeriod
+): string =>
+  `${currency} ${formatThousands(min)} - ${formatThousands(max)} /${SALARY_PERIOD_UNITS[period]}`;
 
 export const formatMatchPercent = (value: number): string => `${value}%`;
 
@@ -111,7 +121,7 @@ const DUMMY_APPLIED_AT = [
   "Aug 12",
 ] as const;
 
-const jobList: Omit<Job, "appliedAt">[] = [
+const jobList: Omit<Job, "appliedAt" | "salaryCurrency" | "salaryPeriod">[] = [
   {
     category: "Software Engineering",
     company: "Grove Collaborative",
@@ -663,6 +673,8 @@ const jobList: Omit<Job, "appliedAt">[] = [
 export const jobs: Job[] = jobList.map((job, index) => ({
   ...job,
   appliedAt: DUMMY_APPLIED_AT[index % DUMMY_APPLIED_AT.length],
+  salaryCurrency: "USD",
+  salaryPeriod: "yearly",
 }));
 
 export const getJobById = (id: string): Job | undefined =>

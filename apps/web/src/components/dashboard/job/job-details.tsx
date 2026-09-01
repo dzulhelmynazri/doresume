@@ -23,7 +23,12 @@ const JobDetails = ({ children, job }: { children?: ReactNode; job: Job }) => (
       </Badge>
       {job.salaryMax > 0 && (
         <Badge variant="secondary">
-          {formatSalaryRange(job.salaryMin, job.salaryMax)}
+          {formatSalaryRange(
+            job.salaryMin,
+            job.salaryMax,
+            job.salaryCurrency,
+            job.salaryPeriod
+          )}
         </Badge>
       )}
       {job.seniority && <Badge variant="secondary">{job.seniority}</Badge>}

@@ -71,8 +71,12 @@ export const toUiJob = (row: FeedJobRow): Job => ({
   location: row.location ?? "",
   matchPercent: row.matchPercent ?? 0,
   resumeStatus: "not-ready",
+  // Both portals publish monthly MYR amounts (same invariant the
+  // crawler-agent matcher relies on), stored raw on salary_min/salary_max.
+  salaryCurrency: "MYR",
   salaryMax: row.salaryMax ?? 0,
   salaryMin: row.salaryMin ?? 0,
+  salaryPeriod: "monthly",
   sections: toSections(row.description),
   seniority: row.seniority ?? "",
   status: "submitted",
