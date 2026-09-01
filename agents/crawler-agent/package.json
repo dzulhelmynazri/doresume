@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@doresume/auth": "workspace:*",
+    "@doresume/contracts": "workspace:*",
     "@doresume/db": "workspace:*",
     "@vercel/connect": "1.0.0",
     "ai": "^7.0.79",
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "playwright": "^1.62.1",
     "typescript": "^6.0.3"
   }
 }

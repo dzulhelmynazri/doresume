@@ -13,19 +13,25 @@ const JobDetails = ({ children, job }: { children?: ReactNode; job: Job }) => (
   <div className="flex flex-col gap-4">
     <div className="flex flex-wrap gap-2">
       {children}
-      <Badge variant="secondary">
-        {formatMatchPercent(job.matchPercent)} match
-      </Badge>
+      {job.matchPercent > 0 && (
+        <Badge variant="secondary">
+          {formatMatchPercent(job.matchPercent)} match
+        </Badge>
+      )}
       <Badge variant="outline">
         {formatWorkplaceLocation(job.location, job.workplace)}
       </Badge>
-      <Badge variant="secondary">
-        {formatSalaryRange(job.salaryMin, job.salaryMax)}
-      </Badge>
-      <Badge variant="secondary">{job.seniority}</Badge>
-      <Badge variant="outline">{job.employmentType}</Badge>
-      <Badge variant="outline">{job.experience}</Badge>
-      <Badge variant="secondary">{job.category}</Badge>
+      {job.salaryMax > 0 && (
+        <Badge variant="secondary">
+          {formatSalaryRange(job.salaryMin, job.salaryMax)}
+        </Badge>
+      )}
+      {job.seniority && <Badge variant="secondary">{job.seniority}</Badge>}
+      {job.employmentType && (
+        <Badge variant="outline">{job.employmentType}</Badge>
+      )}
+      {job.experience && <Badge variant="outline">{job.experience}</Badge>}
+      {job.category && <Badge variant="secondary">{job.category}</Badge>}
     </div>
     <Separator />
     {job.sections.map((section) => (

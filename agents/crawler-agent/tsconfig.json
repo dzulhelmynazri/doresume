@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
+    "lib": ["ES2023"],
     "module": "esnext",
     "moduleResolution": "bundler",
     "types": ["node"],
@@ -9,5 +10,5 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["agent/**/*.ts", "evals/**/*.ts"]
+  "include": ["agent/**/*.ts", "evals/**/*.ts", "scripts/**/*.ts"]
 }

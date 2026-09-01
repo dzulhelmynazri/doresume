@@ -17,29 +17,6 @@ import type { Job } from "../data/jobs";
 const MATCH_RING_RADIUS = 16;
 const MATCH_RING_CIRCUMFERENCE = 2 * Math.PI * MATCH_RING_RADIUS;
 
-const POSTED_LABELS = [
-  "2 days ago",
-  "14 hours ago",
-  "a day ago",
-  "6 days ago",
-  "3 days ago",
-  "8 hours ago",
-  "4 days ago",
-  "11 hours ago",
-  "5 days ago",
-  "18 hours ago",
-  "3 hours ago",
-  "7 days ago",
-  "9 hours ago",
-  "16 hours ago",
-  "a day ago",
-  "4 days ago",
-  "6 hours ago",
-  "5 days ago",
-  "12 hours ago",
-  "2 days ago",
-] as const;
-
 const FEATURED_TONES = [
   {
     card: "bg-featured-1/20 ring-featured-1/25",
@@ -111,7 +88,6 @@ const JobCard = ({
   onApply,
   onPass,
   onSelect,
-  postedLabel,
   ringClassName,
 }: {
   className: string;
@@ -119,7 +95,6 @@ const JobCard = ({
   onApply: (job: Job) => void;
   onPass: (job: Job) => void;
   onSelect: (job: Job) => void;
-  postedLabel: string;
   ringClassName: string;
 }) => {
   const location = formatWorkplaceLocation(job.location, job.workplace);
@@ -145,7 +120,7 @@ const JobCard = ({
         <CardDescription>
           <span className="flex flex-col">
             <span>{location}</span>
-            <span>{postedLabel}</span>
+            <span>{job.appliedAt}</span>
           </span>
         </CardDescription>
         <CardAction>
@@ -155,8 +130,8 @@ const JobCard = ({
       <CardContent className="flex flex-1 flex-col gap-2">
         <CardTitle className="line-clamp-2">{job.title}</CardTitle>
         <div className="flex flex-wrap gap-1">
-          <Badge variant="outline">{job.workplace}</Badge>
-          <Badge variant="secondary">{job.seniority}</Badge>
+          {job.workplace && <Badge variant="outline">{job.workplace}</Badge>}
+          {job.seniority && <Badge variant="secondary">{job.seniority}</Badge>}
         </div>
       </CardContent>
       <CardFooter className="mt-auto justify-between gap-2">
@@ -202,8 +177,6 @@ const JobCards = ({
 }) => (
   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
     {jobs.map((job, index) => {
-      const postedLabel =
-        POSTED_LABELS[index % POSTED_LABELS.length] ?? POSTED_LABELS[0];
       const tone =
         FEATURED_TONES[index % FEATURED_TONES.length] ?? FEATURED_TONES[0];
 
@@ -215,7 +188,6 @@ const JobCards = ({
           onApply={onApplyAction}
           onPass={onPassAction}
           onSelect={onSelectAction}
-          postedLabel={postedLabel}
           ringClassName={tone.ring}
         />
       );

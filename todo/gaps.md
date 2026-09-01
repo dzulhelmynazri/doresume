@@ -2,19 +2,19 @@
 
 Ordered by dependency.
 
-## Gap 1: /jobs on live data + Apply persists an application
+## Gap 1: Apply/Pass persist an application
 
-`apps/web/src/components/jobs/index.tsx` renders static data from `apps/web/src/components/dashboard/data/jobs.ts` and mutates local `useState` only.
+`/jobs` now renders live `listJobs` rows (mapped by `components/jobs/live-jobs.ts`), but Apply/Pass still mutate a local `useState` overlay — nothing survives a refresh.
 
 ### Do
 
-- Replace the static import with a live query (crawler-agent feed via an oRPC procedure; `saveApplicationProcedure` in `packages/api/src/routers/applications.ts` already exists and gates on the `applications` plan limit).
-- Apply click: call `saveApplication` with `status: "pending"`, `jobUrl`, `companyName`, `jobTitle`, then hand off to gap 2.
+- Apply click: call `saveApplication` (`packages/api/src/routers/applications.ts`, gates on the `applications` plan limit) with `status: "pending"`, `jobUrl`, `companyName`, `jobTitle`, then hand off to gap 2.
 - Pass click: persist the skip decision (no application row, or a `skipped` job record) so the feed does not resurface it.
+- Invalidate the `listJobs` query after mutations so status badges come from the DB, not the overlay.
 
 ### Do not
 
-- Keep applying/passing in local state. Nothing survives a refresh today.
+- Keep applying/passing in local state.
 
 ## Gap 2: Apply click launches apply-agent with the signed-in user
 

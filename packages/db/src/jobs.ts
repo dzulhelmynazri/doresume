@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, notInArray, sql } from "drizzle-orm";
 
 import { db } from "./index";
 import { job } from "./schema/job";
@@ -13,6 +13,7 @@ export interface SaveJobInput {
   matchPercent?: number;
   portal?: string;
   postedAt?: Date;
+  postingId?: string;
   salaryMax?: number;
   salaryMin?: number;
   seniority?: string;
@@ -41,8 +42,25 @@ export const getJob = async (id: string) => {
 export const listJobs = async (userId: string, limit = 50) => {
   const records = await db.query.job.findMany({
     limit,
-    orderBy: desc(job.createdAt),
+    orderBy: [sql`${job.matchPercent} desc nulls last`, desc(job.createdAt)],
     where: eq(job.userId, userId),
   });
   return records;
+};
+
+// Drops a user's portal rows that fell out of their regenerated feed.
+export const pruneUserPortalJobs = async (
+  userId: string,
+  portal: string,
+  keepIds: string[]
+) => {
+  await db
+    .delete(job)
+    .where(
+      and(
+        eq(job.userId, userId),
+        eq(job.portal, portal),
+        keepIds.length > 0 ? notInArray(job.id, keepIds) : undefined
+      )
+    );
 };

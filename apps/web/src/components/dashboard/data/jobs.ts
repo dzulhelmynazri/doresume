@@ -46,7 +46,7 @@ export const formatWorkplaceLocation = (
   location: string,
   workplace: string
 ): string => {
-  if (workplace === location) {
+  if (!workplace || workplace === location) {
     return location;
   }
 

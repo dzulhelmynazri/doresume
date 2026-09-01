@@ -21,6 +21,7 @@ export const job = pgTable(
     matchPercent: integer("match_percent"),
     portal: text("portal"),
     postedAt: timestamp("posted_at"),
+    postingId: text("posting_id"),
     salaryMax: integer("salary_max"),
     salaryMin: integer("salary_min"),
     seniority: text("seniority"),
