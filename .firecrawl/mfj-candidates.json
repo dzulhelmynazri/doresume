@@ -1,0 +1,22 @@
+{
+  "markdown": "![](<Base64-Image-Removed>)\n\n## CLIENT IP: 174.209.102.106\n\n## RAY ID: a33c37ec1f8a581d",
+  "metadata": {
+    "viewport": "width=device-width, initial-scale=1.0",
+    "title": "MYFutureJobs",
+    "language": "en",
+    "favicon": "https://candidates.myfuturejobs.gov.my/favicon.ico?v=1.13.0",
+    "scrapeId": "01a057e8-2284-745c-b908-35dc63612274",
+    "sourceURL": "https://candidates.myfuturejobs.gov.my/",
+    "url": "https://candidates.myfuturejobs.gov.my/",
+    "statusCode": 403,
+    "error": "Forbidden",
+    "contentType": "text/html; charset=UTF-8",
+    "timezone": "America/New_York",
+    "proxyUsed": "stealth",
+    "cacheState": "miss",
+    "indexId": "45bed6b9-981c-402e-9b31-6ff01a65b255",
+    "creditsUsed": 1,
+    "concurrencyLimited": false
+  },
+  "links": []
+}
