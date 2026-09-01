@@ -1,26 +1,15 @@
-import type { Industry } from "@doresume/contracts";
-import { pruneUserPortalJobs, saveJob } from "@doresume/db/jobs";
-import {
-  candidatePostings,
-  listExistingExternalIds,
-  upsertPosting,
-} from "@doresume/db/postings";
+import { listExistingExternalIds, upsertPosting } from "@doresume/db/postings";
 import type { PostingInput } from "@doresume/db/postings";
 import { chromium } from "playwright";
 import type { Page } from "playwright";
 
 import {
-  listJobSeekerIds,
-  loadProfile,
-  mapSectorNames,
-  scoreJob,
-  STATE_NAMES,
-  tokenizeTitle,
-} from "./match";
+  generateFeed as generatePortalFeed,
+  refreshAllFeeds as refreshPortalFeeds,
+} from "./feed";
+import { mapSectorNames, STATE_NAMES, tokenizeTitle } from "./match";
 
 const BASE = "https://candidates.myfuturejobs.gov.my";
-const FEED_CAP = 100;
-const MATCH_THRESHOLD = 25;
 const MAX_PAGES = 10;
 const PORTAL = "MYFutureJobs";
 const PORTAL_KEY = "myfuturejobs";
@@ -368,81 +357,10 @@ export const crawlCatalog = async (force = false) => {
   });
 };
 
-// Per-user feed: indexed candidate query over the catalog, deterministic
-// score, top matches materialized into the user's job rows.
-export const generateFeed = async (userId: string) => {
-  const profile = await loadProfile(userId);
-  const titleTokens = [...new Set(profile.resumeTitles.flatMap(tokenizeTitle))];
-  const industries = profile.industries?.industries ?? [];
-
-  const candidates = await candidatePostings({
-    industries,
-    stateName: profile.state,
-    titleTokens,
-  });
-
-  const scored = candidates
-    .map((posting) => ({
-      percent: scoreJob(profile, {
-        educationRequirement: posting.educationRequirement,
-        employmentType: posting.employmentType,
-        industries: posting.industries as Industry[],
-        salaryMax: posting.salaryMax,
-        stateName: posting.stateName,
-        title: posting.title,
-      }).percent,
-      posting,
-    }))
-    .filter((entry) => entry.percent >= MATCH_THRESHOLD)
-    .toSorted((a, b) => b.percent - a.percent)
-    .slice(0, FEED_CAP);
-
-  await Promise.all(
-    scored.map(({ percent, posting }) =>
-      saveJob({
-        company: posting.company ?? undefined,
-        description: posting.description ?? undefined,
-        employmentType: posting.employmentType ?? undefined,
-        id: posting.externalId,
-        location: posting.location ?? undefined,
-        matchPercent: percent,
-        portal: PORTAL,
-        postedAt: posting.postedAt ?? undefined,
-        postingId: posting.id,
-        salaryMax: posting.salaryMax ?? undefined,
-        salaryMin: posting.salaryMin ?? undefined,
-        title: posting.title,
-        url: posting.url,
-        userId,
-      })
-    )
-  );
-
-  await pruneUserPortalJobs(
-    userId,
-    PORTAL,
-    scored.map(({ posting }) => posting.externalId)
-  );
-  console.log(
-    `Feed for ${userId}: ${scored.length} matches out of ${candidates.length} candidates`
-  );
-};
-
-// Sequential to keep feed logs readable and DB load flat.
-const refreshFeeds = async (userIds: string[]): Promise<void> => {
-  const [next, ...rest] = userIds;
-  if (!next) {
-    return;
-  }
-
-  await generateFeed(next);
-  await refreshFeeds(rest);
-};
-
 // Entry point for the daily schedule: delta crawl, then every job seeker.
 export const refreshAllFeeds = async () => {
   await crawlCatalog();
-  await refreshFeeds(await listJobSeekerIds());
+  await refreshPortalFeeds(PORTAL);
 };
 
 const run = async () => {
@@ -458,13 +376,13 @@ const run = async () => {
   }
 
   if (args.mode === "feed") {
-    await generateFeed(args.userId);
+    await generatePortalFeed(PORTAL, args.userId);
     return;
   }
 
   if (args.mode === "full") {
     await crawlCatalog(true);
-    await generateFeed(args.userId);
+    await generatePortalFeed(PORTAL, args.userId);
     return;
   }
 

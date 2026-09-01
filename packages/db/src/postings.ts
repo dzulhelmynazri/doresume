@@ -56,6 +56,7 @@ export const listExistingExternalIds = async (
 
 export interface FeedFilters {
   industries: string[];
+  portal: string;
   stateName: string | null;
   titleTokens: string[];
 }
@@ -70,15 +71,15 @@ const pgArray = (values: string[]) =>
     .join(",")}}`;
 
 // Indexed pre-filter for one user's feed: title-token overlap, same state,
-// or mapped-industry overlap. Scoring happens on the returned rows.
+// or mapped-industry overlap, scoped to one portal's catalog rows. Scoring
+// happens on the returned rows.
 export const candidatePostings = async (filters: FeedFilters, limit = 2000) => {
-  const { industries, stateName, titleTokens } = filters;
+  const { industries, portal, stateName, titleTokens } = filters;
 
-  const conditions = sql`(${jobPosting.titleTokens} && ${pgArray(
-    titleTokens
-  )}::text[]
+  const conditions = sql`(${jobPosting.portal} = ${portal} AND (
+    ${jobPosting.titleTokens} && ${pgArray(titleTokens)}::text[]
     OR ${jobPosting.industries} && ${pgArray(industries)}::text[]
-    ${stateName ? sql`OR ${jobPosting.stateName} = ${stateName}` : sql``})`;
+    ${stateName ? sql`OR ${jobPosting.stateName} = ${stateName}` : sql``}))`;
 
   return await db
     .select()
