@@ -3,7 +3,7 @@ import { getOnboardingState } from "@/lib/onboarding";
 import { getUserResume } from "@/lib/resume";
 import { requireNotOnboardedUser } from "@/lib/session";
 
-export const dynamic = "force-dynamic";
+export const instant = false;
 
 const OnboardingPage = async () => {
   const user = await requireNotOnboardedUser();
