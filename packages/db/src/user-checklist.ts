@@ -26,12 +26,3 @@ export const getUserChecklist = async (userId: string) => {
 
   return parsed.success ? parsed.data : null;
 };
-
-export const userHasChecklist = async (userId: string) => {
-  const record = await db.query.user.findFirst({
-    columns: { checklist: true },
-    where: eq(user.id, userId),
-  });
-
-  return Boolean(record?.checklist);
-};

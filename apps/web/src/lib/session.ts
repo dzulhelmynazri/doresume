@@ -3,6 +3,8 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 
+import { userIsOnboarded } from "@/lib/onboarding";
+
 export const getCurrentUser = cache(async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -16,6 +18,16 @@ export const requireUser = async () => {
 
   if (!user) {
     redirect("/auth");
+  }
+
+  return user;
+};
+
+export const requireOnboardedUser = async () => {
+  const user = await requireUser();
+
+  if (!(await userIsOnboarded(user.id))) {
+    redirect("/onboarding");
   }
 
   return user;

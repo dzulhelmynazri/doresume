@@ -10,12 +10,3 @@ export const saveUserWorkArrangement = async (
 ) => {
   await db.update(user).set({ workArrangement }).where(eq(user.id, userId));
 };
-
-export const userHasWorkArrangement = async (userId: string) => {
-  const record = await db.query.user.findFirst({
-    columns: { workArrangement: true },
-    where: eq(user.id, userId),
-  });
-
-  return Boolean(record?.workArrangement);
-};

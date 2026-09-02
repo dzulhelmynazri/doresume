@@ -10,12 +10,3 @@ export const saveUserEducationLevel = async (
 ) => {
   await db.update(user).set({ educationLevel }).where(eq(user.id, userId));
 };
-
-export const userHasEducationLevel = async (userId: string) => {
-  const record = await db.query.user.findFirst({
-    columns: { educationLevel: true },
-    where: eq(user.id, userId),
-  });
-
-  return Boolean(record?.educationLevel);
-};

@@ -26,12 +26,3 @@ export const getUserMinimumSalary = async (userId: string) => {
 
   return parsed.success ? parsed.data : null;
 };
-
-export const userHasMinimumSalary = async (userId: string) => {
-  const record = await db.query.user.findFirst({
-    columns: { minimumSalary: true },
-    where: eq(user.id, userId),
-  });
-
-  return Boolean(record?.minimumSalary?.amount);
-};

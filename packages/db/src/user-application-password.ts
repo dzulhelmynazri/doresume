@@ -80,12 +80,3 @@ export const getUserApplicationPassword = async (userId: string) => {
     return null;
   }
 };
-
-export const userHasApplicationPassword = async (userId: string) => {
-  const record = await db.query.user.findFirst({
-    columns: { applicationPassword: true },
-    where: eq(user.id, userId),
-  });
-
-  return Boolean(record?.applicationPassword);
-};

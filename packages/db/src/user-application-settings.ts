@@ -40,12 +40,3 @@ export const getUserApplicationSettings = async (userId: string) => {
 
   return settingsToStore(parsed.data);
 };
-
-export const userHasApplicationSettings = async (userId: string) => {
-  const record = await db.query.user.findFirst({
-    columns: { applicationSettings: true },
-    where: eq(user.id, userId),
-  });
-
-  return Boolean(record?.applicationSettings);
-};

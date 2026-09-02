@@ -1,19 +1,13 @@
 import { Separator } from "@doresume/ui/components/separator";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import type { ReactNode } from "react";
 
 import { AppHeader } from "@/components/app-header";
 import { LoadingImage } from "@/components/loading-image";
-import { userIsOnboarded } from "@/lib/onboarding";
-import { requireUser } from "@/lib/session";
+import { requireOnboardedUser } from "@/lib/session";
 
 const AppLayoutContent = async ({ children }: { children: ReactNode }) => {
-  const user = await requireUser();
-
-  if (!(await userIsOnboarded(user.id))) {
-    redirect("/onboarding");
-  }
+  await requireOnboardedUser();
 
   return (
     <div className="bg-sidebar row-span-full flex min-h-0 overflow-hidden p-2">

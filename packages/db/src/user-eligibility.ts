@@ -35,12 +35,3 @@ export const getUserWorkEligibility = async (userId: string) => {
 
   return parsed.success ? parsed.data : null;
 };
-
-export const userHasWorkEligibility = async (userId: string) => {
-  const record = await db.query.user.findFirst({
-    columns: { workCountries: true },
-    where: eq(user.id, userId),
-  });
-
-  return Boolean(record?.workCountries?.length);
-};

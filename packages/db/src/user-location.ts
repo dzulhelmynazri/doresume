@@ -16,12 +16,3 @@ export const saveUserLocation = async (userId: string, location: Location) => {
     })
     .where(eq(user.id, userId));
 };
-
-export const userHasLocation = async (userId: string) => {
-  const record = await db.query.user.findFirst({
-    columns: { address: true },
-    where: eq(user.id, userId),
-  });
-
-  return Boolean(record?.address?.trim());
-};

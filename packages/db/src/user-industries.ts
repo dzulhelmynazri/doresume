@@ -10,12 +10,3 @@ export const saveUserIndustries = async (
 ) => {
   await db.update(user).set({ industries }).where(eq(user.id, userId));
 };
-
-export const userHasIndustries = async (userId: string) => {
-  const record = await db.query.user.findFirst({
-    columns: { industries: true },
-    where: eq(user.id, userId),
-  });
-
-  return Boolean(record?.industries);
-};
