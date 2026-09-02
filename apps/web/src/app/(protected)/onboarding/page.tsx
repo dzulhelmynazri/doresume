@@ -1,25 +1,28 @@
-import { Suspense } from "react";
-
-import { LoadingImage } from "@/components/loading-image";
 import Onboarding from "@/components/onboarding";
+import { getOnboardingState } from "@/lib/onboarding";
 import { getUserResume } from "@/lib/resume";
 import { requireNotOnboardedUser } from "@/lib/session";
 
-const OnboardingPageContent = async () => {
+export const dynamic = "force-dynamic";
+
+const OnboardingPage = async () => {
   const user = await requireNotOnboardedUser();
-  const resume = await getUserResume(user.id);
 
-  return <Onboarding initialResume={resume} />;
-};
+  const [resume, onboardingState] = await Promise.all([
+    getUserResume(user.id),
+    getOnboardingState(user.id),
+  ]);
 
-const OnboardingPage = () => (
-  <div className="row-span-full min-h-0 overflow-y-auto">
-    <div className="flex min-h-full flex-col items-center justify-center px-6 py-12">
-      <Suspense fallback={<LoadingImage />}>
-        <OnboardingPageContent />
-      </Suspense>
+  return (
+    <div className="row-span-full min-h-0 overflow-y-auto">
+      <div className="flex min-h-full flex-col items-center justify-center px-6 py-12">
+        <Onboarding
+          initialOnboarding={onboardingState}
+          initialResume={resume}
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default OnboardingPage;

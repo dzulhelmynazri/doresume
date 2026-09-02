@@ -25,10 +25,11 @@ const CONTACT_DEFAULTS: Contact = {
 };
 
 export const useContactForm = (
-  onValidSubmit: (value: Contact) => void | Promise<void>
+  onValidSubmit: (value: Contact) => void | Promise<void>,
+  defaultValues: Contact = CONTACT_DEFAULTS
 ) =>
   useForm({
-    defaultValues: CONTACT_DEFAULTS,
+    defaultValues,
     onSubmit: async ({ value }) => {
       await onValidSubmit(value);
     },

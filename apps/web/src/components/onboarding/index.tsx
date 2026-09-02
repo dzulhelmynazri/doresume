@@ -1,6 +1,7 @@
 "use client";
 
 import type { ApplicationSettings } from "@doresume/contracts";
+import type { UserOnboardingState } from "@doresume/db/user-onboarding";
 import {
   Questionnaire,
   QuestionnaireActions,
@@ -81,8 +82,10 @@ const isOnboardingStep = (value: string): value is OnboardingStep =>
   ONBOARDING_STEP_NAMES.has(value);
 
 const Onboarding = ({
+  initialOnboarding,
   initialResume,
 }: {
+  initialOnboarding: UserOnboardingState;
   initialResume: UploadedResume | null;
 }) => {
   const router = useRouter();
@@ -95,58 +98,60 @@ const Onboarding = ({
   const [isFinishing, setIsFinishing] = useState(false);
   const locationForm = useLocationForm(async (value) => {
     await client.saveLocation(value);
-  });
-  const contactForm = useContactForm(async (value) => {
-    await client.saveContact(value);
-  });
+  }, initialOnboarding.location);
+  const contactForm = useContactForm(
+    async (value) => {
+      await client.saveContact(value);
+    },
+    {
+      linkedin: initialOnboarding.linkedin ?? "",
+      phone: initialOnboarding.phone ?? "",
+    }
+  );
   const eligibilityForm = useWorkEligibilityForm(async (value) => {
     await client.saveWorkEligibility(value);
-  });
+  }, initialOnboarding.workEligibility);
   const checklistForm = useChecklistForm(async (value) => {
     await client.saveChecklist(value);
-  });
+  }, initialOnboarding.checklist ?? undefined);
   const industriesForm = useIndustriesForm(async (value) => {
     await client.saveIndustries(value);
-  });
-  const experienceLevelForm = useExperienceLevelForm(async (value) => {
-    await client.saveExperienceLevel(value);
-  });
-  const workTypeForm = useWorkTypeForm(async (value) => {
-    await client.saveWorkType(value);
-  });
-  const educationLevelForm = useEducationLevelForm(async (value) => {
-    await client.saveEducationLevel(value);
-  });
-  const workArrangementForm = useWorkArrangementForm(async (value) => {
-    await client.saveWorkArrangement(value);
-  });
+  }, initialOnboarding.industries ?? undefined);
+  const experienceLevelForm = useExperienceLevelForm(
+    async (value) => {
+      await client.saveExperienceLevel(value);
+    },
+    { experienceLevel: initialOnboarding.experienceLevel ?? undefined }
+  );
+  const workTypeForm = useWorkTypeForm(
+    async (value) => {
+      await client.saveWorkType(value);
+    },
+    { workType: initialOnboarding.workType ?? undefined }
+  );
+  const educationLevelForm = useEducationLevelForm(
+    async (value) => {
+      await client.saveEducationLevel(value);
+    },
+    { educationLevel: initialOnboarding.educationLevel ?? undefined }
+  );
+  const workArrangementForm = useWorkArrangementForm(
+    async (value) => {
+      await client.saveWorkArrangement(value);
+    },
+    { workArrangement: initialOnboarding.workArrangement ?? undefined }
+  );
   const minimumSalaryForm = useMinimumSalaryForm(async (value) => {
     await client.saveMinimumSalary(value);
-  });
-  const passwordForm = useApplicationPasswordForm(async (value) => {
-    await client.saveApplicationPassword(value);
-  });
+  }, initialOnboarding.minimumSalary ?? undefined);
+  const passwordForm = useApplicationPasswordForm(
+    async (value) => {
+      await client.saveApplicationPassword(value);
+    },
+    { password: initialOnboarding.applicationPassword ?? "" }
+  );
   const finishOnboarding = async (applicationSettings: ApplicationSettings) => {
     setIsFinishing(true);
-
-    const validateStep = async (
-      form: {
-        handleSubmit: () => Promise<void>;
-        state: { isValid: boolean };
-      },
-      targetStep: OnboardingStep,
-      message: string
-    ) => {
-      await form.handleSubmit();
-
-      if (form.state.isValid) {
-        return true;
-      }
-
-      toast.error(message);
-      void setStep(targetStep);
-      return false;
-    };
 
     try {
       const steps: {
@@ -214,15 +219,41 @@ const Onboarding = ({
         },
       ];
 
-      for (const { form, message, step: targetStep } of steps) {
-        // Sequential on purpose: each step saves before the next is checked.
-        // oxlint-disable-next-line promise/no-await-in-loop
-        const isValid = await validateStep(form, targetStep, message);
+      // Each handleSubmit validates its own form and only saves when valid,
+      // so every step can validate and save concurrently instead of paying a
+      // full request round trip per step. Walking the steps in order after
+      // keeps the "jump to the first step that failed" behavior.
+      const results = await Promise.allSettled(
+        steps.map(({ form }) => form.handleSubmit())
+      );
 
-        if (!isValid) {
-          setIsFinishing(false);
-          return;
+      let firstFailure: { message: string; step: OnboardingStep } | null = null;
+      let isSaveFailure = false;
+
+      for (const [index, stepEntry] of steps.entries()) {
+        if (results[index]?.status === "rejected") {
+          firstFailure = { message: stepEntry.message, step: stepEntry.step };
+          isSaveFailure = true;
+          break;
         }
+
+        if (!stepEntry.form.state.isValid) {
+          firstFailure = { message: stepEntry.message, step: stepEntry.step };
+          break;
+        }
+      }
+
+      if (firstFailure) {
+        toast.error(
+          isSaveFailure ? "Could not save your details." : firstFailure.message
+        );
+
+        if (!isSaveFailure) {
+          void setStep(firstFailure.step);
+        }
+
+        setIsFinishing(false);
+        return;
       }
 
       await client.saveApplicationSettings(applicationSettings);
@@ -232,7 +263,10 @@ const Onboarding = ({
       setIsFinishing(false);
     }
   };
-  const settingsForm = useApplicationSettingsForm(finishOnboarding);
+  const settingsForm = useApplicationSettingsForm(
+    finishOnboarding,
+    initialOnboarding.applicationSettings ?? undefined
+  );
 
   const { isUploading } = files;
   const canContinueResume = uploaded !== null && !isUploading && !isParsing;

@@ -88,10 +88,11 @@ const INDUSTRY_ICONS = {
 } as const satisfies Record<Industry, LucideIcon>;
 
 export const useIndustriesForm = (
-  onValidSubmit: (value: Industries) => void | Promise<void>
+  onValidSubmit: (value: Industries) => void | Promise<void>,
+  defaultValues: Industries = INDUSTRIES_DEFAULTS
 ) =>
   useForm({
-    defaultValues: INDUSTRIES_DEFAULTS,
+    defaultValues,
     onSubmit: async ({ value }) => {
       const parsed = industriesSchema.parse(value);
 

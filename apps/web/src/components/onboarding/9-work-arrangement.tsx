@@ -31,10 +31,13 @@ const isWorkArrangement = (value: string): value is WorkArrangement =>
   WORK_ARRANGEMENTS.some((arrangement) => arrangement === value);
 
 export const useWorkArrangementForm = (
-  onValidSubmit: (value: WorkArrangementForm) => void | Promise<void>
+  onValidSubmit: (value: WorkArrangementForm) => void | Promise<void>,
+  defaultValues: {
+    workArrangement?: WorkArrangement;
+  } = WORK_ARRANGEMENT_DEFAULTS
 ) =>
   useForm({
-    defaultValues: WORK_ARRANGEMENT_DEFAULTS,
+    defaultValues,
     onSubmit: async ({ value }) => {
       await onValidSubmit(workArrangementSchema.parse(value));
     },

@@ -31,10 +31,11 @@ const isEducationLevel = (value: string): value is EducationLevel =>
   EDUCATION_LEVELS.some((level) => level === value);
 
 export const useEducationLevelForm = (
-  onValidSubmit: (value: EducationLevelForm) => void | Promise<void>
+  onValidSubmit: (value: EducationLevelForm) => void | Promise<void>,
+  defaultValues: { educationLevel?: EducationLevel } = EDUCATION_LEVEL_DEFAULTS
 ) =>
   useForm({
-    defaultValues: EDUCATION_LEVEL_DEFAULTS,
+    defaultValues,
     onSubmit: async ({ value }) => {
       await onValidSubmit(educationLevelSchema.parse(value));
     },

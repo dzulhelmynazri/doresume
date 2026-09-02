@@ -31,10 +31,11 @@ const isWorkType = (value: string): value is WorkType =>
   WORK_TYPES.some((type) => type === value);
 
 export const useWorkTypeForm = (
-  onValidSubmit: (value: WorkTypeForm) => void | Promise<void>
+  onValidSubmit: (value: WorkTypeForm) => void | Promise<void>,
+  defaultValues: { workType?: WorkType } = WORK_TYPE_DEFAULTS
 ) =>
   useForm({
-    defaultValues: WORK_TYPE_DEFAULTS,
+    defaultValues,
     onSubmit: async ({ value }) => {
       await onValidSubmit(workTypeSchema.parse(value));
     },

@@ -36,7 +36,13 @@ const INBOX_TOOLKITS = [
 ];
 
 export const InboxFields = () => {
-  const { data } = useQuery(orpc.getConnections.queryOptions());
+  // Composio's connection check is slow, and this step lives while the user
+  // tabs away to complete OAuth and back — default window-focus refetching
+  // would hammer it on every tab switch.
+  const { data } = useQuery({
+    ...orpc.getConnections.queryOptions(),
+    refetchOnWindowFocus: false,
+  });
   const [connecting, setConnecting] = useState<"gmail" | "outlook" | null>(
     null
   );

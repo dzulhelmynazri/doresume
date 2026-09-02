@@ -21,10 +21,11 @@ const LOCATION_DEFAULTS: Location = {
 };
 
 export const useLocationForm = (
-  onValidSubmit: (value: Location) => void | Promise<void>
+  onValidSubmit: (value: Location) => void | Promise<void>,
+  defaultValues: Location = LOCATION_DEFAULTS
 ) =>
   useForm({
-    defaultValues: LOCATION_DEFAULTS,
+    defaultValues,
     onSubmit: async ({ value }) => {
       await onValidSubmit(value);
     },

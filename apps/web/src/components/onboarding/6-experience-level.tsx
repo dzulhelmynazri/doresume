@@ -32,10 +32,13 @@ const isExperienceLevel = (value: string): value is ExperienceLevel =>
   EXPERIENCE_LEVELS.some((level) => level === value);
 
 export const useExperienceLevelForm = (
-  onValidSubmit: (value: ExperienceLevelForm) => void | Promise<void>
+  onValidSubmit: (value: ExperienceLevelForm) => void | Promise<void>,
+  defaultValues: {
+    experienceLevel?: ExperienceLevel;
+  } = EXPERIENCE_LEVEL_DEFAULTS
 ) =>
   useForm({
-    defaultValues: EXPERIENCE_LEVEL_DEFAULTS,
+    defaultValues,
     onSubmit: async ({ value }) => {
       await onValidSubmit(experienceLevelSchema.parse(value));
     },
