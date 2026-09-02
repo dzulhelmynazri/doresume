@@ -1,22 +1,13 @@
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import { LoadingImage } from "@/components/loading-image";
 import Onboarding from "@/components/onboarding";
-import { userIsOnboarded } from "@/lib/onboarding";
 import { getUserResume } from "@/lib/resume";
-import { requireUser } from "@/lib/session";
+import { requireNotOnboardedUser } from "@/lib/session";
 
 const OnboardingPageContent = async () => {
-  const user = await requireUser();
-  const [resume, isOnboarded] = await Promise.all([
-    getUserResume(user.id),
-    userIsOnboarded(user.id),
-  ]);
-
-  if (isOnboarded) {
-    redirect("/dashboard");
-  }
+  const user = await requireNotOnboardedUser();
+  const resume = await getUserResume(user.id);
 
   return <Onboarding initialResume={resume} />;
 };

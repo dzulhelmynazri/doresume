@@ -1,21 +1,11 @@
 import { Spinner } from "@doresume/ui/components/spinner";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import Auth from "@/components/auth";
-import { userIsOnboarded } from "@/lib/onboarding";
-import { getCurrentUser } from "@/lib/session";
+import { requireGuest } from "@/lib/session";
 
 const AuthPageContent = async () => {
-  const user = await getCurrentUser();
-
-  if (user) {
-    if (await userIsOnboarded(user.id)) {
-      redirect("/dashboard");
-    }
-
-    redirect("/onboarding");
-  }
+  await requireGuest();
 
   return <Auth />;
 };

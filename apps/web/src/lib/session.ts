@@ -32,3 +32,27 @@ export const requireOnboardedUser = async () => {
 
   return user;
 };
+
+export const requireNotOnboardedUser = async () => {
+  const user = await requireUser();
+
+  if (await userIsOnboarded(user.id)) {
+    redirect("/dashboard");
+  }
+
+  return user;
+};
+
+export const requireGuest = async () => {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return;
+  }
+
+  if (await userIsOnboarded(user.id)) {
+    redirect("/dashboard");
+  }
+
+  redirect("/onboarding");
+};
