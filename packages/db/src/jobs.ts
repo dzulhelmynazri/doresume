@@ -1,3 +1,4 @@
+import type { JobDescriptionSection } from "@doresume/contracts";
 import { and, desc, eq, notInArray, sql } from "drizzle-orm";
 
 import { db } from "./index";
@@ -7,7 +8,7 @@ export interface SaveJobInput {
   id: string;
   userId: string;
   company?: string;
-  description?: string;
+  descriptionSections?: JobDescriptionSection[];
   employmentType?: string;
   location?: string;
   matchPercent?: number;

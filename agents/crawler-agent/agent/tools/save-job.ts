@@ -1,3 +1,4 @@
+import { jobDescriptionSectionSchema } from "@doresume/contracts";
 import { saveJob } from "@doresume/db/jobs";
 import { defineTool } from "eve/tools";
 import { z } from "zod";
@@ -15,7 +16,12 @@ export default defineTool({
   },
   inputSchema: z.object({
     company: z.string().optional(),
-    description: z.string().optional(),
+    descriptionSections: z
+      .array(jobDescriptionSectionSchema)
+      .describe(
+        "Structured job description sections, each with a heading and paragraph list."
+      )
+      .optional(),
     employmentType: z
       .string()
       .describe(

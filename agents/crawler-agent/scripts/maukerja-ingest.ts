@@ -1,3 +1,4 @@
+import type { JobDescriptionSection } from "@doresume/contracts";
 import { listExistingExternalIds, upsertPosting } from "@doresume/db/postings";
 import type { PostingInput } from "@doresume/db/postings";
 
@@ -163,36 +164,55 @@ export const htmlToText = (html: string) =>
     .replaceAll(/\n{2,}/gu, "\n")
     .trim();
 
+const htmlToParagraphs = (html: string) =>
+  htmlToText(html)
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+
+const SECTION_HEADINGS: Record<string, string> = {
+  benefits: "Benefits",
+  requirement: "Requirements",
+  responsibility: "Responsibilities",
+};
+
 // Search hits carry the full ad: HTML responsibility/requirement/benefits
 // sections, so there is no separate detail phase like MYFutureJobs has.
-const toDescription = (hit: MkHit) => {
+const toDescriptionSections = (hit: MkHit): JobDescriptionSection[] => {
   const { details } = hit;
-  const parts = [
-    details?.responsibility?.trim(),
-    details?.requirement?.trim(),
-    details?.benefits?.trim(),
-  ]
-    .filter((section): section is string => Boolean(section))
-    .map((section) => htmlToText(section));
+  const sections: JobDescriptionSection[] = [];
+
+  for (const key of ["responsibility", "requirement", "benefits"] as const) {
+    const html = details?.[key]?.trim();
+    if (html) {
+      sections.push({
+        heading: SECTION_HEADINGS[key],
+        paragraphs: htmlToParagraphs(html),
+      });
+    }
+  }
 
   const { company } = hit;
-  const aboutLines = [
+  const aboutParagraphs = [
     company?.name?.trim(),
     company?.category?.trim(),
     company?.size?.trim(),
-  ].filter(Boolean);
+  ].filter((line): line is string => Boolean(line));
 
-  if (aboutLines.length > 0) {
-    parts.push(["About the company", ...aboutLines].join("\n"));
+  if (aboutParagraphs.length > 0) {
+    sections.push({
+      heading: "About the Company",
+      paragraphs: aboutParagraphs,
+    });
   }
 
-  return parts.join("\n\n") || null;
+  return sections;
 };
 
 const hitToPosting = (hit: MkHit): PostingInput => ({
   ...toSalaryRange(hit.salary),
   company: hit.company?.name ?? undefined,
-  description: toDescription(hit) ?? undefined,
+  descriptionSections: toDescriptionSections(hit),
   educationRequirement: hit.education?.minimum ?? undefined,
   employmentType: toEmploymentType(hit.jobType),
   externalId: hit.jobPostID,

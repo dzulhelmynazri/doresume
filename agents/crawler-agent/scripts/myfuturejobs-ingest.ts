@@ -1,3 +1,4 @@
+import type { JobDescriptionSection } from "@doresume/contracts";
 import { listExistingExternalIds, upsertPosting } from "@doresume/db/postings";
 import type { PostingInput } from "@doresume/db/postings";
 import { chromium } from "playwright";
@@ -230,20 +231,37 @@ const toSalaryRange = (packages?: MfjRemuneration[] | null) => {
   return { salaryMax: Math.max(...amounts), salaryMin: Math.min(...amounts) };
 };
 
-const toDescription = (detail: MfjDetail) => {
-  const parts = [detail.jobDescription?.trim()].filter(Boolean);
+const textToParagraphs = (text: string) =>
+  text
+    .split(/\r?\n/u)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
 
-  const aboutLines = [
+const toDescriptionSections = (detail: MfjDetail): JobDescriptionSection[] => {
+  const sections: JobDescriptionSection[] = [];
+  const jobDescription = detail.jobDescription?.trim();
+
+  if (jobDescription) {
+    sections.push({
+      heading: "Job Description",
+      paragraphs: textToParagraphs(jobDescription),
+    });
+  }
+
+  const aboutParagraphs = [
     detail.companyName?.trim(),
     detail.companySize?.name?.trim(),
     detail.companyDescription?.trim(),
-  ].filter(Boolean);
+  ].filter((line): line is string => Boolean(line));
 
-  if (aboutLines.length > 0) {
-    parts.push(["About the company", ...aboutLines].join("\n"));
+  if (aboutParagraphs.length > 0) {
+    sections.push({
+      heading: "About the Company",
+      paragraphs: aboutParagraphs,
+    });
   }
 
-  return parts.join("\n\n") || null;
+  return sections;
 };
 
 const detailToPosting = (
@@ -262,7 +280,7 @@ const detailToPosting = (
   return {
     ...toSalaryRange(detail.offeredRemunerationPackages),
     company: detail.companyName ?? undefined,
-    description: toDescription(detail) ?? undefined,
+    descriptionSections: toDescriptionSections(detail),
     educationRequirement: detail.educationDegree?.name ?? undefined,
     employmentType: detail.contractType?.name ?? undefined,
     externalId,

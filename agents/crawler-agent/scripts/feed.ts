@@ -49,7 +49,7 @@ export const generateFeed = async (portal: string, userId: string) => {
     scored.map(({ percent, posting }) =>
       saveJob({
         company: posting.company ?? undefined,
-        description: posting.description ?? undefined,
+        descriptionSections: posting.descriptionSections ?? undefined,
         employmentType: posting.employmentType ?? undefined,
         id: posting.externalId,
         location: posting.location ?? undefined,

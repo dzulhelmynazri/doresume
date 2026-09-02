@@ -1,7 +1,6 @@
-export interface JobSection {
-  heading: string;
-  paragraphs: string[];
-}
+import type { JobDescriptionSection } from "@doresume/contracts";
+
+export type JobSection = JobDescriptionSection;
 
 export const GROVE_SECTIONS: JobSection[] = [
   {

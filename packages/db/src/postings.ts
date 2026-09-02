@@ -1,3 +1,4 @@
+import type { JobDescriptionSection } from "@doresume/contracts";
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 
 import { db } from "./index";
@@ -10,7 +11,7 @@ export interface PostingInput {
   title: string;
   url: string;
   company?: string;
-  description?: string;
+  descriptionSections?: JobDescriptionSection[];
   educationRequirement?: string;
   employmentType?: string;
   industries?: string[];

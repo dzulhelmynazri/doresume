@@ -1,6 +1,8 @@
+import type { JobDescriptionSection } from "@doresume/contracts";
 import {
   index,
   integer,
+  jsonb,
   pgTable,
   text,
   timestamp,
@@ -15,7 +17,9 @@ export const jobPosting = pgTable(
   {
     company: text("company"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    description: text("description"),
+    descriptionSections: jsonb("description_sections").$type<
+      JobDescriptionSection[]
+    >(),
     educationRequirement: text("education_requirement"),
     employmentType: text("employment_type"),
     externalId: text("external_id").notNull(),

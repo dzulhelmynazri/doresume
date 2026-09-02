@@ -43,6 +43,10 @@ export {
   type Industries,
   type Industry,
 } from "./industries";
+export {
+  jobDescriptionSectionSchema,
+  type JobDescriptionSection,
+} from "./job-description";
 
 export {
   AUTHORIZATION_BASES,

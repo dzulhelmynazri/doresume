@@ -1,10 +1,12 @@
+import type { JobDescriptionSection } from "@doresume/contracts";
+
 import type { JobSection } from "@/components/dashboard/data/grove-sections";
 import type { Job } from "@/components/dashboard/data/jobs";
 
 // Row shape returned by the listJobs procedure (see packages/db/src/jobs.ts).
 export interface FeedJobRow {
   company: string | null;
-  description: string | null;
+  descriptionSections: JobDescriptionSection[] | null;
   employmentType: string | null;
   id: string;
   location: string | null;
@@ -48,18 +50,8 @@ export const formatPostedAt = (postedAt: Date | string | null): string => {
   return posted.toLocaleDateString("en-MY", { day: "numeric", month: "short" });
 };
 
-const toSections = (description: string | null): JobSection[] => {
-  const paragraphs = description
-    ?.split(/\r?\n/u)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
-
-  if (!paragraphs || paragraphs.length === 0) {
-    return [];
-  }
-
-  return [{ heading: "Description", paragraphs }];
-};
+const toSections = (sections: JobDescriptionSection[] | null): JobSection[] =>
+  sections ?? [];
 
 export const toUiJob = (row: FeedJobRow): Job => ({
   appliedAt: formatPostedAt(row.postedAt),
@@ -77,7 +69,7 @@ export const toUiJob = (row: FeedJobRow): Job => ({
   salaryMax: row.salaryMax ?? 0,
   salaryMin: row.salaryMin ?? 0,
   salaryPeriod: "monthly",
-  sections: toSections(row.description),
+  sections: toSections(row.descriptionSections),
   seniority: row.seniority ?? "",
   status: "submitted",
   title: row.title,
