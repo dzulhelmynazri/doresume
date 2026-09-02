@@ -90,14 +90,16 @@ export const UserMenu = () => {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem render={<Link href="/apply" />}>
+          <DropdownMenuItem
+            render={<Link href="/apply" className="cursor-pointer" />}
+          >
             <SlidersHorizontalIcon />
             Settings
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem variant="destructive" onClick={handleSignOut}>
+          <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
             <LogOutIcon />
             Log out
           </DropdownMenuItem>
