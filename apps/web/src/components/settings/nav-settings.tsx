@@ -8,8 +8,9 @@ import {
   BriefcaseIcon,
   CreditCardIcon,
   Crown,
-  ToyBrick,
   Terminal,
+  ToyBrick,
+  TriangleAlertIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -19,11 +20,13 @@ import { orpc } from "@/utils/orpc";
 
 const SETTINGS_STALE_TIME_MS = 5 * 60 * 1000;
 
-const SETTINGS_NAV_ITEMS: {
+interface SettingsNavItem {
   icon: LucideIcon;
   title: string;
   url: string;
-}[] = [
+}
+
+const SETTINGS_NAV_ITEMS: SettingsNavItem[] = [
   {
     icon: Crown,
     title: "Apply settings",
@@ -48,6 +51,11 @@ const SETTINGS_NAV_ITEMS: {
     icon: CreditCardIcon,
     title: "Billing",
     url: "/billing",
+  },
+  {
+    icon: TriangleAlertIcon,
+    title: "Account deletion",
+    url: "/account-deletion",
   },
 ];
 
@@ -74,11 +82,11 @@ export const SettingsNav = () => {
 
         return (
           <Button
-            key={item.url}
             className={cn(
               "justify-start gap-2",
               isActive && "bg-muted font-medium"
             )}
+            key={item.url}
             nativeButton={false}
             render={<Link aria-label={item.title} href={item.url} />}
             variant="ghost"

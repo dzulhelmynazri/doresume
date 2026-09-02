@@ -60,6 +60,11 @@ export const createAuth = () => {
       "exp://",
       "http://localhost:8081",
     ],
+    user: {
+      deleteUser: {
+        enabled: true,
+      },
+    },
   });
 };
 

@@ -48,6 +48,7 @@ const SETTINGS_ROUTES = [
   "/workday",
   "/integrations",
   "/billing",
+  "/account-deletion",
 ];
 
 export interface AppNavContext {
