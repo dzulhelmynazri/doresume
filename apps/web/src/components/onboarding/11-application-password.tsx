@@ -16,6 +16,8 @@ import { LockIcon } from "lucide-react";
 
 import { InputPasswordStrength } from "@/components/shadcn-studio/input/input-46";
 
+import { autosaveListener } from "./autosave";
+
 const APPLICATION_PASSWORD_DEFAULTS: ApplicationPassword = {
   password: "",
 };
@@ -89,6 +91,7 @@ export const useApplicationPasswordForm = (
 ) =>
   useForm({
     defaultValues,
+    listeners: autosaveListener(applicationPasswordSchema, onValidSubmit),
     onSubmit: async ({ value }) => {
       await onValidSubmit(applicationPasswordSchema.parse(value));
     },

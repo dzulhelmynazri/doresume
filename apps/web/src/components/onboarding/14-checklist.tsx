@@ -33,6 +33,8 @@ import {
 } from "@doresume/ui/components/toggle-group";
 import { useForm } from "@tanstack/react-form";
 
+import { autosaveListener } from "./autosave";
+
 type YesNo = Checklist["activeClearance"];
 type YesNoKey =
   | "activeClearance"
@@ -103,6 +105,7 @@ export const useChecklistForm = (
 ) =>
   useForm({
     defaultValues,
+    listeners: autosaveListener(checklistSchema, onValidSubmit),
     onSubmit: async ({ value }) => {
       await onValidSubmit(checklistSchema.parse(value));
     },

@@ -150,87 +150,105 @@ const Onboarding = ({
     },
     { password: initialOnboarding.applicationPassword ?? "" }
   );
+  const stepForms: {
+    form: {
+      handleSubmit: () => Promise<void>;
+      state: { isValid: boolean };
+    };
+    message: string;
+    step: OnboardingStep;
+  }[] = [
+    {
+      form: locationForm,
+      message: "Enter your location to continue.",
+      step: "location",
+    },
+    {
+      form: contactForm,
+      message: "Check your contact details.",
+      step: "contact",
+    },
+    {
+      form: eligibilityForm,
+      message: "Add where you can work.",
+      step: "eligibility",
+    },
+    {
+      form: industriesForm,
+      message: "Choose the industries you want to work in.",
+      step: "industries",
+    },
+    {
+      form: experienceLevelForm,
+      message: "Choose the experience level that fits you best.",
+      step: "experience",
+    },
+    {
+      form: workTypeForm,
+      message: "Choose what type of work you're open to.",
+      step: "workType",
+    },
+    {
+      form: educationLevelForm,
+      message: "Choose your highest education level.",
+      step: "education",
+    },
+    {
+      form: workArrangementForm,
+      message: "Choose how you'd like to work.",
+      step: "workArrangement",
+    },
+    {
+      form: minimumSalaryForm,
+      message: "Enter your desired minimum salary.",
+      step: "minimumSalary",
+    },
+    {
+      form: passwordForm,
+      message: "Set a password for application sites.",
+      step: "password",
+    },
+    {
+      form: checklistForm,
+      message: "Finish the checklist to continue.",
+      step: "checklist",
+    },
+  ];
+
+  // Persist the step the user leaves so a full page navigation (the inbox
+  // OAuth round trip) or a refresh restores every answered step from the
+  // database. handleSubmit only saves when the form is valid, so the final
+  // submit remains the strict gate.
+  const saveStepOnLeave = async (name: OnboardingStep) => {
+    const entry = stepForms.find((item) => item.step === name);
+
+    if (!entry) {
+      return;
+    }
+
+    try {
+      await entry.form.handleSubmit();
+    } catch {
+      toast.error("Could not save your details.");
+    }
+  };
+
   const finishOnboarding = async (applicationSettings: ApplicationSettings) => {
     setIsFinishing(true);
 
     try {
-      const steps: {
-        form: {
-          handleSubmit: () => Promise<void>;
-          state: { isValid: boolean };
-        };
-        message: string;
-        step: OnboardingStep;
-      }[] = [
-        {
-          form: locationForm,
-          message: "Enter your location to continue.",
-          step: "location",
-        },
-        {
-          form: contactForm,
-          message: "Check your contact details.",
-          step: "contact",
-        },
-        {
-          form: eligibilityForm,
-          message: "Add where you can work.",
-          step: "eligibility",
-        },
-        {
-          form: industriesForm,
-          message: "Choose the industries you want to work in.",
-          step: "industries",
-        },
-        {
-          form: experienceLevelForm,
-          message: "Choose the experience level that fits you best.",
-          step: "experience",
-        },
-        {
-          form: workTypeForm,
-          message: "Choose what type of work you're open to.",
-          step: "workType",
-        },
-        {
-          form: educationLevelForm,
-          message: "Choose your highest education level.",
-          step: "education",
-        },
-        {
-          form: workArrangementForm,
-          message: "Choose how you'd like to work.",
-          step: "workArrangement",
-        },
-        {
-          form: minimumSalaryForm,
-          message: "Enter your desired minimum salary.",
-          step: "minimumSalary",
-        },
-        {
-          form: passwordForm,
-          message: "Set a password for application sites.",
-          step: "password",
-        },
-        {
-          form: checklistForm,
-          message: "Finish the checklist to continue.",
-          step: "checklist",
-        },
-      ];
-
       // Each handleSubmit validates its own form and only saves when valid,
       // so every step can validate and save concurrently instead of paying a
       // full request round trip per step. Walking the steps in order after
       // keeps the "jump to the first step that failed" behavior.
       const results = await Promise.allSettled(
-        steps.map(({ form }) => form.handleSubmit())
+        stepForms.map(({ form }) => form.handleSubmit())
       );
 
       let firstFailure: { message: string; step: OnboardingStep } | null = null;
       let isSaveFailure = false;
 
-      for (const [index, stepEntry] of steps.entries()) {
+      for (const [index, stepEntry] of stepForms.entries()) {
         if (results[index]?.status === "rejected") {
           firstFailure = { message: stepEntry.message, step: stepEntry.step };
           isSaveFailure = true;
@@ -293,6 +311,7 @@ const Onboarding = ({
       items={ONBOARDING_ITEMS}
       onItemChange={(nextStep) => {
         if (isOnboardingStep(nextStep)) {
+          void saveStepOnLeave(step);
           void setStep(nextStep);
         }
       }}

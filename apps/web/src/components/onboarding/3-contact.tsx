@@ -19,6 +19,8 @@ import { LinkedIn } from "@doresume/ui/socials/linkedin";
 import { useForm } from "@tanstack/react-form";
 import { PhoneIcon } from "lucide-react";
 
+import { autosaveListener } from "./autosave";
+
 const CONTACT_DEFAULTS: Contact = {
   linkedin: "",
   phone: "",
@@ -30,6 +32,7 @@ export const useContactForm = (
 ) =>
   useForm({
     defaultValues,
+    listeners: autosaveListener(contactSchema, onValidSubmit),
     onSubmit: async ({ value }) => {
       await onValidSubmit(value);
     },

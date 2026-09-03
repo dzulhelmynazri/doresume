@@ -51,6 +51,8 @@ import {
 import { cn } from "@doresume/ui/lib/utils";
 import { useForm } from "@tanstack/react-form";
 
+import { autosaveListener } from "./autosave";
+
 const MINIMUM_SALARY_DEFAULTS: MinimumSalary = {
   amount: getSalaryRange("yearly").default,
   currency: "MYR",
@@ -69,6 +71,7 @@ export const useMinimumSalaryForm = (
 ) =>
   useForm({
     defaultValues,
+    listeners: autosaveListener(minimumSalarySchema, onValidSubmit),
     onSubmit: async ({ value }) => {
       await onValidSubmit(minimumSalarySchema.parse(value));
     },

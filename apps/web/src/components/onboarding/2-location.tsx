@@ -12,6 +12,8 @@ import { Input } from "@doresume/ui/components/input";
 import { QuestionnaireInput } from "@doresume/ui/components/questionnaire";
 import { useForm } from "@tanstack/react-form";
 
+import { autosaveListener } from "./autosave";
+
 const LOCATION_DEFAULTS: Location = {
   address: "",
   city: "",
@@ -26,6 +28,7 @@ export const useLocationForm = (
 ) =>
   useForm({
     defaultValues,
+    listeners: autosaveListener(locationSchema, onValidSubmit),
     onSubmit: async ({ value }) => {
       await onValidSubmit(value);
     },
@@ -45,7 +48,11 @@ const LocationFields = ({ form }: { form: LocationFormApi }) => (
           <QuestionnaireInput
             key={JSON.stringify(values)}
             aria-label="Location"
-            defaultValue={JSON.stringify(values)}
+            defaultValue={
+              locationSchema.safeParse(values).success
+                ? JSON.stringify(values)
+                : ""
+            }
             readOnly
           />
         </div>

@@ -23,6 +23,8 @@ import {
 } from "@doresume/ui/components/radio-group";
 import { useForm } from "@tanstack/react-form";
 
+import { autosaveListener } from "./autosave";
+
 const EDUCATION_LEVEL_DEFAULTS: { educationLevel?: EducationLevel } = {
   educationLevel: undefined,
 };
@@ -36,6 +38,7 @@ export const useEducationLevelForm = (
 ) =>
   useForm({
     defaultValues,
+    listeners: autosaveListener(educationLevelSchema, onValidSubmit),
     onSubmit: async ({ value }) => {
       await onValidSubmit(educationLevelSchema.parse(value));
     },

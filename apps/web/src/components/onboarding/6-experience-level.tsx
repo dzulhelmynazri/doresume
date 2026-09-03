@@ -24,6 +24,8 @@ import {
 } from "@doresume/ui/components/radio-group";
 import { useForm } from "@tanstack/react-form";
 
+import { autosaveListener } from "./autosave";
+
 const EXPERIENCE_LEVEL_DEFAULTS: { experienceLevel?: ExperienceLevel } = {
   experienceLevel: undefined,
 };
@@ -39,6 +41,7 @@ export const useExperienceLevelForm = (
 ) =>
   useForm({
     defaultValues,
+    listeners: autosaveListener(experienceLevelSchema, onValidSubmit),
     onSubmit: async ({ value }) => {
       await onValidSubmit(experienceLevelSchema.parse(value));
     },

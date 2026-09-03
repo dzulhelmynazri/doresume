@@ -23,6 +23,8 @@ import {
 } from "@doresume/ui/components/radio-group";
 import { useForm } from "@tanstack/react-form";
 
+import { autosaveListener } from "./autosave";
+
 const WORK_TYPE_DEFAULTS: { workType?: WorkType } = {
   workType: undefined,
 };
@@ -36,6 +38,7 @@ export const useWorkTypeForm = (
 ) =>
   useForm({
     defaultValues,
+    listeners: autosaveListener(workTypeSchema, onValidSubmit),
     onSubmit: async ({ value }) => {
       await onValidSubmit(workTypeSchema.parse(value));
     },

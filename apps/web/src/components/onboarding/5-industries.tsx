@@ -52,6 +52,8 @@ import {
   ZapIcon,
 } from "lucide-react";
 
+import { autosaveListener } from "./autosave";
+
 const INDUSTRIES_DEFAULTS: Industries = {
   industries: [],
   openToAny: false,
@@ -87,20 +89,25 @@ const INDUSTRY_ICONS = {
   sports_athletics: DumbbellIcon,
 } as const satisfies Record<Industry, LucideIcon>;
 
+const toSavedIndustries = (value: Industries): Industries => {
+  const parsed = industriesSchema.parse(value);
+
+  return parsed.openToAny
+    ? { industries: [], openToAny: true }
+    : { industries: parsed.industries, openToAny: false };
+};
+
 export const useIndustriesForm = (
   onValidSubmit: (value: Industries) => void | Promise<void>,
   defaultValues: Industries = INDUSTRIES_DEFAULTS
 ) =>
   useForm({
     defaultValues,
+    listeners: autosaveListener(industriesSchema, (value) =>
+      onValidSubmit(toSavedIndustries(value))
+    ),
     onSubmit: async ({ value }) => {
-      const parsed = industriesSchema.parse(value);
-
-      await onValidSubmit(
-        parsed.openToAny
-          ? { industries: [], openToAny: true }
-          : { industries: parsed.industries, openToAny: false }
-      );
+      await onValidSubmit(toSavedIndustries(value));
     },
     validators: {
       onSubmit: industriesSchema,

@@ -23,6 +23,8 @@ import {
 } from "@doresume/ui/components/radio-group";
 import { useForm } from "@tanstack/react-form";
 
+import { autosaveListener } from "./autosave";
+
 const WORK_ARRANGEMENT_DEFAULTS: { workArrangement?: WorkArrangement } = {
   workArrangement: undefined,
 };
@@ -38,6 +40,7 @@ export const useWorkArrangementForm = (
 ) =>
   useForm({
     defaultValues,
+    listeners: autosaveListener(workArrangementSchema, onValidSubmit),
     onSubmit: async ({ value }) => {
       await onValidSubmit(workArrangementSchema.parse(value));
     },

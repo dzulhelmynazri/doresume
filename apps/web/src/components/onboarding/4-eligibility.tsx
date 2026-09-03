@@ -58,6 +58,8 @@ import { XIcon } from "lucide-react";
 import { COUNTRIES, getCountriesByCode, getCountryName } from "@/lib/countries";
 import type { CountryOption } from "@/lib/countries";
 
+import { autosaveListener } from "./autosave";
+
 type YesNoDraft = "" | "no" | "yes";
 type AuthorizationBasisDraft = "" | AuthorizationBasis;
 type AuthorizationStatusDraft = "" | AuthorizationStatus;
@@ -124,10 +126,12 @@ export const useWorkEligibilityForm = (
 ) =>
   useForm({
     defaultValues,
+    listeners: autosaveListener(workEligibilitySchema, onValidSubmit),
     onSubmit: async ({ value }) => {
       await onValidSubmit(workEligibilitySchema.parse(value));
     },
     validators: {
+      onBlur: workEligibilitySchema,
       onSubmit: workEligibilitySchema,
     },
   });
@@ -183,7 +187,11 @@ const WorkEligibilityFields = ({
             <QuestionnaireInput
               key={JSON.stringify(values)}
               aria-label="Work eligibility"
-              defaultValue={JSON.stringify(values)}
+              defaultValue={
+                workEligibilitySchema.safeParse(values).success
+                  ? JSON.stringify(values)
+                  : ""
+              }
               readOnly
             />
           </div>
