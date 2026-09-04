@@ -16,7 +16,6 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@browserbasehq/eve": "^0.1.0",
     "@composio/core": "^0.18.0",
     "@composio/experimental": "^0.2.3",
     "@doresume/auth": "workspace:*",
